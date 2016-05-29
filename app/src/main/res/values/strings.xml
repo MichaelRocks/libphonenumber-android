@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">libphonenumber</string>
+  <string name="phone_number_hint">Click a button to display a phone number</string>
+  <string name="phone_number_button">Click Me!</string>
+</resources>
