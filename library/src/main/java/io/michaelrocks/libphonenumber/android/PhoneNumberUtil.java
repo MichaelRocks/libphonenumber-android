@@ -357,8 +357,6 @@ public class PhoneNumberUtil {
   // for unbalanced parentheses.
   private static final Pattern FIRST_GROUP_ONLY_PREFIX_PATTERN = Pattern.compile("\\(?\\$1\\)?");
 
-  private static PhoneNumberUtil instance = null;
-
   public static final String REGION_CODE_FOR_NON_GEO_ENTITY = "001";
 
   /**
@@ -939,15 +937,6 @@ public class PhoneNumberUtil {
   }
 
   /**
-   * Sets or resets the PhoneNumberUtil singleton instance. If set to null, the next call to
-   * {@code getInstance()} will load (and return) the default instance.
-   */
-  // @VisibleForTesting
-  static synchronized void setInstance(PhoneNumberUtil util) {
-    instance = util;
-  }
-
-  /**
    * Convenience method to get a list of what regions the library has metadata for.
    */
   public Set<String> getSupportedRegions() {
@@ -963,30 +952,13 @@ public class PhoneNumberUtil {
   }
 
   /**
-   * Gets a {@link PhoneNumberUtil} instance to carry out international phone number formatting,
-   * parsing, or validation. The instance is loaded with phone number metadata for a number of most
-   * commonly used regions.
-   *
-   * <p>The {@link PhoneNumberUtil} is implemented as a singleton. Therefore, calling getInstance
-   * multiple times will only result in one instance being created.
-   *
-   * @return a PhoneNumberUtil instance
-   */
-  public static synchronized PhoneNumberUtil getInstance() {
-    if (instance == null) {
-      setInstance(createInstance(DEFAULT_METADATA_SOURCE));
-    }
-    return instance;
-  }
-
-  /**
    * Create a new {@link PhoneNumberUtil} instance to carry out international phone number
    * formatting, parsing, or validation. The instance is loaded with all metadata by
    * using the metadataSource specified.
    *
    * This method should only be used in the rare case in which you want to manage your own
    * metadata loading. Calling this method multiple times is very expensive, as each time
-   * a new instance is created from scratch. When in doubt, use {@link #getInstance}.
+   * a new instance is created from scratch.
    *
    * @param metadataSource Customized metadata source. This should not be null.
    * @return a PhoneNumberUtil instance
@@ -1006,7 +978,7 @@ public class PhoneNumberUtil {
    *
    * This method should only be used in the rare case in which you want to manage your own
    * metadata loading. Calling this method multiple times is very expensive, as each time
-   * a new instance is created from scratch. When in doubt, use {@link #getInstance}.
+   * a new instance is created from scratch.
    *
    * @param metadataLoader Customized metadata loader. This should not be null.
    * @return a PhoneNumberUtil instance

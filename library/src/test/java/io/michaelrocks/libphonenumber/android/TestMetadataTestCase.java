@@ -47,7 +47,6 @@ public abstract class TestMetadataTestCase extends TestCase {
             TEST_META_DATA_FILE_PREFIX, TEST_ALTERNATE_FORMATS_FILE_PREFIX, TEST_SHORT_NUMBER_METADATA_FILE_PREFIX,
             new ResourceMetadataLoader(TestMetadataTestCase.class)),
         CountryCodeToRegionCodeMapForTesting.getCountryCodeToRegionCodeMap());
-    PhoneNumberUtil.setInstance(phoneUtil);
     return phoneUtil;
   }
 }
