@@ -127,7 +127,7 @@ public class ShortNumberInfo {
   @Deprecated
   public boolean isPossibleShortNumberForRegion(String shortNumber, String regionDialingFrom) {
     PhoneMetadata phoneMetadata =
-        MetadataManager.getShortNumberMetadataForRegion(regionDialingFrom);
+        MetadataManager.getInstance().getShortNumberMetadataForRegion(regionDialingFrom);
     if (phoneMetadata == null) {
       return false;
     }
@@ -147,7 +147,7 @@ public class ShortNumberInfo {
       return false;
     }
     PhoneMetadata phoneMetadata =
-        MetadataManager.getShortNumberMetadataForRegion(regionDialingFrom);
+        MetadataManager.getInstance().getShortNumberMetadataForRegion(regionDialingFrom);
     if (phoneMetadata == null) {
       return false;
     }
@@ -168,7 +168,7 @@ public class ShortNumberInfo {
     List<String> regionCodes = getRegionCodesForCountryCode(number.getCountryCode());
     String shortNumber = getNationalSignificantNumber(number);
     for (String region : regionCodes) {
-      PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(region);
+      PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(region);
       if (phoneMetadata == null) {
         continue;
       }
@@ -196,7 +196,7 @@ public class ShortNumberInfo {
   @Deprecated
   public boolean isValidShortNumberForRegion(String shortNumber, String regionDialingFrom) {
     PhoneMetadata phoneMetadata =
-        MetadataManager.getShortNumberMetadataForRegion(regionDialingFrom);
+        MetadataManager.getInstance().getShortNumberMetadataForRegion(regionDialingFrom);
     if (phoneMetadata == null) {
       return false;
     }
@@ -222,7 +222,7 @@ public class ShortNumberInfo {
       return false;
     }
     PhoneMetadata phoneMetadata =
-        MetadataManager.getShortNumberMetadataForRegion(regionDialingFrom);
+        MetadataManager.getInstance().getShortNumberMetadataForRegion(regionDialingFrom);
     if (phoneMetadata == null) {
       return false;
     }
@@ -285,7 +285,7 @@ public class ShortNumberInfo {
   @Deprecated
   public ShortNumberCost getExpectedCostForRegion(String shortNumber, String regionDialingFrom) {
     // Note that regionDialingFrom may be null, in which case phoneMetadata will also be null.
-    PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(
+    PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(
         regionDialingFrom);
     if (phoneMetadata == null) {
       return ShortNumberCost.UNKNOWN_COST;
@@ -337,7 +337,7 @@ public class ShortNumberInfo {
       return ShortNumberCost.UNKNOWN_COST;
     }
     // Note that regionDialingFrom may be null, in which case phoneMetadata will also be null.
-    PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(
+    PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(
         regionDialingFrom);
     if (phoneMetadata == null) {
       return ShortNumberCost.UNKNOWN_COST;
@@ -428,7 +428,7 @@ public class ShortNumberInfo {
     }
     String nationalNumber = getNationalSignificantNumber(number);
     for (String regionCode : regionCodes) {
-      PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(regionCode);
+      PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode);
       if (phoneMetadata != null
           && matchesPossibleNumberAndNationalNumber(nationalNumber, phoneMetadata.shortCode)) {
         // The number is valid for this region.
@@ -442,7 +442,7 @@ public class ShortNumberInfo {
    * Convenience method to get a list of what regions the library has metadata for.
    */
   Set<String> getSupportedRegions() {
-    return Collections.unmodifiableSet(MetadataManager.getShortNumberMetadataSupportedRegions());
+    return Collections.unmodifiableSet(MetadataManager.getInstance().getShortNumberMetadataSupportedRegions());
   }
 
   /**
@@ -454,7 +454,7 @@ public class ShortNumberInfo {
    */
   // @VisibleForTesting
   String getExampleShortNumber(String regionCode) {
-    PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(regionCode);
+    PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode);
     if (phoneMetadata == null) {
       return "";
     }
@@ -475,7 +475,7 @@ public class ShortNumberInfo {
    */
   // @VisibleForTesting
   String getExampleShortNumberForCost(String regionCode, ShortNumberCost cost) {
-    PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(regionCode);
+    PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode);
     if (phoneMetadata == null) {
       return "";
     }
@@ -543,7 +543,7 @@ public class ShortNumberInfo {
       // add additional logic here to handle it.
       return false;
     }
-    PhoneMetadata metadata = MetadataManager.getShortNumberMetadataForRegion(regionCode);
+    PhoneMetadata metadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode);
     if (metadata == null || metadata.emergency == null) {
       return false;
     }
@@ -570,7 +570,7 @@ public class ShortNumberInfo {
     List<String> regionCodes = getRegionCodesForCountryCode(number.getCountryCode());
     String regionCode = getRegionCodeForShortNumberFromRegionList(number, regionCodes);
     String nationalNumber = getNationalSignificantNumber(number);
-    PhoneMetadata phoneMetadata = MetadataManager.getShortNumberMetadataForRegion(regionCode);
+    PhoneMetadata phoneMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode);
     return (phoneMetadata != null)
         && (matchesPossibleNumberAndNationalNumber(nationalNumber,
                 phoneMetadata.carrierSpecific));

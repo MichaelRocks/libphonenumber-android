@@ -28,25 +28,25 @@ public class MetadataManagerTest extends TestCase {
 
   public void testAlternateFormatsContainsData() throws Exception {
     // We should have some data for Germany.
-    PhoneMetadata germanyAlternateFormats = MetadataManager.getAlternateFormatsForCountry(49);
+    PhoneMetadata germanyAlternateFormats = MetadataManager.getInstance().getAlternateFormatsForCountry(49);
     assertNotNull(germanyAlternateFormats);
     assertTrue(germanyAlternateFormats.numberFormat.length > 0);
   }
 
   public void testShortNumberMetadataContainsData() throws Exception {
     // We should have some data for France.
-    PhoneMetadata franceShortNumberMetadata = MetadataManager.getShortNumberMetadataForRegion("FR");
+    PhoneMetadata franceShortNumberMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion("FR");
     assertNotNull(franceShortNumberMetadata);
     assertTrue(franceShortNumberMetadata.shortCode != null);
   }
 
   public void testAlternateFormatsFailsGracefully() throws Exception {
-    PhoneMetadata noAlternateFormats = MetadataManager.getAlternateFormatsForCountry(999);
+    PhoneMetadata noAlternateFormats = MetadataManager.getInstance().getAlternateFormatsForCountry(999);
     assertNull(noAlternateFormats);
   }
 
   public void testShortNumberMetadataFailsGracefully() throws Exception {
-    PhoneMetadata noShortNumberMetadata = MetadataManager.getShortNumberMetadataForRegion("XXX");
+    PhoneMetadata noShortNumberMetadata = MetadataManager.getInstance().getShortNumberMetadataForRegion("XXX");
     assertNull(noShortNumberMetadata);
   }
 }

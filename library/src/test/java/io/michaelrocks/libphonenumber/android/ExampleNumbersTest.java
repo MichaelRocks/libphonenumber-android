@@ -235,7 +235,7 @@ public class ExampleNumbersTest extends TestCase {
     int wrongTypeCounter = 0;
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       PhoneNumberDesc desc =
-          MetadataManager.getShortNumberMetadataForRegion(regionCode).emergency;
+          MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode).emergency;
       if (!desc.exampleNumber.equals("")) {
         String exampleNumber = desc.exampleNumber;
         PhoneNumber phoneNumber = phoneNumberUtil.parse(exampleNumber, regionCode);
@@ -258,7 +258,7 @@ public class ExampleNumbersTest extends TestCase {
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       // Test the carrier-specific tag.
       PhoneNumberDesc desc =
-          MetadataManager.getShortNumberMetadataForRegion(regionCode).carrierSpecific;
+          MetadataManager.getInstance().getShortNumberMetadataForRegion(regionCode).carrierSpecific;
       if (!desc.exampleNumber.equals("")) {
         String exampleNumber = desc.exampleNumber;
         PhoneNumber carrierSpecificNumber = phoneNumberUtil.parse(exampleNumber, regionCode);
