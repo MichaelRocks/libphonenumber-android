@@ -1,4 +1,4 @@
 rootProject.name = 'libphonenumber-android'
 
 include ':library'
-include ':app'
+include ':sample'
