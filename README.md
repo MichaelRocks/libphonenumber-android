@@ -36,8 +36,6 @@ This library is not fully compatible with the original `libphonenumber`.
  `PhoneNumberUtil.createInstance()` methods and store it somewhere.
  3. `PhoneNumberUtil` now has a `createInstance(Context)` method, which
  is a default way to obtain an instance of this class on Android.
- Please, **pass an application context** to this method to prevent 
- `Context` leaks.
 
 License
 =======
