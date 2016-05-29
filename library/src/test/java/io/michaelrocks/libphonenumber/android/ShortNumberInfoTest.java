@@ -349,8 +349,11 @@ public class ShortNumberInfoTest extends TestMetadataTestCase {
     try {
       return phoneUtil.parse(number, regionCode);
     } catch (NumberParseException e) {
-      throw new AssertionError(
-          "Test input data should always parse correctly: " + number + " (" + regionCode + ")", e);
+      AssertionError error =
+          new AssertionError("Test input data should always parse correctly: " + number + " (" + regionCode + ")");
+      //noinspection UnnecessaryInitCause
+      error.initCause(e);
+      throw error;
     }
   }
 }
