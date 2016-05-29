@@ -60,6 +60,7 @@ public class PhoneNumberUtil {
       return PhoneNumberUtil.class.getResourceAsStream(metadataFileName);
     }
   };
+  static final MetadataSource DEFAULT_METADATA_SOURCE = new MultiFileMetadataSourceImpl(DEFAULT_METADATA_LOADER);
 
   private static final Logger logger = Logger.getLogger(PhoneNumberUtil.class.getName());
 
@@ -596,6 +597,10 @@ public class PhoneNumberUtil {
           "(country calling code was mapped to the non-geo entity as well as specific region(s))");
     }
     nanpaRegions.addAll(countryCallingCodeToRegionCodeMap.get(NANPA_COUNTRY_CODE));
+  }
+
+  MetadataSource getMetadataSource() {
+    return metadataSource;
   }
 
   /**

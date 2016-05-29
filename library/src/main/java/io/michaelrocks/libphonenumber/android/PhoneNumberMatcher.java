@@ -581,7 +581,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     }
     // If this didn't pass, see if there are any alternate formats, and try them instead.
     PhoneMetadata alternateFormats =
-        MetadataManager.getInstance().getAlternateFormatsForCountry(number.getCountryCode());
+        util.getMetadataSource().getAlternateFormatsForCountry(number.getCountryCode());
     if (alternateFormats != null) {
       for (NumberFormat alternateFormat : alternateFormats.numberFormat) {
         formattedNumberGroups = getNationalNumberGroups(util, number, alternateFormat);

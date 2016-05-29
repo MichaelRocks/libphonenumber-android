@@ -19,6 +19,8 @@ package io.michaelrocks.libphonenumber.android;
 
 import junit.framework.TestCase;
 
+import io.michaelrocks.libphonenumber.android.nano.Phonemetadata;
+
 /**
  * Unit tests for MultiFileMetadataSourceImpl.java.
  */
@@ -27,7 +29,7 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
 
   public void testMissingMetadataFileThrowsRuntimeException() {
     MultiFileMetadataSourceImpl multiFileMetadataSource = new MultiFileMetadataSourceImpl(
-        "no/such/file", PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+        "no/such/file", "no/such/file", "no/such/file", PhoneNumberUtil.DEFAULT_METADATA_LOADER);
     // In normal usage we should never get a state where we are asking to load metadata that doesn't
     // exist. However if the library is packaged incorrectly in the jar, this could happen and the
     // best we can do is make sure the exception has the file name in it.
@@ -44,5 +46,37 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
     } catch (RuntimeException e) {
       assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file_123"));
     }
+  }
+
+  public void testAlternateFormatsContainsData() throws Exception {
+    MultiFileMetadataSourceImpl multiFileMetadataSource = new MultiFileMetadataSourceImpl(
+        "no/such/file", "no/such/file", "no/such/file", PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+    // We should have some data for Germany.
+    Phonemetadata.PhoneMetadata germanyAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(49);
+    assertNotNull(germanyAlternateFormats);
+    assertTrue(germanyAlternateFormats.numberFormat.length > 0);
+  }
+
+  public void testShortNumberMetadataContainsData() throws Exception {
+    MultiFileMetadataSourceImpl multiFileMetadataSource =
+        new MultiFileMetadataSourceImpl(PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+    // We should have some data for France.
+    Phonemetadata.PhoneMetadata franceShortNumberMetadata = multiFileMetadataSource.getShortNumberMetadataForRegion("FR");
+    assertNotNull(franceShortNumberMetadata);
+    assertTrue(franceShortNumberMetadata.shortCode != null);
+  }
+
+  public void testAlternateFormatsFailsGracefully() throws Exception {
+    MultiFileMetadataSourceImpl multiFileMetadataSource =
+        new MultiFileMetadataSourceImpl(PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+    Phonemetadata.PhoneMetadata noAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(999);
+    assertNull(noAlternateFormats);
+  }
+
+  public void testShortNumberMetadataFailsGracefully() throws Exception {
+    MultiFileMetadataSourceImpl multiFileMetadataSource =
+        new MultiFileMetadataSourceImpl(PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+    Phonemetadata.PhoneMetadata noShortNumberMetadata = multiFileMetadataSource.getShortNumberMetadataForRegion("XXX");
+    assertNull(noShortNumberMetadata);
   }
 }
