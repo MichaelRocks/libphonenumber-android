@@ -45,7 +45,7 @@ public class TestMetadataTestCase extends TestCase {
     PhoneNumberUtil phoneUtil = new PhoneNumberUtil(
         new MultiFileMetadataSourceImpl(
             TEST_META_DATA_FILE_PREFIX, TEST_ALTERNATE_FORMATS_FILE_PREFIX, TEST_SHORT_NUMBER_METADATA_FILE_PREFIX,
-            PhoneNumberUtil.DEFAULT_METADATA_LOADER),
+            new ResourceMetadataLoader()),
         CountryCodeToRegionCodeMapForTesting.getCountryCodeToRegionCodeMap());
     PhoneNumberUtil.setInstance(phoneUtil);
     return phoneUtil;

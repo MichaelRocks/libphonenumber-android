@@ -17,7 +17,6 @@
 
 package io.michaelrocks.libphonenumber.android;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,13 +53,7 @@ import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc
  */
 public class PhoneNumberUtil {
   // @VisibleForTesting
-  static final MetadataLoader DEFAULT_METADATA_LOADER = new MetadataLoader() {
-    @Override
-    public InputStream loadMetadata(String metadataFileName) {
-      return PhoneNumberUtil.class.getResourceAsStream(metadataFileName);
-    }
-  };
-  static final MetadataSource DEFAULT_METADATA_SOURCE = new MultiFileMetadataSourceImpl(DEFAULT_METADATA_LOADER);
+  static final MetadataSource DEFAULT_METADATA_SOURCE = new MultiFileMetadataSourceImpl(new ResourceMetadataLoader());
 
   private static final Logger logger = Logger.getLogger(PhoneNumberUtil.class.getName());
 
@@ -966,7 +959,7 @@ public class PhoneNumberUtil {
    */
   public static synchronized PhoneNumberUtil getInstance() {
     if (instance == null) {
-      setInstance(createInstance(DEFAULT_METADATA_LOADER));
+      setInstance(createInstance(DEFAULT_METADATA_SOURCE));
     }
     return instance;
   }

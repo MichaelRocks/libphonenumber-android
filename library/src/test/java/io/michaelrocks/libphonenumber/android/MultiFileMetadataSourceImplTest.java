@@ -29,7 +29,7 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
 
   public void testMissingMetadataFileThrowsRuntimeException() {
     MultiFileMetadataSourceImpl multiFileMetadataSource = new MultiFileMetadataSourceImpl(
-        "no/such/file", "no/such/file", "no/such/file", PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+        "no/such/file", "no/such/file", "no/such/file", new ResourceMetadataLoader());
     // In normal usage we should never get a state where we are asking to load metadata that doesn't
     // exist. However if the library is packaged incorrectly in the jar, this could happen and the
     // best we can do is make sure the exception has the file name in it.
@@ -50,7 +50,7 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
 
   public void testAlternateFormatsContainsData() throws Exception {
     MultiFileMetadataSourceImpl multiFileMetadataSource = new MultiFileMetadataSourceImpl(
-        "no/such/file", "no/such/file", "no/such/file", PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+        "no/such/file", "no/such/file", "no/such/file", new ResourceMetadataLoader());
     // We should have some data for Germany.
     Phonemetadata.PhoneMetadata germanyAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(49);
     assertNotNull(germanyAlternateFormats);
@@ -59,7 +59,7 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
 
   public void testShortNumberMetadataContainsData() throws Exception {
     MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader());
     // We should have some data for France.
     Phonemetadata.PhoneMetadata franceShortNumberMetadata = multiFileMetadataSource.getShortNumberMetadataForRegion("FR");
     assertNotNull(franceShortNumberMetadata);
@@ -68,14 +68,14 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
 
   public void testAlternateFormatsFailsGracefully() throws Exception {
     MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader());
     Phonemetadata.PhoneMetadata noAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(999);
     assertNull(noAlternateFormats);
   }
 
   public void testShortNumberMetadataFailsGracefully() throws Exception {
     MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(PhoneNumberUtil.DEFAULT_METADATA_LOADER);
+        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader());
     Phonemetadata.PhoneMetadata noShortNumberMetadata = multiFileMetadataSource.getShortNumberMetadataForRegion("XXX");
     assertNull(noShortNumberMetadata);
   }
