@@ -258,7 +258,7 @@ public class ShortNumberInfo {
   /**
    * Gets the expected cost category of a short number when dialled from a region (however, nothing
    * is implied about its validity). If it is important that the number is valid, then its validity
-   * must first be checked using {@link isValidShortNumberForRegion}. Note that emergency numbers
+   * must first be checked using {@link #isValidShortNumberForRegion}. Note that emergency numbers
    * are always considered toll-free. Example usage:
    * <pre>{@code
    * ShortNumberInfo shortInfo = ShortNumberInfo.getInstance();
