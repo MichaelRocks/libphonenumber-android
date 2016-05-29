@@ -1,21 +1,53 @@
+/*
+ * Copyright 2016 Michael Rozumyanskiy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import com.jfrog.bintray.gradle.BintrayUploadTask
+
+plugins {
+  id "com.jfrog.bintray" version "1.6"
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+group 'io.michaelrocks'
+version '7.4.1'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
 
 android {
   compileSdkVersion 23
-  buildToolsVersion "23.0.3"
+  buildToolsVersion '23.0.0'
 
   defaultConfig {
     minSdkVersion 8
     targetSdkVersion 23
     versionCode 1
-    versionName "1.0"
+    versionName project.version
   }
 
   buildTypes {
     release {
       minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+  }
+
+  lintOptions {
+    abortOnError false
   }
 }
 
@@ -23,4 +55,73 @@ dependencies {
   compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-5'
 
   testCompile 'junit:junit:4.12'
+}
+
+publishing {
+  def artifactName = 'libphonenumber-android'
+
+  android.libraryVariants.all { variant ->
+    project.tasks.create("bintrayUpload${variant.name.capitalize()}", BintrayUploadTask) {
+      apiUrl = BintrayUploadTask.API_URL_DEFAULT
+
+      user = project.findProperty('bintrayUser')
+      apiKey = project.findProperty('bintrayKey')
+      publications = [variant.name.capitalize()]
+
+      repoName = 'maven'
+      packageName = artifactName
+
+      versionName = project.version
+      versionReleased = new Date()
+      versionVcsTag = "v${project.version}"
+
+      dependsOn tasks["assemble${variant.name.capitalize()}"]
+    }
+
+    project.tasks.create("javadoc${variant.name.capitalize()}", Javadoc) {
+      source = variant.sourceSets.javaDirectories
+      classpath += variant.javaCompile.classpath
+      classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
+      if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+      }
+    }
+
+    project.tasks.create("javadocJar${variant.name.capitalize()}", Jar) {
+      classifier = 'javadoc'
+      def javadoc = tasks["javadoc${variant.name.capitalize()}"]
+      from javadoc.destinationDir
+      dependsOn javadoc
+    }
+
+    project.tasks.create("sourcesJar${variant.name.capitalize()}", Jar) {
+      classifier = 'sources'
+      from variant.sourceSets.javaDirectories
+    }
+
+    publications {
+      create(variant.name.capitalize(), MavenPublication) {
+        artifactId artifactName
+        variant.outputs.each { output ->
+          artifact output.packageLibrary
+        }
+
+        artifact tasks["javadocJar${variant.name.capitalize()}"]
+        artifact tasks["sourcesJar${variant.name.capitalize()}"]
+      }
+    }
+  }
+}
+
+afterEvaluate {
+  android.libraryVariants.all { variant ->
+    def bintrayUpload = tasks["bintrayUpload${variant.name.capitalize()}"]
+    publishing.publications.each { publication ->
+      if (publication instanceof MavenPublication) {
+        def taskName = "publish${publication.name.capitalize()}PublicationToMavenLocal"
+        bintrayUpload.dependsOn(taskName)
+      }
+    }
+  }
 }
