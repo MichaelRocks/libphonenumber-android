@@ -37,8 +37,7 @@ import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc
 public class ExampleNumbersTest extends TestCase {
   private static final Logger LOGGER = Logger.getLogger(ExampleNumbersTest.class.getName());
   private PhoneNumberUtil phoneNumberUtil =
-      PhoneNumberUtil.createInstance(new ResourceMetadataLoader());
-  private ShortNumberInfo shortNumberInfo = ShortNumberInfo.getInstance();
+      PhoneNumberUtil.createInstance(new ResourceMetadataLoader(ExampleNumbersTest.class));
   private ShortNumberInfo shortNumberInfo = phoneNumberUtil.getShortNumberInfo();
   private List<PhoneNumber> invalidCases = new ArrayList<PhoneNumber>();
   private List<PhoneNumber> wrongTypeCases = new ArrayList<PhoneNumber>();

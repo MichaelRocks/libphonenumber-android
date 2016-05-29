@@ -27,13 +27,13 @@ import junit.framework.TestCase;
  *
  * @author Shaopeng Jia
  */
-public class TestMetadataTestCase extends TestCase {
+public abstract class TestMetadataTestCase extends TestCase {
   private static final String TEST_META_DATA_FILE_PREFIX =
       "/io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProtoForTesting";
   private static final String TEST_ALTERNATE_FORMATS_FILE_PREFIX =
-      "/io/michaelrocks/libphonenumber/android/data/PhoneNumberAlternateFormatsProtoForTesting";
+      "/io/michaelrocks/libphonenumber/android/data/PhoneNumberAlternateFormatsProto";
   private static final String TEST_SHORT_NUMBER_METADATA_FILE_PREFIX =
-      "/io/michaelrocks/libphonenumber/android/data/ShortNumberMetadataProtoForTesting";
+      "/io/michaelrocks/libphonenumber/android/data/ShortNumberMetadataProto";
 
   protected final PhoneNumberUtil phoneUtil;
 
@@ -45,7 +45,7 @@ public class TestMetadataTestCase extends TestCase {
     PhoneNumberUtil phoneUtil = new PhoneNumberUtil(
         new MultiFileMetadataSourceImpl(
             TEST_META_DATA_FILE_PREFIX, TEST_ALTERNATE_FORMATS_FILE_PREFIX, TEST_SHORT_NUMBER_METADATA_FILE_PREFIX,
-            new ResourceMetadataLoader()),
+            new ResourceMetadataLoader(TestMetadataTestCase.class)),
         CountryCodeToRegionCodeMapForTesting.getCountryCodeToRegionCodeMap());
     PhoneNumberUtil.setInstance(phoneUtil);
     return phoneUtil;
