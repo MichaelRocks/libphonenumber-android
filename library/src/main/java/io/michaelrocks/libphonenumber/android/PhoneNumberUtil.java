@@ -17,6 +17,8 @@
 
 package io.michaelrocks.libphonenumber.android;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -949,6 +951,24 @@ public class PhoneNumberUtil {
    */
   public Set<Integer> getSupportedGlobalNetworkCallingCodes() {
     return Collections.unmodifiableSet(countryCodesForNonGeographicalRegion);
+  }
+
+  /**
+   * Create a new {@link PhoneNumberUtil} instance to carry out international phone number
+   * formatting, parsing, or validation. The instance is loaded with all metadata by
+   * using the metadataSource specified.
+   *
+   * Calling this method multiple times is very expensive, as each time a new instance is created
+   * from scratch.
+   *
+   * @param context Android {@link Context} used to load metadata. This should not be null.
+   * @return a PhoneNumberUtil instance
+   */
+  public static PhoneNumberUtil createInstance(Context context) {
+    if (context == null) {
+      throw new IllegalArgumentException("context could not be null.");
+    }
+    return createInstance(new AssetsMetadataLoader(context.getAssets()));
   }
 
   /**
