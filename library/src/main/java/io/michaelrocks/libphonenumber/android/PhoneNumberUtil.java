@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber.CountryCodeSource;
+import io.michaelrocks.libphonenumber.android.internal.RegexBasedMatcher;
 import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat;
 import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata;
 import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc;
@@ -537,6 +538,9 @@ public class PhoneNumberUtil {
   // A source of metadata for different regions.
   private final MetadataSource metadataSource;
 
+  // A helper class for getting information about short phone numbers.
+  private volatile ShortNumberInfo shortNumberInfo;
+
   // A mapping from a country calling code to the region codes which denote the region represented
   // by that country calling code. In the case of multiple regions sharing a calling code, such as
   // the NANPA regions, the one indicated with "isMainCountryForCode" in the metadata should be
@@ -594,6 +598,17 @@ public class PhoneNumberUtil {
 
   MetadataSource getMetadataSource() {
     return metadataSource;
+  }
+
+  public ShortNumberInfo getShortNumberInfo() {
+    if (shortNumberInfo == null) {
+      synchronized (this) {
+        if (shortNumberInfo == null) {
+          shortNumberInfo = new ShortNumberInfo(metadataSource, RegexBasedMatcher.create());
+        }
+      }
+    }
+    return shortNumberInfo;
   }
 
   /**

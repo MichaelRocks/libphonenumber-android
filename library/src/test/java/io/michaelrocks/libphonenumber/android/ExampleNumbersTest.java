@@ -39,6 +39,7 @@ public class ExampleNumbersTest extends TestCase {
   private PhoneNumberUtil phoneNumberUtil =
       PhoneNumberUtil.createInstance(new ResourceMetadataLoader());
   private ShortNumberInfo shortNumberInfo = ShortNumberInfo.getInstance();
+  private ShortNumberInfo shortNumberInfo = phoneNumberUtil.getShortNumberInfo();
   private List<PhoneNumber> invalidCases = new ArrayList<PhoneNumber>();
   private List<PhoneNumber> wrongTypeCases = new ArrayList<PhoneNumber>();
 

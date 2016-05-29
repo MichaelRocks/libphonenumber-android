@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
 import io.michaelrocks.libphonenumber.android.internal.MatcherApi;
-import io.michaelrocks.libphonenumber.android.internal.RegexBasedMatcher;
 import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata;
 import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc;
 
@@ -43,9 +42,6 @@ import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc
  */
 public class ShortNumberInfo {
   private static final Logger logger = Logger.getLogger(ShortNumberInfo.class.getName());
-
-  private static final ShortNumberInfo INSTANCE =
-      new ShortNumberInfo(PhoneNumberUtil.DEFAULT_METADATA_SOURCE, RegexBasedMatcher.create());
 
   // In these countries, if extra digits are added to an emergency number, it no longer connects
   // to the emergency service.
@@ -63,11 +59,6 @@ public class ShortNumberInfo {
     STANDARD_RATE,
     PREMIUM_RATE,
     UNKNOWN_COST
-  }
-
-  /** Returns the singleton instance of the ShortNumberInfo. */
-  public static ShortNumberInfo getInstance() {
-    return INSTANCE;
   }
 
   private final MetadataSource metadataSource;

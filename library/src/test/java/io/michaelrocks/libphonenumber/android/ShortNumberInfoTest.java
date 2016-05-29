@@ -25,7 +25,8 @@ import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
  * @author Shaopeng Jia
  */
 public class ShortNumberInfoTest extends TestMetadataTestCase {
-  private static final ShortNumberInfo shortInfo = ShortNumberInfo.getInstance();
+  private static final ShortNumberInfo shortInfo =
+      PhoneNumberUtil.createInstance(new ResourceMetadataLoader(ShortNumberInfoTest.class)).getShortNumberInfo();
 
   public void testIsPossibleShortNumber() {
     PhoneNumber possibleNumber = new PhoneNumber();
