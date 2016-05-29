@@ -110,6 +110,21 @@ publishing {
 
         artifact tasks["javadocJar${variant.name.capitalize()}"]
         artifact tasks["sourcesJar${variant.name.capitalize()}"]
+
+        def dependencies = project.configurations["_${variant.baseName}Compile"].allDependencies
+        if (!dependencies.empty) {
+          pom.withXml {
+            asNode().appendNode("dependencies").with {
+              dependencies.each { dependency ->
+                appendNode("dependency").with {
+                  appendNode("groupId", dependency.group)
+                  appendNode("artifactId", dependency.name)
+                  appendNode("version", dependency.version)
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
