@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-  compile 'io.michaelrocks:libphonenumber-android:7.4.3'
+  compile 'io.michaelrocks:libphonenumber-android:7.4.4'
 }
 ```
 
