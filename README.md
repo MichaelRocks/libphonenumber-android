@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/MichaelRocks/libphonenumber-android.svg?branch=master)](https://travis-ci.org/MichaelRocks/libphonenumber-android)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-libphonenumber--android-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3676)
-[![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20558%20%7C%20deps:%20441-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A7.5.1)
+[![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20562%20%7C%20deps:%20441-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A7.5.1)
 
 libphonenumber-android
 ======
