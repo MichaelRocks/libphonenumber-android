@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2014 The Libphonenumber Authors
- * Copyright (C) 2016 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +23,8 @@ import java.io.InputStream;
  */
 public interface MetadataLoader {
   /**
-   * Returns an input stream corresponding to the metadata to load.
+   * Returns an input stream corresponding to the metadata to load. This method may be called
+   * concurrently so implementations must be thread-safe.
    *
    * @param metadataFileName File name (including path) of metadata to load. File path is an
    *     absolute class path like /io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProto.
