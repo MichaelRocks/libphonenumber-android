@@ -178,14 +178,16 @@ final class MultiFileMetadataSourceImpl implements MetadataSource {
       throw new IllegalStateException("missing metadata: " + fileName);
     }
     PhoneMetadataCollection metadataCollection = loadMetadataAndCloseInput(source);
-    PhoneMetadata[] metadataList = metadataCollection.metadata;
-    if (metadataList.length == 0) {
+    PhoneMetadata[] metadatas = metadataCollection.metadata;
+    if (metadatas.length == 0) {
+      // Sanity check; this should not happen since we only load things based on the expectation
+      // that they are present, by checking the map of available data first.
       throw new IllegalStateException("empty metadata: " + fileName);
     }
-    if (metadataList.length > 1) {
+    if (metadatas.length > 1) {
       LOGGER.log(Level.WARNING, "invalid metadata (too many entries): " + fileName);
     }
-    PhoneMetadata metadata = metadataList[0];
+    PhoneMetadata metadata = metadatas[0];
     PhoneMetadata oldValue = map.putIfAbsent(key, metadata);
     return (oldValue != null) ? oldValue : metadata;
   }

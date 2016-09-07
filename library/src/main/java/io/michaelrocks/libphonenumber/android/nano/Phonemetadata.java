@@ -207,6 +207,12 @@ public interface Phonemetadata {
     // optional string possible_number_pattern = 3;
     public String possibleNumberPattern;
 
+    // repeated int32 possible_length = 9;
+    public int[] possibleLength;
+
+    // repeated int32 possible_length_local_only = 10;
+    public int[] possibleLengthLocalOnly;
+
     // optional string example_number = 6;
     public String exampleNumber;
 
@@ -217,6 +223,8 @@ public interface Phonemetadata {
     public PhoneNumberDesc clear() {
       nationalNumberPattern = "";
       possibleNumberPattern = "";
+      possibleLength = com.google.protobuf.nano.WireFormatNano.EMPTY_INT_ARRAY;
+      possibleLengthLocalOnly = com.google.protobuf.nano.WireFormatNano.EMPTY_INT_ARRAY;
       exampleNumber = "";
       cachedSize = -1;
       return this;
@@ -233,6 +241,16 @@ public interface Phonemetadata {
       }
       if (!this.exampleNumber.equals("")) {
         output.writeString(6, this.exampleNumber);
+      }
+      if (this.possibleLength != null && this.possibleLength.length > 0) {
+        for (int i = 0; i < this.possibleLength.length; i++) {
+          output.writeInt32(9, this.possibleLength[i]);
+        }
+      }
+      if (this.possibleLengthLocalOnly != null && this.possibleLengthLocalOnly.length > 0) {
+        for (int i = 0; i < this.possibleLengthLocalOnly.length; i++) {
+          output.writeInt32(10, this.possibleLengthLocalOnly[i]);
+        }
       }
       super.writeTo(output);
     }
@@ -251,6 +269,26 @@ public interface Phonemetadata {
       if (!this.exampleNumber.equals("")) {
         size += com.google.protobuf.nano.CodedOutputByteBufferNano
             .computeStringSize(6, this.exampleNumber);
+      }
+      if (this.possibleLength != null && this.possibleLength.length > 0) {
+        int dataSize = 0;
+        for (int i = 0; i < this.possibleLength.length; i++) {
+          int element = this.possibleLength[i];
+          dataSize += com.google.protobuf.nano.CodedOutputByteBufferNano
+              .computeInt32SizeNoTag(element);
+        }
+        size += dataSize;
+        size += 1 * this.possibleLength.length;
+      }
+      if (this.possibleLengthLocalOnly != null && this.possibleLengthLocalOnly.length > 0) {
+        int dataSize = 0;
+        for (int i = 0; i < this.possibleLengthLocalOnly.length; i++) {
+          int element = this.possibleLengthLocalOnly[i];
+          dataSize += com.google.protobuf.nano.CodedOutputByteBufferNano
+              .computeInt32SizeNoTag(element);
+        }
+        size += dataSize;
+        size += 1 * this.possibleLengthLocalOnly.length;
       }
       return size;
     }
@@ -280,6 +318,86 @@ public interface Phonemetadata {
           }
           case 50: {
             this.exampleNumber = input.readString();
+            break;
+          }
+          case 72: {
+            int arrayLength = com.google.protobuf.nano.WireFormatNano
+                .getRepeatedFieldArrayLength(input, 72);
+            int i = this.possibleLength == null ? 0 : this.possibleLength.length;
+            int[] newArray = new int[i + arrayLength];
+            if (i != 0) {
+              System.arraycopy(this.possibleLength, 0, newArray, 0, i);
+            }
+            for (; i < newArray.length - 1; i++) {
+              newArray[i] = input.readInt32();
+              input.readTag();
+            }
+            // Last one without readTag.
+            newArray[i] = input.readInt32();
+            this.possibleLength = newArray;
+            break;
+          }
+          case 74: {
+            int length = input.readRawVarint32();
+            int limit = input.pushLimit(length);
+            // First pass to compute array length.
+            int arrayLength = 0;
+            int startPos = input.getPosition();
+            while (input.getBytesUntilLimit() > 0) {
+              input.readInt32();
+              arrayLength++;
+            }
+            input.rewindToPosition(startPos);
+            int i = this.possibleLength == null ? 0 : this.possibleLength.length;
+            int[] newArray = new int[i + arrayLength];
+            if (i != 0) {
+              System.arraycopy(this.possibleLength, 0, newArray, 0, i);
+            }
+            for (; i < newArray.length; i++) {
+              newArray[i] = input.readInt32();
+            }
+            this.possibleLength = newArray;
+            input.popLimit(limit);
+            break;
+          }
+          case 80: {
+            int arrayLength = com.google.protobuf.nano.WireFormatNano
+                .getRepeatedFieldArrayLength(input, 80);
+            int i = this.possibleLengthLocalOnly == null ? 0 : this.possibleLengthLocalOnly.length;
+            int[] newArray = new int[i + arrayLength];
+            if (i != 0) {
+              System.arraycopy(this.possibleLengthLocalOnly, 0, newArray, 0, i);
+            }
+            for (; i < newArray.length - 1; i++) {
+              newArray[i] = input.readInt32();
+              input.readTag();
+            }
+            // Last one without readTag.
+            newArray[i] = input.readInt32();
+            this.possibleLengthLocalOnly = newArray;
+            break;
+          }
+          case 82: {
+            int length = input.readRawVarint32();
+            int limit = input.pushLimit(length);
+            // First pass to compute array length.
+            int arrayLength = 0;
+            int startPos = input.getPosition();
+            while (input.getBytesUntilLimit() > 0) {
+              input.readInt32();
+              arrayLength++;
+            }
+            input.rewindToPosition(startPos);
+            int i = this.possibleLengthLocalOnly == null ? 0 : this.possibleLengthLocalOnly.length;
+            int[] newArray = new int[i + arrayLength];
+            if (i != 0) {
+              System.arraycopy(this.possibleLengthLocalOnly, 0, newArray, 0, i);
+            }
+            for (; i < newArray.length; i++) {
+              newArray[i] = input.readInt32();
+            }
+            this.possibleLengthLocalOnly = newArray;
+            input.popLimit(limit);
             break;
           }
         }
@@ -316,52 +434,52 @@ public interface Phonemetadata {
     }
 
     // optional .i18n.phonenumbers.PhoneNumberDesc general_desc = 1;
-    public PhoneNumberDesc generalDesc;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc generalDesc;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc fixed_line = 2;
-    public PhoneNumberDesc fixedLine;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc fixedLine;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc mobile = 3;
-    public PhoneNumberDesc mobile;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc mobile;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc toll_free = 4;
-    public PhoneNumberDesc tollFree;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc tollFree;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc premium_rate = 5;
-    public PhoneNumberDesc premiumRate;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc premiumRate;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc shared_cost = 6;
-    public PhoneNumberDesc sharedCost;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc sharedCost;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc personal_number = 7;
-    public PhoneNumberDesc personalNumber;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc personalNumber;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc voip = 8;
-    public PhoneNumberDesc voip;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc voip;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc pager = 21;
-    public PhoneNumberDesc pager;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc pager;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc uan = 25;
-    public PhoneNumberDesc uan;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc uan;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc emergency = 27;
-    public PhoneNumberDesc emergency;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc emergency;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc voicemail = 28;
-    public PhoneNumberDesc voicemail;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc voicemail;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc short_code = 29;
-    public PhoneNumberDesc shortCode;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc shortCode;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc standard_rate = 30;
-    public PhoneNumberDesc standardRate;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc standardRate;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc carrier_specific = 31;
-    public PhoneNumberDesc carrierSpecific;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc carrierSpecific;
 
     // optional .i18n.phonenumbers.PhoneNumberDesc no_international_dialling = 24;
-    public PhoneNumberDesc noInternationalDialling;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc noInternationalDialling;
 
     // required string id = 9;
     public String id;
@@ -391,10 +509,10 @@ public interface Phonemetadata {
     public boolean sameMobileAndFixedLinePattern;
 
     // repeated .i18n.phonenumbers.NumberFormat number_format = 19;
-    public NumberFormat[] numberFormat;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat[] numberFormat;
 
     // repeated .i18n.phonenumbers.NumberFormat intl_number_format = 20;
-    public NumberFormat[] intlNumberFormat;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat[] intlNumberFormat;
 
     // optional bool main_country_for_code = 22 [default = false];
     public boolean mainCountryForCode;
@@ -438,8 +556,8 @@ public interface Phonemetadata {
       nationalPrefixForParsing = "";
       nationalPrefixTransformRule = "";
       sameMobileAndFixedLinePattern = false;
-      numberFormat = NumberFormat.emptyArray();
-      intlNumberFormat = NumberFormat.emptyArray();
+      numberFormat = io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat.emptyArray();
+      intlNumberFormat = io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat.emptyArray();
       mainCountryForCode = false;
       leadingDigits = "";
       leadingZeroPossible = false;
@@ -502,7 +620,7 @@ public interface Phonemetadata {
       }
       if (this.numberFormat != null && this.numberFormat.length > 0) {
         for (int i = 0; i < this.numberFormat.length; i++) {
-          NumberFormat element = this.numberFormat[i];
+          io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat element = this.numberFormat[i];
           if (element != null) {
             output.writeMessage(19, element);
           }
@@ -510,7 +628,7 @@ public interface Phonemetadata {
       }
       if (this.intlNumberFormat != null && this.intlNumberFormat.length > 0) {
         for (int i = 0; i < this.intlNumberFormat.length; i++) {
-          NumberFormat element = this.intlNumberFormat[i];
+          io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat element = this.intlNumberFormat[i];
           if (element != null) {
             output.writeMessage(20, element);
           }
@@ -626,7 +744,7 @@ public interface Phonemetadata {
       }
       if (this.numberFormat != null && this.numberFormat.length > 0) {
         for (int i = 0; i < this.numberFormat.length; i++) {
-          NumberFormat element = this.numberFormat[i];
+          io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat element = this.numberFormat[i];
           if (element != null) {
             size += com.google.protobuf.nano.CodedOutputByteBufferNano
               .computeMessageSize(19, element);
@@ -635,7 +753,7 @@ public interface Phonemetadata {
       }
       if (this.intlNumberFormat != null && this.intlNumberFormat.length > 0) {
         for (int i = 0; i < this.intlNumberFormat.length; i++) {
-          NumberFormat element = this.intlNumberFormat[i];
+          io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat element = this.intlNumberFormat[i];
           if (element != null) {
             size += com.google.protobuf.nano.CodedOutputByteBufferNano
               .computeMessageSize(20, element);
@@ -710,56 +828,56 @@ public interface Phonemetadata {
           }
           case 10: {
             if (this.generalDesc == null) {
-              this.generalDesc = new PhoneNumberDesc();
+              this.generalDesc = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.generalDesc);
             break;
           }
           case 18: {
             if (this.fixedLine == null) {
-              this.fixedLine = new PhoneNumberDesc();
+              this.fixedLine = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.fixedLine);
             break;
           }
           case 26: {
             if (this.mobile == null) {
-              this.mobile = new PhoneNumberDesc();
+              this.mobile = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.mobile);
             break;
           }
           case 34: {
             if (this.tollFree == null) {
-              this.tollFree = new PhoneNumberDesc();
+              this.tollFree = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.tollFree);
             break;
           }
           case 42: {
             if (this.premiumRate == null) {
-              this.premiumRate = new PhoneNumberDesc();
+              this.premiumRate = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.premiumRate);
             break;
           }
           case 50: {
             if (this.sharedCost == null) {
-              this.sharedCost = new PhoneNumberDesc();
+              this.sharedCost = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.sharedCost);
             break;
           }
           case 58: {
             if (this.personalNumber == null) {
-              this.personalNumber = new PhoneNumberDesc();
+              this.personalNumber = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.personalNumber);
             break;
           }
           case 66: {
             if (this.voip == null) {
-              this.voip = new PhoneNumberDesc();
+              this.voip = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.voip);
             break;
@@ -804,18 +922,18 @@ public interface Phonemetadata {
             int arrayLength = com.google.protobuf.nano.WireFormatNano
                 .getRepeatedFieldArrayLength(input, 154);
             int i = this.numberFormat == null ? 0 : this.numberFormat.length;
-            NumberFormat[] newArray =
-                new NumberFormat[i + arrayLength];
+            io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat[] newArray =
+                new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat[i + arrayLength];
             if (i != 0) {
               System.arraycopy(this.numberFormat, 0, newArray, 0, i);
             }
             for (; i < newArray.length - 1; i++) {
-              newArray[i] = new NumberFormat();
+              newArray[i] = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat();
               input.readMessage(newArray[i]);
               input.readTag();
             }
             // Last one without readTag.
-            newArray[i] = new NumberFormat();
+            newArray[i] = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat();
             input.readMessage(newArray[i]);
             this.numberFormat = newArray;
             break;
@@ -824,25 +942,25 @@ public interface Phonemetadata {
             int arrayLength = com.google.protobuf.nano.WireFormatNano
                 .getRepeatedFieldArrayLength(input, 162);
             int i = this.intlNumberFormat == null ? 0 : this.intlNumberFormat.length;
-            NumberFormat[] newArray =
-                new NumberFormat[i + arrayLength];
+            io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat[] newArray =
+                new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat[i + arrayLength];
             if (i != 0) {
               System.arraycopy(this.intlNumberFormat, 0, newArray, 0, i);
             }
             for (; i < newArray.length - 1; i++) {
-              newArray[i] = new NumberFormat();
+              newArray[i] = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat();
               input.readMessage(newArray[i]);
               input.readTag();
             }
             // Last one without readTag.
-            newArray[i] = new NumberFormat();
+            newArray[i] = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat();
             input.readMessage(newArray[i]);
             this.intlNumberFormat = newArray;
             break;
           }
           case 170: {
             if (this.pager == null) {
-              this.pager = new PhoneNumberDesc();
+              this.pager = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.pager);
             break;
@@ -857,14 +975,14 @@ public interface Phonemetadata {
           }
           case 194: {
             if (this.noInternationalDialling == null) {
-              this.noInternationalDialling = new PhoneNumberDesc();
+              this.noInternationalDialling = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.noInternationalDialling);
             break;
           }
           case 202: {
             if (this.uan == null) {
-              this.uan = new PhoneNumberDesc();
+              this.uan = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.uan);
             break;
@@ -875,35 +993,35 @@ public interface Phonemetadata {
           }
           case 218: {
             if (this.emergency == null) {
-              this.emergency = new PhoneNumberDesc();
+              this.emergency = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.emergency);
             break;
           }
           case 226: {
             if (this.voicemail == null) {
-              this.voicemail = new PhoneNumberDesc();
+              this.voicemail = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.voicemail);
             break;
           }
           case 234: {
             if (this.shortCode == null) {
-              this.shortCode = new PhoneNumberDesc();
+              this.shortCode = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.shortCode);
             break;
           }
           case 242: {
             if (this.standardRate == null) {
-              this.standardRate = new PhoneNumberDesc();
+              this.standardRate = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.standardRate);
             break;
           }
           case 250: {
             if (this.carrierSpecific == null) {
-              this.carrierSpecific = new PhoneNumberDesc();
+              this.carrierSpecific = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc();
             }
             input.readMessage(this.carrierSpecific);
             break;
@@ -946,14 +1064,14 @@ public interface Phonemetadata {
     }
 
     // repeated .i18n.phonenumbers.PhoneMetadata metadata = 1;
-    public PhoneMetadata[] metadata;
+    public io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata[] metadata;
 
     public PhoneMetadataCollection() {
       clear();
     }
 
     public PhoneMetadataCollection clear() {
-      metadata = PhoneMetadata.emptyArray();
+      metadata = io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata.emptyArray();
       cachedSize = -1;
       return this;
     }
@@ -963,7 +1081,7 @@ public interface Phonemetadata {
         throws java.io.IOException {
       if (this.metadata != null && this.metadata.length > 0) {
         for (int i = 0; i < this.metadata.length; i++) {
-          PhoneMetadata element = this.metadata[i];
+          io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata element = this.metadata[i];
           if (element != null) {
             output.writeMessage(1, element);
           }
@@ -977,7 +1095,7 @@ public interface Phonemetadata {
       int size = super.computeSerializedSize();
       if (this.metadata != null && this.metadata.length > 0) {
         for (int i = 0; i < this.metadata.length; i++) {
-          PhoneMetadata element = this.metadata[i];
+          io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata element = this.metadata[i];
           if (element != null) {
             size += com.google.protobuf.nano.CodedOutputByteBufferNano
               .computeMessageSize(1, element);
@@ -1006,18 +1124,18 @@ public interface Phonemetadata {
             int arrayLength = com.google.protobuf.nano.WireFormatNano
                 .getRepeatedFieldArrayLength(input, 10);
             int i = this.metadata == null ? 0 : this.metadata.length;
-            PhoneMetadata[] newArray =
-                new PhoneMetadata[i + arrayLength];
+            io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata[] newArray =
+                new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata[i + arrayLength];
             if (i != 0) {
               System.arraycopy(this.metadata, 0, newArray, 0, i);
             }
             for (; i < newArray.length - 1; i++) {
-              newArray[i] = new PhoneMetadata();
+              newArray[i] = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata();
               input.readMessage(newArray[i]);
               input.readTag();
             }
             // Last one without readTag.
-            newArray[i] = new PhoneMetadata();
+            newArray[i] = new io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata();
             input.readMessage(newArray[i]);
             this.metadata = newArray;
             break;
