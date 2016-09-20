@@ -2,8 +2,12 @@ language: android
 
 android:
   components:
-    - build-tools-23.0.0
-    - android-23
+    - tools
+    - tools
+    - platform-tools
+    - build-tools-24.0.0
+    - android-24
+    - extra
     - extra-android-m2repository
 
 script:
