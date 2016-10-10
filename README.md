@@ -9,7 +9,7 @@ Android port of Google's [libphonenumber][1].
 Why?
 ----
 Google's libphonenumber is a great library but it has to major flaws when used on Android:
- 1. It adds about [7k methods][2] to a final dex.
+ 1. ~~It adds about [7k methods][2] to a final dex.~~ Not anymore, since 7.7.0.
  2. Internally the library uses `Class.getResourceAsStream()` method,
  which is [very slow on Android][3].
 
