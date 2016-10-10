@@ -17,9 +17,6 @@
 
 package io.michaelrocks.libphonenumber.android;
 
-import com.google.protobuf.nano.CodedInputByteBufferNano;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -32,8 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata;
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadataCollection;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadataCollection;
 
 /**
  * Implementation of {@link MetadataSource} that reads from multiple resource files.
@@ -178,16 +175,16 @@ final class MultiFileMetadataSourceImpl implements MetadataSource {
       throw new IllegalStateException("missing metadata: " + fileName);
     }
     PhoneMetadataCollection metadataCollection = loadMetadataAndCloseInput(source);
-    PhoneMetadata[] metadatas = metadataCollection.metadata;
-    if (metadatas.length == 0) {
+    List<PhoneMetadata> metadataList = metadataCollection.getMetadataList();
+    if (metadataList.isEmpty()) {
       // Sanity check; this should not happen since we only load things based on the expectation
       // that they are present, by checking the map of available data first.
       throw new IllegalStateException("empty metadata: " + fileName);
     }
-    if (metadatas.length > 1) {
+    if (metadataList.size() > 1) {
       LOGGER.log(Level.WARNING, "invalid metadata (too many entries): " + fileName);
     }
-    PhoneMetadata metadata = metadatas[0];
+    PhoneMetadata metadata = metadataList.get(0);
     PhoneMetadata oldValue = map.putIfAbsent(key, metadata);
     return (oldValue != null) ? oldValue : metadata;
   }
@@ -196,8 +193,8 @@ final class MultiFileMetadataSourceImpl implements MetadataSource {
     try {
       PhoneMetadataCollection alternateFormatsMetadata =
           loadMetadataFromFile(alternateFormatsFilePrefix + "_" + countryCallingCode);
-      for (PhoneMetadata metadata : alternateFormatsMetadata.metadata) {
-        alternateFormats.put(metadata.countryCode, metadata);
+      for (PhoneMetadata metadata : alternateFormatsMetadata.getMetadataList()) {
+        alternateFormats.put(metadata.getCountryCode(), metadata);
       }
     } catch (IOException e) {
       LOGGER.log(Level.WARNING, e.toString());
@@ -208,7 +205,7 @@ final class MultiFileMetadataSourceImpl implements MetadataSource {
     try {
       PhoneMetadataCollection shortNumbersMetadata =
           loadMetadataFromFile(shortNumberFilePrefix + "_" + regionCode);
-      for (PhoneMetadata metadata : shortNumbersMetadata.metadata) {
+      for (PhoneMetadata metadata : shortNumbersMetadata.getMetadataList()) {
         shortNumbers.put(regionCode, metadata);
       }
     } catch (IOException e) {
@@ -226,37 +223,37 @@ final class MultiFileMetadataSourceImpl implements MetadataSource {
   }
 
   /**
-   * Loads and returns the metadata protocol buffer from the given stream and closes the stream.
+   * Loads and returns the metadata object from the given stream and closes the stream.
+   *
+   * @param source  the non-null stream from which metadata is to be read
+   * @return  the loaded metadata object
    */
-  private static PhoneMetadataCollection loadMetadataAndCloseInput(InputStream source) {
+  static PhoneMetadataCollection loadMetadataAndCloseInput(InputStream source) {
+    ObjectInputStream ois = null;
     try {
-      // Read in metadata for each region.
+      try {
+        ois = new ObjectInputStream(source);
+      } catch (IOException e) {
+        throw new RuntimeException("cannot load/parse metadata", e);
+      }
       PhoneMetadataCollection metadataCollection = new PhoneMetadataCollection();
-      metadataCollection.mergeFrom(convertStreamToByteBuffer(
-          new ObjectInputStream(source), MULTI_FILE_BUFFER_SIZE));
+      try {
+        metadataCollection.readExternal(ois);
+      } catch (IOException e) {
+        throw new RuntimeException("cannot load/parse metadata", e);
+      }
       return metadataCollection;
-    } catch (IOException e) {
-      throw new RuntimeException("cannot load/parse metadata", e);
     } finally {
       try {
-        source.close();
+        if (ois != null) {
+          // This will close all underlying streams as well, including source.
+          ois.close();
+        } else {
+          source.close();
+        }
       } catch (IOException e) {
         LOGGER.log(Level.WARNING, "error closing input stream (ignored)", e);
       }
     }
-  }
-
-  static CodedInputByteBufferNano convertStreamToByteBuffer(ObjectInputStream in, int bufferSize)
-      throws IOException {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    int nRead;
-    byte[] data = new byte[bufferSize];
-
-    while ((nRead = in.read(data, 0, bufferSize)) != -1) {
-      outputStream.write(data, 0, nRead);
-    }
-
-    outputStream.flush();
-    return CodedInputByteBufferNano.newInstance(outputStream.toByteArray());
   }
 }

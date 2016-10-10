@@ -24,7 +24,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 group 'io.michaelrocks'
-version '7.6.1'
+version '7.7.0'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
@@ -53,8 +53,6 @@ android {
 }
 
 dependencies {
-  compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
-
   testCompile 'junit:junit:4.12'
 }
 

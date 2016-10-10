@@ -19,8 +19,8 @@ package io.michaelrocks.libphonenumber.android.internal;
 
 import java.util.regex.Matcher;
 
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneNumberDesc;
 import io.michaelrocks.libphonenumber.android.RegexCache;
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc;
 
 /**
  * Implementation of the matcher API using the regular expressions in the PhoneNumberDesc
@@ -39,7 +39,7 @@ public final class RegexBasedMatcher implements MatcherApi {
   public boolean matchesNationalNumber(String nationalNumber, PhoneNumberDesc numberDesc,
       boolean allowPrefixMatch) {
     Matcher nationalNumberPatternMatcher = regexCache.getPatternForRegex(
-        numberDesc.nationalNumberPattern).matcher(nationalNumber);
+        numberDesc.getNationalNumberPattern()).matcher(nationalNumber);
     return nationalNumberPatternMatcher.matches()
         || (allowPrefixMatch && nationalNumberPatternMatcher.lookingAt());
   }
@@ -47,7 +47,7 @@ public final class RegexBasedMatcher implements MatcherApi {
   // @Override
   public boolean matchesPossibleNumber(String nationalNumber, PhoneNumberDesc numberDesc) {
     Matcher possibleNumberPatternMatcher = regexCache.getPatternForRegex(
-        numberDesc.possibleNumberPattern).matcher(nationalNumber);
+        numberDesc.getPossibleNumberPattern()).matcher(nationalNumber);
     return possibleNumberPatternMatcher.matches();
   }
 }

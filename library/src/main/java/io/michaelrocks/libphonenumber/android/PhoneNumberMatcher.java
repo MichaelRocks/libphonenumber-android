@@ -23,10 +23,13 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil.Leniency;
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil.MatchType;
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil.PhoneNumberFormat;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.NumberFormat;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber.CountryCodeSource;
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.NumberFormat;
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata;
 
 /**
  * A stateful class that finds and extracts telephone numbers from {@linkplain CharSequence text}.
@@ -194,7 +197,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
    */
   private final String preferredRegion;
   /** The degree of validation requested. */
-  private final PhoneNumberUtil.Leniency leniency;
+  private final Leniency leniency;
   /** The maximum number of retries after matching an invalid number. */
   private long maxTries;
 
@@ -220,7 +223,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
    *                  This is to cover degenerate cases where the text has a lot of false positives
    *                  in it. Must be {@code >= 0}.
    */
-  PhoneNumberMatcher(PhoneNumberUtil util, CharSequence text, String country, PhoneNumberUtil.Leniency leniency,
+  PhoneNumberMatcher(PhoneNumberUtil util, CharSequence text, String country, Leniency leniency,
       long maxTries) {
 
     if ((util == null) || (leniency == null)) {
@@ -391,7 +394,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
 
       // If leniency is set to VALID or stricter, we also want to skip numbers that are surrounded
       // by Latin alphabetic characters, to skip cases like abc8005001234 or 8005001234def.
-      if (leniency.compareTo(PhoneNumberUtil.Leniency.VALID) >= 0) {
+      if (leniency.compareTo(Leniency.VALID) >= 0) {
         // If the candidate is not at the start of the text, and does not start with phone-number
         // punctuation, check the previous character.
         if (offset > 0 && !LEAD_CLASS.matcher(candidate).lookingAt()) {
@@ -463,7 +466,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
      *     formatted this number
      */
     boolean checkGroups(PhoneNumberUtil util, PhoneNumber number,
-        StringBuilder normalizedCandidate, String[] expectedNumberGroups);
+                        StringBuilder normalizedCandidate, String[] expectedNumberGroups);
   }
 
   static boolean allNumberGroupsRemainGrouped(PhoneNumberUtil util,
@@ -551,7 +554,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
                                                   NumberFormat formattingPattern) {
     if (formattingPattern == null) {
       // This will be in the format +CC-DG;ext=EXT where DG represents groups of digits.
-      String rfc3966Format = util.format(number, PhoneNumberUtil.PhoneNumberFormat.RFC3966);
+      String rfc3966Format = util.format(number, PhoneNumberFormat.RFC3966);
       // We remove the extension part from the formatted string before splitting it into different
       // groups.
       int endIndex = rfc3966Format.indexOf(';');
@@ -565,7 +568,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
       // We format the NSN only, and split that according to the separator.
       String nationalSignificantNumber = util.getNationalSignificantNumber(number);
       return util.formatNsnUsingPattern(nationalSignificantNumber,
-                                        formattingPattern, PhoneNumberUtil.PhoneNumberFormat.RFC3966).split("-");
+                                        formattingPattern, PhoneNumberFormat.RFC3966).split("-");
     }
   }
 
@@ -583,7 +586,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     PhoneMetadata alternateFormats =
         util.getMetadataSource().getAlternateFormatsForCountry(number.getCountryCode());
     if (alternateFormats != null) {
-      for (NumberFormat alternateFormat : alternateFormats.numberFormat) {
+      for (NumberFormat alternateFormat : alternateFormats.numberFormats()) {
         formattedNumberGroups = getNationalNumberGroups(util, number, alternateFormat);
         if (checker.checkGroups(util, number, normalizedCandidate, formattedNumberGroups)) {
           return true;
@@ -634,7 +637,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
           // This is the carrier code case, in which the 'X's always precede the national
           // significant number.
           index++;
-          if (util.isNumberMatch(number, candidate.substring(index)) != PhoneNumberUtil.MatchType.NSN_MATCH) {
+          if (util.isNumberMatch(number, candidate.substring(index)) != MatchType.NSN_MATCH) {
             return false;
           }
         // This is the extension sign case, in which the 'x' or 'X' should always precede the
@@ -663,17 +666,17 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     // Check if a national prefix should be present when formatting this number.
     String nationalNumber = util.getNationalSignificantNumber(number);
     NumberFormat formatRule =
-        util.chooseFormattingPatternForNumber(metadata.numberFormat, nationalNumber);
+        util.chooseFormattingPatternForNumber(metadata.numberFormats(), nationalNumber);
     // To do this, we check that a national prefix formatting rule was present and that it wasn't
     // just the first-group symbol ($1) with punctuation.
-    if ((formatRule != null) && formatRule.nationalPrefixFormattingRule.length() > 0) {
-      if (formatRule.nationalPrefixOptionalWhenFormatting) {
+    if ((formatRule != null) && formatRule.getNationalPrefixFormattingRule().length() > 0) {
+      if (formatRule.isNationalPrefixOptionalWhenFormatting()) {
         // The national-prefix is optional in these cases, so we don't need to check if it was
         // present.
         return true;
       }
       if (PhoneNumberUtil.formattingRuleHasFirstGroupOnly(
-          formatRule.nationalPrefixFormattingRule)) {
+          formatRule.getNationalPrefixFormattingRule())) {
         // National Prefix not needed for this number.
         return true;
       }

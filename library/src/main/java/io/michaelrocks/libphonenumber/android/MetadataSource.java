@@ -17,7 +17,7 @@
 
 package io.michaelrocks.libphonenumber.android;
 
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
 
 /**
  * A source for phone metadata for all regions.

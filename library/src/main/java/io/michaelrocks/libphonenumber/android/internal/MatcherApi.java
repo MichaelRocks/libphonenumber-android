@@ -17,7 +17,7 @@
 
 package io.michaelrocks.libphonenumber.android.internal;
 
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneNumberDesc;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneNumberDesc;
 
 /**
  * Internal phonenumber matching API used to isolate the underlying implementation of the
