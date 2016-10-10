@@ -53,8 +53,6 @@ android {
 }
 
 dependencies {
-  compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
-
   testCompile 'junit:junit:4.12'
 }
 

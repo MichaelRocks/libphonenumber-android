@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.michaelrocks.libphonenumber.android.nano.Phonemetadata.PhoneMetadata;
+import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
 
 /**
  * Unit tests for MultiFileMetadataSourceImpl.java.
@@ -73,7 +73,7 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
     // We should have some data for Germany.
     PhoneMetadata germanyAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(49);
     assertNotNull(germanyAlternateFormats);
-    assertTrue(germanyAlternateFormats.numberFormat.length > 0);
+    assertTrue(germanyAlternateFormats.numberFormatSize() > 0);
   }
 
   public void testShortNumberMetadataContainsData() throws Exception {
@@ -83,7 +83,7 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
     PhoneMetadata franceShortNumberMetadata =
         multiFileMetadataSource.getShortNumberMetadataForRegion("FR");
     assertNotNull(franceShortNumberMetadata);
-    assertTrue(franceShortNumberMetadata.shortCode != null);
+    assertTrue(franceShortNumberMetadata.hasShortCode());
   }
 
   public void testAlternateFormatsFailsGracefully() throws Exception {
