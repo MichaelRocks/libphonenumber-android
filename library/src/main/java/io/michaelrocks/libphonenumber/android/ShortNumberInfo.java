@@ -58,7 +58,7 @@ public class ShortNumberInfo {
     TOLL_FREE,
     STANDARD_RATE,
     PREMIUM_RATE,
-    UNKNOWN_COST
+    UNKNOWN_COST;
   }
 
   private final MetadataSource metadataSource;
