@@ -3,7 +3,7 @@
 [![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20674%20-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A7.7.2)
 
 libphonenumber-android
-======
+======================
 Android port of Google's [libphonenumber][1].
 
 Why?
