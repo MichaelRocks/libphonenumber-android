@@ -113,8 +113,8 @@ public final class PhoneNumberMatch {
       return false;
     }
     PhoneNumberMatch other = (PhoneNumberMatch) obj;
-    return rawString.equals(other.rawString) && (start == other.start) &&
-        number.equals(other.number);
+    return rawString.equals(other.rawString) && (start == other.start)
+        && number.equals(other.number);
   }
 
   @Override
