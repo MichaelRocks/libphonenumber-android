@@ -4,7 +4,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.2'
+    classpath 'com.android.tools.build:gradle:2.2.3'
   }
 }
 
@@ -20,7 +20,7 @@ task clean(type: Delete) {
 
 ext {
   projectCompileSdkVersion = 25
-  projectBuildToolsVersion = '25.0.0'
+  projectBuildToolsVersion = '25.0.2'
   projectMinSdkVersion = 9
   projectTargetSdkVersion = 25
 }

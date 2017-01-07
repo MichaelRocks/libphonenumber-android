@@ -64,8 +64,7 @@ public class ShortNumberInfo {
   private final MetadataSource metadataSource;
 
   // MatcherApi supports the basic matching method for checking if a given national number matches
-  // a national number patten or a possible number patten defined in the given
-  // {@code PhoneNumberDesc}.
+  // a national number pattern defined in the given {@code PhoneNumberDesc}.
   private final MatcherApi matcherApi;
 
   // A mapping from a country calling code to the region codes which denote the region represented
@@ -125,7 +124,7 @@ public class ShortNumberInfo {
     if (phoneMetadata == null) {
       return false;
     }
-    return matcherApi.matchesPossibleNumber(shortNumber, phoneMetadata.getGeneralDesc());
+    return phoneMetadata.getGeneralDesc().getPossibleLengthList().contains(shortNumber.length());
   }
 
   /**
@@ -145,8 +144,8 @@ public class ShortNumberInfo {
     if (phoneMetadata == null) {
       return false;
     }
-    return matcherApi.matchesPossibleNumber(getNationalSignificantNumber(number),
-        phoneMetadata.getGeneralDesc());
+    int numberLength = getNationalSignificantNumber(number).length();
+    return phoneMetadata.getGeneralDesc().getPossibleLengthList().contains(numberLength);
   }
 
   /**
@@ -160,13 +159,13 @@ public class ShortNumberInfo {
    */
   public boolean isPossibleShortNumber(PhoneNumber number) {
     List<String> regionCodes = getRegionCodesForCountryCode(number.getCountryCode());
-    String shortNumber = getNationalSignificantNumber(number);
+    int shortNumberLength = getNationalSignificantNumber(number).length();
     for (String region : regionCodes) {
       PhoneMetadata phoneMetadata = metadataSource.getShortNumberMetadataForRegion(region);
       if (phoneMetadata == null) {
         continue;
       }
-      if (matcherApi.matchesPossibleNumber(shortNumber, phoneMetadata.getGeneralDesc())) {
+      if (phoneMetadata.getGeneralDesc().getPossibleLengthList().contains(shortNumberLength)) {
         return true;
       }
     }
@@ -285,6 +284,13 @@ public class ShortNumberInfo {
       return ShortNumberCost.UNKNOWN_COST;
     }
 
+    // The possible lengths are not present for a particular sub-type if they match the general
+    // description; for this reason, we check the possible lengths against the general description
+    // first to allow an early exit if possible.
+    if (!phoneMetadata.getGeneralDesc().getPossibleLengthList().contains(shortNumber.length())) {
+      return ShortNumberCost.UNKNOWN_COST;
+    }
+
     // The cost categories are tested in order of decreasing expense, since if for some reason the
     // patterns overlap the most expensive matching cost category should be returned.
     if (matchesPossibleNumberAndNationalNumber(shortNumber, phoneMetadata.getPremiumRate())) {
@@ -338,6 +344,13 @@ public class ShortNumberInfo {
     }
 
     String shortNumber = getNationalSignificantNumber(number);
+
+    // The possible lengths are not present for a particular sub-type if they match the general
+    // description; for this reason, we check the possible lengths against the general description
+    // first to allow an early exit if possible.
+    if (!phoneMetadata.getGeneralDesc().getPossibleLengthList().contains(shortNumber.length())) {
+      return ShortNumberCost.UNKNOWN_COST;
+    }
 
     // The cost categories are tested in order of decreasing expense, since if for some reason the
     // patterns overlap the most expensive matching cost category should be returned.
@@ -595,10 +608,13 @@ public class ShortNumberInfo {
   }
 
   // TODO: Once we have benchmarked ShortNumberInfo, consider if it is worth keeping
-  // this performance optimization, and if so move this into the matcher implementation.
+  // this performance optimization.
   private boolean matchesPossibleNumberAndNationalNumber(String number,
       PhoneNumberDesc numberDesc) {
-    return matcherApi.matchesPossibleNumber(number, numberDesc)
-        && matcherApi.matchesNationalNumber(number, numberDesc, false);
+    if (numberDesc.getPossibleLengthCount() > 0
+        && !numberDesc.getPossibleLengthList().contains(number.length())) {
+      return false;
+    }
+    return matcherApi.matchesNationalNumber(number, numberDesc, false);
   }
 }
