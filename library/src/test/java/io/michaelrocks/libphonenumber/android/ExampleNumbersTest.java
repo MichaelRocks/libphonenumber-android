@@ -38,9 +38,9 @@ import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
  */
 public class ExampleNumbersTest extends TestCase {
   private static final Logger logger = Logger.getLogger(ExampleNumbersTest.class.getName());
-  private PhoneNumberUtil phoneNumberUtil =
-      PhoneNumberUtil.createInstance(new ResourceMetadataLoader(ExampleNumbersTest.class));
-  private ShortNumberInfo shortNumberInfo = phoneNumberUtil.getShortNumberInfo();
+  private final MetadataSource metadataSource = new MultiFileMetadataSourceImpl(new ResourceMetadataLoader(getClass()));
+  private final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.createInstance(metadataSource);
+  private final ShortNumberInfo shortNumberInfo = phoneNumberUtil.getShortNumberInfo();
   private List<PhoneNumber> invalidCases = new ArrayList<PhoneNumber>();
   private List<PhoneNumber> wrongTypeCases = new ArrayList<PhoneNumber>();
 
@@ -240,7 +240,7 @@ public class ExampleNumbersTest extends TestCase {
     int wrongTypeCounter = 0;
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       PhoneNumberDesc desc =
-          PhoneNumberUtil.DEFAULT_METADATA_SOURCE.getShortNumberMetadataForRegion(regionCode).getEmergency();
+          metadataSource.getShortNumberMetadataForRegion(regionCode).getEmergency();
       if (desc.hasExampleNumber()) {
         String exampleNumber = desc.getExampleNumber();
         PhoneNumber phoneNumber = phoneNumberUtil.parse(exampleNumber, regionCode);
@@ -263,7 +263,7 @@ public class ExampleNumbersTest extends TestCase {
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       // Test the carrier-specific tag.
       PhoneNumberDesc desc =
-          PhoneNumberUtil.DEFAULT_METADATA_SOURCE.getShortNumberMetadataForRegion(regionCode).getCarrierSpecific();
+          metadataSource.getShortNumberMetadataForRegion(regionCode).getCarrierSpecific();
       if (desc.hasExampleNumber()) {
         String exampleNumber = desc.getExampleNumber();
         PhoneNumber carrierSpecificNumber = phoneNumberUtil.parse(exampleNumber, regionCode);

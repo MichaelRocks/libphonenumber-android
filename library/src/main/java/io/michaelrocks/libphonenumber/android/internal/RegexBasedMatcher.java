@@ -43,11 +43,4 @@ public final class RegexBasedMatcher implements MatcherApi {
     return nationalNumberPatternMatcher.matches()
         || (allowPrefixMatch && nationalNumberPatternMatcher.lookingAt());
   }
-
-  // @Override
-  public boolean matchesPossibleNumber(String nationalNumber, PhoneNumberDesc numberDesc) {
-    Matcher possibleNumberPatternMatcher = regexCache.getPatternForRegex(
-        numberDesc.getPossibleNumberPattern()).matcher(nationalNumber);
-    return possibleNumberPatternMatcher.matches();
-  }
 }
