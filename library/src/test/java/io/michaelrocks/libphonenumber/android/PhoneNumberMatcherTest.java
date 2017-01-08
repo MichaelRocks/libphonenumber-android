@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 The Libphonenumber Authors
- * Copyright (C) 2016 Michael Rozumyanskiy
+ * Copyright (C) 2017 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -982,6 +982,9 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
         "As I said on 03/10/2011, you may call me at ", ""));
     // With trailing numbers after a comma. The 45 should not be considered an extension.
     contextPairs.add(new NumberContext("", ", 45 days a year"));
+    // When matching we don't consider semicolon along with legitimate extension symbol to indicate
+    // an extension. The 7246433 should not be considered an extension.
+    contextPairs.add(new NumberContext("", ";x 7246433"));
      // With a postfix stripped off as it looks like the start of another number.
     contextPairs.add(new NumberContext("Call ", "/x12 more"));
 
