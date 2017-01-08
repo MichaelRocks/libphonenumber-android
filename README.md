@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/MichaelRocks/libphonenumber-android.svg?branch=master)](https://travis-ci.org/MichaelRocks/libphonenumber-android)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-libphonenumber--android-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3676)
-[![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20674%20-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A7.7.5)
+[![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20692%20-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A8.0.0)
 
 libphonenumber-android
 ======================
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-  compile 'io.michaelrocks:libphonenumber-android:7.7.5'
+  compile 'io.michaelrocks:libphonenumber-android:8.0.0'
 }
 ```
 
@@ -41,7 +41,7 @@ This library is not fully compatible with the original `libphonenumber`.
 
 License
 =======
-    Copyright 2016 Michael Rozumyanskiy
+    Copyright 2017 Michael Rozumyanskiy
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -56,5 +56,5 @@ License
     limitations under the License.
 
  [1]: https://github.com/googlei18n/libphonenumber
- [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A7.7.5
+ [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.0.0
  [3]: http://blog.nimbledroid.com/2016/04/06/slow-ClassLoader.getResourceAsStream.html
