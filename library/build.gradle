@@ -24,7 +24,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 group 'io.michaelrocks'
-version '7.7.4'
+version '7.7.5'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
