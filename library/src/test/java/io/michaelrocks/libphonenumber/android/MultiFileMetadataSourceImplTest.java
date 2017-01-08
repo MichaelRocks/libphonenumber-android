@@ -19,84 +19,47 @@ package io.michaelrocks.libphonenumber.android;
 
 import junit.framework.TestCase;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
 
 /**
  * Unit tests for MultiFileMetadataSourceImpl.java.
  */
 public class MultiFileMetadataSourceImplTest extends TestCase {
-  public MultiFileMetadataSourceImplTest() {}
+  private final MetadataLoader metadataLoader = new ResourceMetadataLoader(getClass());
+  private final MultiFileMetadataSourceImpl source =
+      new MultiFileMetadataSourceImpl(metadataLoader);
+  private final MultiFileMetadataSourceImpl missingFileSource =
+      new MultiFileMetadataSourceImpl("no/such/file", "no/such/file", "no/such/file", metadataLoader);
 
-  public void testGeographicalRegionMetadataLoadsCorrectly() {
-    ConcurrentHashMap<String, PhoneMetadata> map = new ConcurrentHashMap<String, PhoneMetadata>();
-    PhoneMetadata metadata = MultiFileMetadataSourceImpl.loadMetadataFromFile(
-        "CA", map, "/io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProtoForTesting",
-        new ResourceMetadataLoader());
-    assertEquals(metadata, map.get("CA"));
+  public void testGeoPhoneNumberMetadataLoadCorrectly() {
+    // We should have some data for the UAE.
+    PhoneMetadata uaeMetadata = source.getMetadataForRegion("AE");
+    assertEquals(uaeMetadata.getCountryCode(), 971);
+    assertTrue(uaeMetadata.hasGeneralDesc());
   }
 
-  public void testNonGeographicalRegionMetadataLoadsCorrectly() {
-    ConcurrentHashMap<Integer, PhoneMetadata> map = new ConcurrentHashMap<Integer, PhoneMetadata>();
-    PhoneMetadata metadata = MultiFileMetadataSourceImpl.loadMetadataFromFile(
-        800, map, "/io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProtoForTesting",
-        new ResourceMetadataLoader());
-    assertEquals(metadata, map.get(800));
-  }
-
-  public void testMissingMetadataFileThrowsRuntimeException() {
-    // In normal usage we should never get a state where we are asking to load metadata that doesn't
-    // exist. However if the library is packaged incorrectly in the jar, this could happen and the
-    // best we can do is make sure the exception has the file name in it.
+  public void testGeoPhoneNumberMetadataLoadFromMissingFileThrowsException() throws Exception {
     try {
-      MultiFileMetadataSourceImpl.loadMetadataFromFile(
-          "XX", new ConcurrentHashMap<String, PhoneMetadata>(), "no/such/file",
-          new ResourceMetadataLoader());
+      missingFileSource.getMetadataForRegion("AE");
       fail("expected exception");
     } catch (RuntimeException e) {
-      assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file_XX"));
-    }
-    try {
-      MultiFileMetadataSourceImpl.loadMetadataFromFile(
-          123, new ConcurrentHashMap<Integer, PhoneMetadata>(), "no/such/file",
-          new ResourceMetadataLoader());
-      fail("expected exception");
-    } catch (RuntimeException e) {
-      assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file_123"));
+      assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file"));
     }
   }
 
-  public void testAlternateFormatsContainsData() throws Exception {
-    MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader(MultiFileMetadataSourceImplTest.class));
-    // We should have some data for Germany.
-    PhoneMetadata germanyAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(49);
-    assertNotNull(germanyAlternateFormats);
-    assertTrue(germanyAlternateFormats.numberFormatSize() > 0);
+  public void testNonGeoPhoneNumberMetadataLoadCorrectly() {
+    // We should have some data for international toll-free numbers.
+    PhoneMetadata intlMetadata = source.getMetadataForNonGeographicalRegion(800);
+    assertEquals(intlMetadata.getId(), "001");
+    assertTrue(intlMetadata.hasGeneralDesc());
   }
 
-  public void testShortNumberMetadataContainsData() throws Exception {
-    MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader(MultiFileMetadataSourceImplTest.class));
-    // We should have some data for France.
-    PhoneMetadata franceShortNumberMetadata =
-        multiFileMetadataSource.getShortNumberMetadataForRegion("FR");
-    assertNotNull(franceShortNumberMetadata);
-    assertTrue(franceShortNumberMetadata.hasShortCode());
-  }
-
-  public void testAlternateFormatsFailsGracefully() throws Exception {
-    MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader(MultiFileMetadataSourceImplTest.class));
-    PhoneMetadata noAlternateFormats = multiFileMetadataSource.getAlternateFormatsForCountry(999);
-    assertNull(noAlternateFormats);
-  }
-
-  public void testShortNumberMetadataFailsGracefully() throws Exception {
-    MultiFileMetadataSourceImpl multiFileMetadataSource =
-        new MultiFileMetadataSourceImpl(new ResourceMetadataLoader(MultiFileMetadataSourceImplTest.class));
-    PhoneMetadata noShortNumberMetadata = multiFileMetadataSource.getShortNumberMetadataForRegion("XXX");
-    assertNull(noShortNumberMetadata);
+  public void testNonGeoPhoneNumberMetadataLoadFromMissingFileThrowsException() throws Exception {
+    try {
+      missingFileSource.getMetadataForNonGeographicalRegion(800);
+      fail("expected exception");
+    } catch (RuntimeException e) {
+      assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file"));
+    }
   }
 }

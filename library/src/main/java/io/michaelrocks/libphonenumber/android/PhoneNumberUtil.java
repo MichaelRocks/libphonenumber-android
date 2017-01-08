@@ -55,9 +55,6 @@ import io.michaelrocks.libphonenumber.android.internal.RegexBasedMatcher;
  * @author Shaopeng Jia
  */
 public class PhoneNumberUtil {
-  // @VisibleForTesting
-  static final MetadataSource DEFAULT_METADATA_SOURCE = new MultiFileMetadataSourceImpl(new ResourceMetadataLoader());
-
   private static final Logger logger = Logger.getLogger(PhoneNumberUtil.class.getName());
 
   /** Flags to use when compiling regular expressions for phone numbers. */
@@ -1084,7 +1081,7 @@ public class PhoneNumberUtil {
       // This is the only case where a number can be formatted as E164 without a
       // leading '+' symbol (but the original number wasn't parseable anyway).
       // TODO: Consider removing the 'if' above so that unparseable
-      // strings without raw input format to the empty string instead of "+00"
+      // strings without raw input format to the empty string instead of "+00".
       String rawInput = number.getRawInput();
       if (rawInput.length() > 0) {
         return rawInput;
@@ -1154,7 +1151,7 @@ public class PhoneNumberUtil {
     // share a country calling code is contained by only one region for performance reasons. For
     // example, for NANPA regions it will be contained in the metadata for US.
     String regionCode = getRegionCodeForCountryCode(countryCallingCode);
-    // Metadata cannot be null because the country calling code is valid
+    // Metadata cannot be null because the country calling code is valid.
     PhoneMetadata metadata =
         getMetadataForRegionOrCallingCode(countryCallingCode, regionCode);
 
@@ -1312,8 +1309,8 @@ public class PhoneNumberUtil {
         // dialing from a mobile phone, except for short numbers. As a result, we add it back here
         // if it is a valid regular length phone number.
         formattedNumber =
-            getNddPrefixForRegion(regionCode, true /* strip non-digits */) +
-            " " + format(numberNoExt, PhoneNumberFormat.NATIONAL);
+            getNddPrefixForRegion(regionCode, true /* strip non-digits */) + " "
+            + format(numberNoExt, PhoneNumberFormat.NATIONAL);
       } else if (countryCallingCode == NANPA_COUNTRY_CODE) {
         // For NANPA countries, we output international format for numbers that can be dialed
         // internationally, since that always works, except for numbers which might potentially be
