@@ -25,7 +25,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 group 'io.michaelrocks'
-version '8.0.1'
+version '8.1.0'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
