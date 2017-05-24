@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
-import io.michaelrocks.libphonenumber.android.NumberParseException;
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
-import io.michaelrocks.libphonenumber.android.Phonenumber;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import io.michaelrocks.libphonenumber.android.AndroidPhoneNumberUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(final View v) {
         if (util == null) {
-          util = PhoneNumberUtil.createInstance(getApplicationContext());
+          util = AndroidPhoneNumberUtil.createInstance(getApplicationContext());
         }
 
         try {

@@ -4,7 +4,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.1'
+    classpath 'com.android.tools.build:gradle:2.3.2'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
   }
 }
@@ -21,7 +21,7 @@ task clean(type: Delete) {
 
 ext {
   projectCompileSdkVersion = 25
-  projectBuildToolsVersion = '25.0.2'
+  projectBuildToolsVersion = '25.0.3'
   projectMinSdkVersion = 9
   projectTargetSdkVersion = 25
 }
