@@ -24,20 +24,35 @@ repositories {
 }
 
 dependencies {
-  compile 'io.michaelrocks:libphonenumber-android:8.4.1'
+  compile 'io.michaelrocks:libphonenumber-android:8.5.0'
 }
 ```
 
+Usage
+-----
+```java
+PhoneNumberUtil phoneNumberUtil = AndroidPhoneNumberUtil.createInstance(context);
+```
+
+It's advisable to instantiate a single instance of `PhoneNumberUtil` and use it throughout your
+application.
+
 API differences
 ---------------
-This library is not fully compatible with the original `libphonenumber`.
- 1. Every `libphonenumber` class is repackaged to 
- `io.michaelrocks.libphonenumber.android`.
- 2. `PhoneNumberUtil` doesn't contains a `getInstance()` method so you
- have to create an instance of this class with one of 
- `PhoneNumberUtil.createInstance()` methods and store it somewhere.
- 3. `PhoneNumberUtil` now has a `createInstance(Context)` method, which
- is a default way to obtain an instance of this class on Android.
+This library is not fully compatible with the original `libphonenumber`. The upstream library
+hardcodes metadata loading for the following features:
+
+- Shortcodes
+- Alternate phone number formats
+- Geocoding
+- Prefix mapping
+
+APIs using these features are not supported, e.g.
+
+- [`ShortNumberInfo`](https://static.javadoc.io/com.googlecode.libphonenumber/libphonenumber/8.5.0/com/google/i18n/phonenumbers/ShortNumberInfo.html)
+  - All methods are unsupported
+- [`PhoneNumberUtil.Leniency`](https://static.javadoc.io/com.googlecode.libphonenumber/libphonenumber/8.5.0/com/google/i18n/phonenumbers/PhoneNumberUtil.html)
+  - `STRICT_GROUPING` is unsupported
 
 License
 =======

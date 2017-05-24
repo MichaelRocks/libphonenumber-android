@@ -18,13 +18,14 @@ package io.michaelrocks.libphonenumber.android;
 
 import android.content.res.AssetManager;
 
+import com.google.i18n.phonenumbers.MetadataLoader;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AssetsMetadataLoader implements MetadataLoader {
+class AssetsMetadataLoader implements MetadataLoader {
   private final AssetManager assetManager;
 
-  public AssetsMetadataLoader(final AssetManager assetManager) {
+  AssetsMetadataLoader(final AssetManager assetManager) {
     this.assetManager = assetManager;
   }
 
