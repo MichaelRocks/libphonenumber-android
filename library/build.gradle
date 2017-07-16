@@ -22,7 +22,6 @@ plugins {
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-apply plugin: 'com.getkeepsafe.dexcount'
 
 group 'io.michaelrocks'
 version '8.4.2'
@@ -140,3 +139,5 @@ afterEvaluate {
     }
   }
 }
+
+apply plugin: 'com.getkeepsafe.dexcount'
