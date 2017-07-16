@@ -40,6 +40,7 @@ import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneNumberDesc;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber.CountryCodeSource;
 import io.michaelrocks.libphonenumber.android.internal.RegexBasedMatcher;
+import io.michaelrocks.libphonenumber.android.internal.RegexCache;
 
 /**
  * Utility for international phone numbers. Functionality includes formatting, parsing and
@@ -2201,7 +2202,7 @@ public class PhoneNumberUtil {
 
     boolean isFixedLine = isNumberMatchingDesc(nationalNumber, metadata.getFixedLine());
     if (isFixedLine) {
-      if (metadata.isSameMobileAndFixedLinePattern()) {
+      if (metadata.getSameMobileAndFixedLinePattern()) {
         return PhoneNumberType.FIXED_LINE_OR_MOBILE;
       } else if (isNumberMatchingDesc(nationalNumber, metadata.getMobile())) {
         return PhoneNumberType.FIXED_LINE_OR_MOBILE;
@@ -2210,7 +2211,7 @@ public class PhoneNumberUtil {
     }
     // Otherwise, test to see if the number is mobile. Only do this if certain that the patterns for
     // mobile and fixed line aren't the same.
-    if (!metadata.isSameMobileAndFixedLinePattern()
+    if (!metadata.getSameMobileAndFixedLinePattern()
         && isNumberMatchingDesc(nationalNumber, metadata.getMobile())) {
       return PhoneNumberType.MOBILE;
     }
