@@ -84,6 +84,7 @@ publishing {
 
       if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
+        options.encoding "UTF-8"
       }
     }
 
