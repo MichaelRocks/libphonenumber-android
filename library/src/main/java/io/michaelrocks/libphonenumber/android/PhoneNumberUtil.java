@@ -1135,7 +1135,7 @@ public class PhoneNumberUtil {
 
   /**
    * Tests whether a phone number has a geographical association. It checks if the number is
-   * associated to a certain region in the country where it belongs to. Note that this doesn't
+   * associated with a certain region in the country to which it belongs. Note that this doesn't
    * verify if the number is actually in use.
    */
   public boolean isNumberGeographical(PhoneNumber phoneNumber) {
@@ -1143,17 +1143,14 @@ public class PhoneNumberUtil {
   }
 
   /**
-   * Tests whether a phone number has a geographical association, as represented by its type and the
-   * country it belongs to.
-   *
-   * This version of isNumberGeographical exists since calculating the phone number type is
+   * Overload of isNumberGeographical(PhoneNumber), since calculating the phone number type is
    * expensive; if we have already done this, we don't want to do it again.
    */
-  public boolean isNumberGeographical(PhoneNumberType numberType, int countryCallingCode) {
-    return numberType == PhoneNumberType.FIXED_LINE
-        || numberType == PhoneNumberType.FIXED_LINE_OR_MOBILE
+  public boolean isNumberGeographical(PhoneNumberType phoneNumberType, int countryCallingCode) {
+    return phoneNumberType == PhoneNumberType.FIXED_LINE
+        || phoneNumberType == PhoneNumberType.FIXED_LINE_OR_MOBILE
         || (GEO_MOBILE_COUNTRIES.contains(countryCallingCode)
-            && numberType == PhoneNumberType.MOBILE);
+            && phoneNumberType == PhoneNumberType.MOBILE);
   }
 
   /**
@@ -1548,9 +1545,8 @@ public class PhoneNumberUtil {
    * Formats a phone number using the original phone number format that the number is parsed from.
    * The original format is embedded in the country_code_source field of the PhoneNumber object
    * passed in. If such information is missing, the number will be formatted into the NATIONAL
-   * format by default. When the number contains a leading zero and this is unexpected for this
-   * country, or we don't have a formatting pattern for the number, the method returns the raw input
-   * when it is available.
+   * format by default. When we don't have a formatting pattern for the number, the method returns
+   * the raw input when it is available.
    *
    * Note this method guarantees no digit will be inserted, removed or modified as a result of
    * formatting.
@@ -1561,8 +1557,7 @@ public class PhoneNumberUtil {
    * @return  the formatted phone number in its original number format
    */
   public String formatInOriginalFormat(PhoneNumber number, String regionCallingFrom) {
-    if (number.hasRawInput()
-        && (hasUnexpectedItalianLeadingZero(number) || !hasFormattingPatternForNumber(number))) {
+    if (number.hasRawInput() && !hasFormattingPatternForNumber(number)) {
       // We check if we have the formatting pattern because without that, we might format the number
       // as a group without national prefix.
       return number.getRawInput();
@@ -3033,6 +3028,12 @@ public class PhoneNumberUtil {
    * number is not considered to be a possible number. Note that validation of whether the number
    * is actually a valid number for a particular region is not performed. This can be done
    * separately with {@link #isValidNumber}.
+   *
+   * <p> Note this method canonicalizes the phone number such that different representations can be
+   * easily compared, no matter what form it was originally entered in (e.g. national,
+   * international). If you want to record context about the number being parsed, such as the raw
+   * input that was entered, how the country code was derived etc. then call {@link
+   * #parseAndKeepRawInput} instead.
    *
    * @param numberToParse  number that we are attempting to parse. This can contain formatting such
    *     as +, ( and -, as well as a phone number extension. It can also be provided in RFC3966
