@@ -20,7 +20,6 @@ package io.michaelrocks.libphonenumber.android.internal;
 import java.util.regex.Matcher;
 
 import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneNumberDesc;
-import io.michaelrocks.libphonenumber.android.RegexCache;
 
 /**
  * Implementation of the matcher API using the regular expressions in the PhoneNumberDesc

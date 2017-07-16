@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.michaelrocks.libphonenumber.android;
+package io.michaelrocks.libphonenumber.android.internal;
 
 import junit.framework.TestCase;
 

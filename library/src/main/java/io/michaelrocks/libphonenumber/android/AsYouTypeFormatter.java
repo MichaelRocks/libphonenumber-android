@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import io.michaelrocks.libphonenumber.android.Phonemetadata.NumberFormat;
 import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
+import io.michaelrocks.libphonenumber.android.internal.RegexCache;
 
 /**
  * A formatter which formats phone numbers as they are entered.
@@ -184,7 +185,7 @@ public class AsYouTypeFormatter {
     for (NumberFormat format : formatList) {
       if (!nationalPrefixIsUsedByCountry
           || isCompleteNumber
-          || format.isNationalPrefixOptionalWhenFormatting()
+          || format.getNationalPrefixOptionalWhenFormatting()
           || PhoneNumberUtil.formattingRuleHasFirstGroupOnly(
               format.getNationalPrefixFormattingRule())) {
         if (isFormatEligible(format.getFormat())) {
