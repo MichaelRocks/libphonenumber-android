@@ -39,6 +39,7 @@ import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
 import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneNumberDesc;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber.CountryCodeSource;
+import io.michaelrocks.libphonenumber.android.internal.MatcherApi;
 import io.michaelrocks.libphonenumber.android.internal.RegexBasedMatcher;
 import io.michaelrocks.libphonenumber.android.internal.RegexCache;
 
@@ -581,6 +582,9 @@ public class PhoneNumberUtil {
   // first.
   private final Map<Integer, List<String>> countryCallingCodeToRegionCodeMap;
 
+  // An API for validation checking.
+  private final MatcherApi matcherApi = RegexBasedMatcher.create();
+
   // The set of regions that share country calling code 1.
   // There are roughly 26 regions.
   // We set the initial capacity of the HashSet to 35 to offer a load factor of roughly 0.75.
@@ -1006,7 +1010,7 @@ public class PhoneNumberUtil {
     // support the type at all: no type-specific methods will work with only this data.
     return desc.hasExampleNumber()
         || descHasPossibleNumberData(desc)
-        || (desc.hasNationalNumberPattern() && !desc.getNationalNumberPattern().equals("NA"));
+        || desc.hasNationalNumberPattern();
   }
 
   /**
@@ -2245,10 +2249,7 @@ public class PhoneNumberUtil {
     if (possibleLengths.size() > 0 && !possibleLengths.contains(actualLength)) {
       return false;
     }
-    Matcher nationalNumberPatternMatcher =
-        regexCache.getPatternForRegex(numberDesc.getNationalNumberPattern())
-            .matcher(nationalNumber);
-    return nationalNumberPatternMatcher.matches();
+    return matcherApi.matchNationalNumber(nationalNumber, numberDesc, false);
   }
 
   /**
@@ -2834,15 +2835,13 @@ public class PhoneNumberUtil {
         StringBuilder potentialNationalNumber =
             new StringBuilder(normalizedNumber.substring(defaultCountryCodeString.length()));
         PhoneNumberDesc generalDesc = defaultRegionMetadata.getGeneralDesc();
-        Pattern validNumberPattern =
-            regexCache.getPatternForRegex(generalDesc.getNationalNumberPattern());
         maybeStripNationalPrefixAndCarrierCode(
             potentialNationalNumber, defaultRegionMetadata, null /* Don't need the carrier code */);
         // If the number was not valid before but is valid now, or if it was too long before, we
         // consider the number with the country calling code stripped to be a better result and
         // keep that instead.
-        if ((!validNumberPattern.matcher(fullNumber).matches()
-                && validNumberPattern.matcher(potentialNationalNumber).matches())
+        if ((!matcherApi.matchNationalNumber(fullNumber, generalDesc, false)
+                && matcherApi.matchNationalNumber(potentialNationalNumber, generalDesc, false))
             || testNumberLength(fullNumber.toString(), defaultRegionMetadata)
                 == ValidationResult.TOO_LONG) {
           nationalNumber.append(potentialNationalNumber);
@@ -2938,10 +2937,9 @@ public class PhoneNumberUtil {
     // Attempt to parse the first digits as a national prefix.
     Matcher prefixMatcher = regexCache.getPatternForRegex(possibleNationalPrefix).matcher(number);
     if (prefixMatcher.lookingAt()) {
-      Pattern nationalNumberRule =
-          regexCache.getPatternForRegex(metadata.getGeneralDesc().getNationalNumberPattern());
+      PhoneNumberDesc generalDesc = metadata.getGeneralDesc();
       // Check if the original number is viable.
-      boolean isViableOriginalNumber = nationalNumberRule.matcher(number).matches();
+      boolean isViableOriginalNumber = matcherApi.matchNationalNumber(number, generalDesc, false);
       // prefixMatcher.group(numOfGroups) == null implies nothing was captured by the capturing
       // groups in possibleNationalPrefix; therefore, no transformation is necessary, and we just
       // remove the national prefix.
@@ -2951,7 +2949,8 @@ public class PhoneNumberUtil {
           || prefixMatcher.group(numOfGroups) == null) {
         // If the original number was viable, and the resultant number is not, we return.
         if (isViableOriginalNumber
-            && !nationalNumberRule.matcher(number.substring(prefixMatcher.end())).matches()) {
+            && !matcherApi.matchNationalNumber(
+                number.substring(prefixMatcher.end()), generalDesc, false)) {
           return false;
         }
         if (carrierCode != null && numOfGroups > 0 && prefixMatcher.group(numOfGroups) != null) {
@@ -2965,7 +2964,7 @@ public class PhoneNumberUtil {
         StringBuilder transformedNumber = new StringBuilder(number);
         transformedNumber.replace(0, numberLength, prefixMatcher.replaceFirst(transformRule));
         if (isViableOriginalNumber
-            && !nationalNumberRule.matcher(transformedNumber.toString()).matches()) {
+            && !matcherApi.matchNationalNumber(transformedNumber.toString(), generalDesc, false)) {
           return false;
         }
         if (carrierCode != null && numOfGroups > 1) {
@@ -3503,14 +3502,13 @@ public class PhoneNumberUtil {
   /**
    * Returns true if the number can be dialled from outside the region, or unknown. If the number
    * can only be dialled from within the region, returns false. Does not check the number is a valid
-   * number. Note that, at the moment, this method does not handle short numbers.
-   * TODO: Make this method public when we have enough metadata to make it worthwhile.
+   * number. Note that, at the moment, this method does not handle short numbers (which are
+   * currently all presumed to not be diallable from outside their country).
    *
    * @param number  the phone-number for which we want to know whether it is diallable from
    *     outside the region
    */
-  // @VisibleForTesting
-  boolean canBeInternationallyDialled(PhoneNumber number) {
+  public boolean canBeInternationallyDialled(PhoneNumber number) {
     PhoneMetadata metadata = getMetadataForRegion(getRegionCodeForNumber(number));
     if (metadata == null) {
       // Note numbers belonging to non-geographical entities (e.g. +800 numbers) are always
