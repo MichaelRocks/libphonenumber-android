@@ -1,28 +1,37 @@
 buildscript {
+  group = 'io.michaelrocks'
+  version = '8.8.5'
+
+  ext.projectCompileSdkVersion = 27
+  ext.projectBuildToolsVersion = '27.0.0'
+  ext.projectMinSdkVersion = 14
+  ext.projectTargetSdkVersion = 27
+
+  ext.androidToolsVersion = '3.0.0'
+  ext.bintrayVersion = '1.7.3'
+  ext.dexCountVersion = '0.8.1'
+
+  ext.androidSupportVersion = '27.0.0'
+
   repositories {
+    google()
     jcenter()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.3'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.3'
+    classpath "com.android.tools.build:gradle:$androidToolsVersion"
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion"
+    classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexCountVersion"
   }
 }
 
 allprojects {
   repositories {
-    jcenter()
     google()
+    jcenter()
   }
 }
 
 task clean(type: Delete) {
   delete rootProject.buildDir
-}
-
-ext {
-  projectCompileSdkVersion = 25
-  projectBuildToolsVersion = '25.0.3'
-  projectMinSdkVersion = 9
-  projectTargetSdkVersion = 25
 }
