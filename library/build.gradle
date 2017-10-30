@@ -16,15 +16,13 @@
 
 import com.jfrog.bintray.gradle.BintrayUploadTask
 
-plugins {
-  id "com.jfrog.bintray" version "1.6"
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
-group 'io.michaelrocks'
-version '8.8.5'
+def artifactName = rootProject.name
+group rootProject.group
+version rootProject.version
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
@@ -53,53 +51,11 @@ android {
 }
 
 dependencies {
-  testCompile 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.12'
 }
 
 publishing {
-  def artifactName = 'libphonenumber-android'
-
   android.libraryVariants.all { variant ->
-    project.tasks.create("bintrayUpload${variant.name.capitalize()}", BintrayUploadTask) {
-      apiUrl = BintrayUploadTask.API_URL_DEFAULT
-
-      user = project.findProperty('bintrayUser')
-      apiKey = project.findProperty('bintrayKey')
-      publications = [variant.name.capitalize()]
-
-      repoName = 'maven'
-      packageName = artifactName
-
-      versionName = project.version
-      versionReleased = new Date()
-      versionVcsTag = "v${project.version}"
-
-      dependsOn tasks["assemble${variant.name.capitalize()}"]
-    }
-
-    project.tasks.create("javadoc${variant.name.capitalize()}", Javadoc) {
-      source = variant.sourceSets.javaDirectories
-      classpath += variant.javaCompile.classpath
-      classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
-      if (JavaVersion.current().isJava8Compatible()) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-        options.encoding "UTF-8"
-      }
-    }
-
-    project.tasks.create("javadocJar${variant.name.capitalize()}", Jar) {
-      classifier = 'javadoc'
-      def javadoc = tasks["javadoc${variant.name.capitalize()}"]
-      from javadoc.destinationDir
-      dependsOn javadoc
-    }
-
-    project.tasks.create("sourcesJar${variant.name.capitalize()}", Jar) {
-      classifier = 'sources'
-      from variant.sourceSets.javaDirectories
-    }
-
     publications {
       create(variant.name.capitalize(), MavenPublication) {
         artifactId artifactName
@@ -110,7 +66,7 @@ publishing {
         artifact tasks["javadocJar${variant.name.capitalize()}"]
         artifact tasks["sourcesJar${variant.name.capitalize()}"]
 
-        def dependencies = project.configurations["_${variant.baseName}Compile"].allDependencies
+        def dependencies = project.configurations["${variant.baseName}CompileClasspath"].allDependencies
         if (!dependencies.empty) {
           pom.withXml {
             asNode().appendNode("dependencies").with {
@@ -129,13 +85,50 @@ publishing {
   }
 }
 
-afterEvaluate {
-  android.libraryVariants.all { variant ->
-    def bintrayUpload = tasks["bintrayUpload${variant.name.capitalize()}"]
-    publishing.publications.each { publication ->
-      if (publication instanceof MavenPublication) {
-        def taskName = "publish${publication.name.capitalize()}PublicationToMavenLocal"
-        bintrayUpload.dependsOn(taskName)
+android.libraryVariants.all { variant ->
+  tasks.addRule("Publishing configuration for ${variant.name} variant") { taskName ->
+    if (taskName == "bintrayUpload${variant.name.capitalize()}") {
+      tasks.create(taskName, BintrayUploadTask) {
+        apiUrl = BintrayUploadTask.API_URL_DEFAULT
+
+        user = project.findProperty('bintrayUser')
+        apiKey = project.findProperty('bintrayKey')
+        publications = [variant.name.capitalize()]
+
+        repoName = 'maven'
+        packageName = artifactName
+
+        versionName = project.version
+        versionReleased = new Date()
+        versionVcsTag = "v${project.version}"
+
+        dependsOn tasks["assemble${variant.name.capitalize()}"]
+        dependsOn tasks["javadocJar${variant.name.capitalize()}"]
+        dependsOn tasks["sourcesJar${variant.name.capitalize()}"]
+        dependsOn tasks["generatePomFileFor${variant.name.capitalize()}Publication"]
+      }
+    } else if (taskName == "javadoc${variant.name.capitalize()}") {
+      tasks.create(taskName, Javadoc) {
+        source = variant.sourceSets.javaDirectories
+        classpath += variant.javaCompiler.classpath
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
+        if (JavaVersion.current().isJava8Compatible()) {
+          options.addStringOption('Xdoclint:none', '-quiet')
+          options.encoding "UTF-8"
+        }
+      }
+    } else if (taskName == "javadocJar${variant.name.capitalize()}") {
+      tasks.create(taskName, Jar) {
+        classifier = 'javadoc'
+        def javadoc = tasks["javadoc${variant.name.capitalize()}"]
+        from javadoc.destinationDir
+        dependsOn javadoc
+      }
+    } else if (taskName == "sourcesJar${variant.name.capitalize()}") {
+      tasks.create(taskName, Jar) {
+        classifier = 'sources'
+        from variant.sourceSets.javaDirectories
       }
     }
   }

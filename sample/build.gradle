@@ -11,7 +11,7 @@ android {
     applicationId "io.michaelrocks.libphonenumber.android.sample"
 
     versionCode 1
-    versionName "1.0"
+    versionName rootProject.version
   }
 
   lintOptions {
@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-  compile project(':library')
-  compile 'com.android.support:appcompat-v7:25.4.0'
+  implementation project(':library')
+  implementation "com.android.support:appcompat-v7:$androidSupportVersion"
 }
