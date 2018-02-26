@@ -3,7 +3,7 @@ buildscript {
   version = '8.8.5'
 
   ext.projectCompileSdkVersion = 27
-  ext.projectBuildToolsVersion = '27.0.0'
+  ext.projectBuildToolsVersion = '27.0.3'
   ext.projectMinSdkVersion = 14
   ext.projectTargetSdkVersion = 27
 
