@@ -11,7 +11,7 @@ buildscript {
   ext.bintrayVersion = '1.7.3'
   ext.dexCountVersion = '0.8.1'
 
-  ext.androidSupportVersion = '27.0.0'
+  ext.androidSupportVersion = '27.0.2'
 
   repositories {
     google()
