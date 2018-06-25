@@ -33,7 +33,7 @@ API differences
 This library is not fully compatible with the original `libphonenumber`.
  1. Every `libphonenumber` class is repackaged to 
  `io.michaelrocks.libphonenumber.android`.
- 2. `PhoneNumberUtil` doesn't contains a `getInstance()` method so you
+ 2. `PhoneNumberUtil` doesn't contain a `getInstance()` method so you
  have to create an instance of this class with one of 
  `PhoneNumberUtil.createInstance()` methods and store it somewhere.
  3. `PhoneNumberUtil` now has a `createInstance(Context)` method, which
