@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/MichaelRocks/libphonenumber-android.svg?branch=master)](https://travis-ci.org/MichaelRocks/libphonenumber-android)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-libphonenumber--android-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3676)
-[![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20704%20-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A8.9.5)
+[![Methods Count](https://img.shields.io/badge/Methods%20count-core:%20704%20-e91e63.svg)](http://www.methodscount.com/?lib=io.michaelrocks%3Alibphonenumber-android%3A8.9.6)
 
 libphonenumber-android
 ======================
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.michaelrocks:libphonenumber-android:8.9.5'
+  implementation 'io.michaelrocks:libphonenumber-android:8.9.6'
 }
 ```
 
@@ -33,7 +33,7 @@ API differences
 This library is not fully compatible with the original `libphonenumber`.
  1. Every `libphonenumber` class is repackaged to 
  `io.michaelrocks.libphonenumber.android`.
- 2. `PhoneNumberUtil` doesn't contains a `getInstance()` method so you
+ 2. `PhoneNumberUtil` doesn't contain a `getInstance()` method so you
  have to create an instance of this class with one of 
  `PhoneNumberUtil.createInstance()` methods and store it somewhere.
  3. `PhoneNumberUtil` now has a `createInstance(Context)` method, which
@@ -56,5 +56,5 @@ License
     limitations under the License.
 
  [1]: https://github.com/googlei18n/libphonenumber
- [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.9.5
+ [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.9.6
  [3]: http://blog.nimbledroid.com/2016/04/06/slow-ClassLoader.getResourceAsStream.html
