@@ -1,17 +1,17 @@
 buildscript {
   group = 'io.michaelrocks'
-  version = '8.9.10'
+  version = '8.9.11'
 
-  ext.projectCompileSdkVersion = 27
-  ext.projectBuildToolsVersion = '27.0.3'
+  ext.projectCompileSdkVersion = 28
+  ext.projectBuildToolsVersion = '28.0.2'
   ext.projectMinSdkVersion = 14
-  ext.projectTargetSdkVersion = 27
+  ext.projectTargetSdkVersion = 28
 
-  ext.androidToolsVersion = '3.1.3'
+  ext.androidToolsVersion = '3.1.4'
   ext.bintrayVersion = '1.8.0'
   ext.dexCountVersion = '0.8.2'
 
-  ext.androidSupportVersion = '27.1.1'
+  ext.androidSupportVersion = '28.0.0'
 
   repositories {
     google()
