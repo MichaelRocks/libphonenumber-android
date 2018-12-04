@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import com.jfrog.bintray.gradle.BintrayUploadTask
+import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
@@ -88,7 +88,7 @@ publishing {
 android.libraryVariants.all { variant ->
   tasks.addRule("Publishing configuration for ${variant.name} variant") { taskName ->
     if (taskName == "bintrayUpload${variant.name.capitalize()}") {
-      tasks.create(taskName, BintrayUploadTask) {
+      def bintrayUpload = tasks.create(taskName, BintrayUploadTask) {
         apiUrl = BintrayUploadTask.API_URL_DEFAULT
 
         user = project.findProperty('bintrayUser')
@@ -107,6 +107,8 @@ android.libraryVariants.all { variant ->
         dependsOn tasks["sourcesJar${variant.name.capitalize()}"]
         dependsOn tasks["generatePomFileFor${variant.name.capitalize()}Publication"]
       }
+
+      bintrayUpload.project = project
     } else if (taskName == "javadoc${variant.name.capitalize()}") {
       tasks.create(taskName, Javadoc) {
         source = variant.sourceSets.javaDirectories
