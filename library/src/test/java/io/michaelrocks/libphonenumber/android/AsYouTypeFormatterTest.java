@@ -656,6 +656,21 @@ public class AsYouTypeFormatterTest extends TestMetadataTestCase {
     assertEquals("+52 55 1234 567", formatter.inputDigit('7'));
     assertEquals("+52 55 1234 5678", formatter.inputDigit('8'));
 
+    formatter.clear();
+    assertEquals("+", formatter.inputDigit('+'));
+    assertEquals("+5", formatter.inputDigit('5'));
+    assertEquals("+52 ", formatter.inputDigit('2'));
+    assertEquals("+52 5", formatter.inputDigit('5'));
+    assertEquals("+52 56", formatter.inputDigit('6'));
+    assertEquals("+52 561", formatter.inputDigit('1'));
+    assertEquals("+52 561 2", formatter.inputDigit('2'));
+    assertEquals("+52 561 23", formatter.inputDigit('3'));
+    assertEquals("+52 561 234", formatter.inputDigit('4'));
+    assertEquals("+52 561 234 5", formatter.inputDigit('5'));
+    assertEquals("+52 561 234 56", formatter.inputDigit('6'));
+    assertEquals("+52 561 234 567", formatter.inputDigit('7'));
+    assertEquals("+52 561 234 5678", formatter.inputDigit('8'));
+
     // +52 212 345 6789
     formatter.clear();
     assertEquals("+", formatter.inputDigit('+'));
