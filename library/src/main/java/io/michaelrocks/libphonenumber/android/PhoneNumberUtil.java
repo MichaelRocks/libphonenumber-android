@@ -17,6 +17,8 @@
 
 package io.michaelrocks.libphonenumber.android;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,7 +49,7 @@ import io.michaelrocks.libphonenumber.android.internal.RegexCache;
  *
  * <p>If you use this library, and want to be notified about important changes, please sign up to
  * our <a href="https://groups.google.com/forum/#!aboutgroup/libphonenumber-discuss">mailing list</a>.
- *
+ * <p>
  * NOTE: A lot of methods in this class require Region Code strings. These must be provided using
  * CLDR two-letter region-code format. These should be in upper-case. The list of the codes
  * can be found here:
@@ -56,7 +58,9 @@ import io.michaelrocks.libphonenumber.android.internal.RegexCache;
 public class PhoneNumberUtil {
   private static final Logger logger = Logger.getLogger(PhoneNumberUtil.class.getName());
 
-  /** Flags to use when compiling regular expressions for phone numbers. */
+  /**
+   * Flags to use when compiling regular expressions for phone numbers.
+   */
   static final int REGEX_FLAGS = Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE;
   // The minimum and maximum length of the national significant number.
   private static final int MIN_LENGTH_FOR_NSN = 2;
@@ -312,6 +316,7 @@ public class PhoneNumberUtil {
   // version.
   private static final String EXTN_PATTERNS_FOR_PARSING;
   static final String EXTN_PATTERNS_FOR_MATCHING;
+
   static {
     // One-character symbols that can be used to indicate an extension.
     String singleExtnSymbolsForMatching = "x\uFF58#\uFF03~\uFF5E";
@@ -387,7 +392,7 @@ public class PhoneNumberUtil {
    * RFC3966 is as per INTERNATIONAL format, but with all spaces and other separating symbols
    * replaced with a hyphen, and with any phone number extension appended with ";ext=". It also
    * will have a prefix of "tel:" added, e.g. "tel:+41-44-668-1800".
-   *
+   * <p>
    * Note: If you are considering storing the number in a neutral format, you are highly advised to
    * use the PhoneNumber class.
    */
@@ -446,7 +451,9 @@ public class PhoneNumberUtil {
    * Possible outcomes when testing if a PhoneNumber is possible.
    */
   public enum ValidationResult {
-    /** The number length matches that of valid numbers for this region. */
+    /**
+     * The number length matches that of valid numbers for this region.
+     */
     IS_POSSIBLE,
     /**
      * The number length matches that of local numbers for this region only (i.e. numbers that may
@@ -454,9 +461,13 @@ public class PhoneNumberUtil {
      * anywhere inside or outside the country).
      */
     IS_POSSIBLE_LOCAL_ONLY,
-    /** The number has an invalid country calling code. */
+    /**
+     * The number has an invalid country calling code.
+     */
     INVALID_COUNTRY_CODE,
-    /** The number is shorter than all valid numbers for this region. */
+    /**
+     * The number is shorter than all valid numbers for this region.
+     */
     TOO_SHORT,
     /**
      * The number is longer than the shortest valid numbers for this region, shorter than the
@@ -466,7 +477,9 @@ public class PhoneNumberUtil {
      * for this region.
      */
     INVALID_LENGTH,
-    /** The number is longer than all valid numbers for this region. */
+    /**
+     * The number is longer than all valid numbers for this region.
+     */
     TOO_LONG,
   }
 
@@ -569,7 +582,9 @@ public class PhoneNumberUtil {
       }
     };
 
-    /** Returns true if {@code number} is a verified number according to this leniency. */
+    /**
+     * Returns true if {@code number} is a verified number according to this leniency.
+     */
     abstract boolean verify(PhoneNumber number, CharSequence candidate, PhoneNumberUtil util);
   }
 
@@ -644,10 +659,10 @@ public class PhoneNumberUtil {
    * (530) 583-6985 x302 and (530) 583-6985 x2303. We remove the second extension so that the first
    * number is parsed correctly.
    *
-   * @param number  the string that might contain a phone number
-   * @return  the number, stripped of any non-phone-number prefix (such as "Tel:") or an empty
-   *     string if no character used to start phone numbers (such as + or any digit) is found in the
-   *     number
+   * @param number the string that might contain a phone number
+   * @return the number, stripped of any non-phone-number prefix (such as "Tel:") or an empty
+   * string if no character used to start phone numbers (such as + or any digit) is found in the
+   * number
    */
   static CharSequence extractPossibleNumber(CharSequence number) {
     Matcher m = VALID_START_CHAR_PATTERN.matcher(number);
@@ -676,8 +691,8 @@ public class PhoneNumberUtil {
    * This method does not require the number to be normalized in advance - but does assume that
    * leading non-number symbols have been removed, such as by the method extractPossibleNumber.
    *
-   * @param number  string to be checked for viability as a phone number
-   * @return  true if the number could be a phone number of some sort, otherwise false
+   * @param number string to be checked for viability as a phone number
+   * @return true if the number could be a phone number of some sort, otherwise false
    */
   // @VisibleForTesting
   static boolean isViablePhoneNumber(CharSequence number) {
@@ -691,18 +706,18 @@ public class PhoneNumberUtil {
   /**
    * Normalizes a string of characters representing a phone number. This performs the following
    * conversions:
-   *   - Punctuation is stripped.
-   *   For ALPHA/VANITY numbers:
-   *   - Letters are converted to their numeric representation on a telephone keypad. The keypad
-   *     used here is the one defined in ITU Recommendation E.161. This is only done if there are 3
-   *     or more letters in the number, to lessen the risk that such letters are typos.
-   *   For other numbers:
-   *   - Wide-ascii digits are converted to normal ASCII (European) digits.
-   *   - Arabic-Indic numerals are converted to European numerals.
-   *   - Spurious alpha characters are stripped.
+   * - Punctuation is stripped.
+   * For ALPHA/VANITY numbers:
+   * - Letters are converted to their numeric representation on a telephone keypad. The keypad
+   * used here is the one defined in ITU Recommendation E.161. This is only done if there are 3
+   * or more letters in the number, to lessen the risk that such letters are typos.
+   * For other numbers:
+   * - Wide-ascii digits are converted to normal ASCII (European) digits.
+   * - Arabic-Indic numerals are converted to European numerals.
+   * - Spurious alpha characters are stripped.
    *
-   * @param number  a StringBuilder of characters representing a phone number that will be
-   *     normalized in place
+   * @param number a StringBuilder of characters representing a phone number that will be
+   *               normalized in place
    */
   static StringBuilder normalize(StringBuilder number) {
     Matcher m = VALID_ALPHA_PHONE_PATTERN.matcher(number);
@@ -718,8 +733,8 @@ public class PhoneNumberUtil {
    * Normalizes a string of characters representing a phone number. This converts wide-ascii and
    * arabic-indic numerals to European numerals, and strips punctuation and alpha characters.
    *
-   * @param number  a string of characters representing a phone number
-   * @return  the normalized string version of the phone number
+   * @param number a string of characters representing a phone number
+   * @return the normalized string version of the phone number
    */
   public static String normalizeDigitsOnly(CharSequence number) {
     return normalizeDigits(number, false /* strip non-digits */).toString();
@@ -743,8 +758,8 @@ public class PhoneNumberUtil {
    * Normalizes a string of characters representing a phone number. This strips all characters which
    * are not diallable on a mobile phone keypad (including all non-ASCII digits).
    *
-   * @param number  a string of characters representing a phone number
-   * @return  the normalized string version of the phone number
+   * @param number a string of characters representing a phone number
+   * @return the normalized string version of the phone number
    */
   public static String normalizeDiallableCharsOnly(CharSequence number) {
     return normalizeHelper(number, DIALLABLE_CHAR_MAPPINGS, true /* remove non matches */);
@@ -781,23 +796,24 @@ public class PhoneNumberUtil {
    *   subscriberNumber = nationalSignificantNumber;
    * }
    * }</pre>
-   *
+   * <p>
    * N.B.: area code is a very ambiguous concept, so the I18N team generally recommends against
    * using it for most purposes, but recommends using the more general {@code national_number}
    * instead. Read the following carefully before deciding to use this method:
    * <ul>
-   *  <li> geographical area codes change over time, and this method honors those changes;
-   *    therefore, it doesn't guarantee the stability of the result it produces.
-   *  <li> subscriber numbers may not be diallable from all devices (notably mobile devices, which
-   *    typically requires the full national_number to be dialled in most regions).
-   *  <li> most non-geographical numbers have no area codes, including numbers from non-geographical
-   *    entities
-   *  <li> some geographical numbers have no area codes.
+   * <li> geographical area codes change over time, and this method honors those changes;
+   * therefore, it doesn't guarantee the stability of the result it produces.
+   * <li> subscriber numbers may not be diallable from all devices (notably mobile devices, which
+   * typically requires the full national_number to be dialled in most regions).
+   * <li> most non-geographical numbers have no area codes, including numbers from non-geographical
+   * entities
+   * <li> some geographical numbers have no area codes.
    * </ul>
-   * @param number  the PhoneNumber object for which clients
-   *     want to know the length of the area code
-   * @return  the length of area code of the PhoneNumber object
-   *     passed in
+   *
+   * @param number the PhoneNumber object for which clients
+   *               want to know the length of the area code
+   * @return the length of area code of the PhoneNumber object
+   * passed in
    */
   public int getLengthOfGeographicalAreaCode(PhoneNumber number) {
     PhoneMetadata metadata = getMetadataForRegion(getRegionCodeForNumber(number));
@@ -834,9 +850,9 @@ public class PhoneNumberUtil {
    * number is normally the first group of digit(s) right after the country calling code when the
    * number is formatted in the international format, if there is a subscriber number part that
    * follows.
-   *
+   * <p>
    * N.B.: similar to an area code, not all numbers have an NDC!
-   *
+   * <p>
    * An example of how this could be used:
    *
    * <pre>{@code
@@ -856,14 +872,14 @@ public class PhoneNumberUtil {
    *   subscriberNumber = nationalSignificantNumber;
    * }
    * }</pre>
-   *
+   * <p>
    * Refer to the unittests to see the difference between this function and
    * {@link #getLengthOfGeographicalAreaCode}.
    *
-   * @param number  the PhoneNumber object for which clients
-   *     want to know the length of the NDC
-   * @return  the length of NDC of the PhoneNumber object
-   *     passed in, which could be zero
+   * @param number the PhoneNumber object for which clients
+   *               want to know the length of the NDC
+   * @return the length of NDC of the PhoneNumber object
+   * passed in, which could be zero
    */
   public int getLengthOfNationalDestinationCode(PhoneNumber number) {
     PhoneNumber copiedProto;
@@ -906,8 +922,8 @@ public class PhoneNumberUtil {
    * returns an empty string. A mobile token is a number inserted before the area code when dialing
    * a mobile number from that country from abroad.
    *
-   * @param countryCallingCode  the country calling code for which we want the mobile token
-   * @return  the mobile token, as a string, for the given country calling code
+   * @param countryCallingCode the country calling code for which we want the mobile token
+   * @return the mobile token, as a string, for the given country calling code
    */
   public static String getCountryMobileToken(int countryCallingCode) {
     if (MOBILE_TOKEN_MAPPINGS.containsKey(countryCallingCode)) {
@@ -921,12 +937,12 @@ public class PhoneNumberUtil {
    * in the accompanying map with the values therein, and stripping all other characters if
    * removeNonMatches is true.
    *
-   * @param number  a string of characters representing a phone number
-   * @param normalizationReplacements  a mapping of characters to what they should be replaced by in
-   *     the normalized version of the phone number
-   * @param removeNonMatches  indicates whether characters that are not able to be replaced should
-   *     be stripped from the number. If this is false, they will be left unchanged in the number.
-   * @return  the normalized string version of the phone number
+   * @param number                    a string of characters representing a phone number
+   * @param normalizationReplacements a mapping of characters to what they should be replaced by in
+   *                                  the normalized version of the phone number
+   * @param removeNonMatches          indicates whether characters that are not able to be replaced should
+   *                                  be stripped from the number. If this is false, they will be left unchanged in the number.
+   * @return the normalized string version of the phone number
    */
   private static String normalizeHelper(CharSequence number,
                                         Map<Character, Character> normalizationReplacements,
@@ -957,8 +973,8 @@ public class PhoneNumberUtil {
   /**
    * Returns all regions the library has metadata for.
    *
-   * @return  an unordered set of the two-letter region codes for every geographical region the
-   *     library supports
+   * @return an unordered set of the two-letter region codes for every geographical region the
+   * library supports
    */
   public Set<String> getSupportedRegions() {
     return Collections.unmodifiableSet(supportedRegions);
@@ -967,8 +983,8 @@ public class PhoneNumberUtil {
   /**
    * Returns all global network calling codes the library has metadata for.
    *
-   * @return  an unordered set of the country calling codes for every non-geographical entity the
-   *     library supports
+   * @return an unordered set of the country calling codes for every non-geographical entity the
+   * library supports
    */
   public Set<Integer> getSupportedGlobalNetworkCallingCodes() {
     return Collections.unmodifiableSet(countryCodesForNonGeographicalRegion);
@@ -980,8 +996,8 @@ public class PhoneNumberUtil {
    * used to populate a drop-down box of country calling codes for a phone-number widget, for
    * instance.
    *
-   * @return  an unordered set of the country calling codes for every geographical and
-   *     non-geographical entity the library supports
+   * @return an unordered set of the country calling codes for every geographical and
+   * non-geographical entity the library supports
    */
   public Set<Integer> getSupportedCallingCodes() {
     return Collections.unmodifiableSet(countryCallingCodeToRegionCodeMap.keySet());
@@ -1036,7 +1052,7 @@ public class PhoneNumberUtil {
    * Returns the types for a given region which the library has metadata for. Will not include
    * FIXED_LINE_OR_MOBILE (if numbers in this region could be classified as FIXED_LINE_OR_MOBILE,
    * both FIXED_LINE and MOBILE would be present) and UNKNOWN.
-   *
+   * <p>
    * No types will be returned for invalid or unknown region codes.
    */
   public Set<PhoneNumberType> getSupportedTypesForRegion(String regionCode) {
@@ -1053,7 +1069,7 @@ public class PhoneNumberUtil {
    * has metadata for. Will not include FIXED_LINE_OR_MOBILE (if numbers for this non-geographical
    * entity could be classified as FIXED_LINE_OR_MOBILE, both FIXED_LINE and MOBILE would be
    * present) and UNKNOWN.
-   *
+   * <p>
    * No types will be returned for country calling codes that do not map to a known non-geographical
    * entity.
    */
@@ -1111,8 +1127,8 @@ public class PhoneNumberUtil {
    * metadata loading. Calling this method multiple times is very expensive, as each time
    * a new instance is created from scratch. When in doubt, use {@link #getInstance}.
    *
-   * @param metadataSource  customized metadata source. This should not be null
-   * @return  a PhoneNumberUtil instance
+   * @param metadataSource customized metadata source. This should not be null
+   * @return a PhoneNumberUtil instance
    */
   private static PhoneNumberUtil createInstance(MetadataSource metadataSource) {
     if (metadataSource == null) {
@@ -1175,9 +1191,9 @@ public class PhoneNumberUtil {
    * which formatting rules to apply so we return the national significant number with no formatting
    * applied.
    *
-   * @param number  the phone number to be formatted
-   * @param numberFormat  the format the phone number should be formatted into
-   * @return  the formatted phone number
+   * @param number       the phone number to be formatted
+   * @param numberFormat the format the phone number should be formatted into
+   * @return the formatted phone number
    */
   public String format(PhoneNumber number, PhoneNumberFormat numberFormat) {
     if (number.getNationalNumber() == 0 && number.hasRawInput()) {
@@ -1238,10 +1254,10 @@ public class PhoneNumberUtil {
    * code, we cannot work out things like whether there should be a national prefix applied, or how
    * to format extensions, so we return the national significant number with no formatting applied.
    *
-   * @param number  the phone number to be formatted
-   * @param numberFormat  the format the phone number should be formatted into
-   * @param userDefinedFormats  formatting rules specified by clients
-   * @return  the formatted phone number
+   * @param number             the phone number to be formatted
+   * @param numberFormat       the format the phone number should be formatted into
+   * @param userDefinedFormats formatting rules specified by clients
+   * @return the formatted phone number
    */
   public String formatByPattern(PhoneNumber number,
                                 PhoneNumberFormat numberFormat,
@@ -1300,10 +1316,10 @@ public class PhoneNumberUtil {
    * phone number already has a preferred domestic carrier code stored. If {@code carrierCode}
    * contains an empty string, returns the number in national format without any carrier code.
    *
-   * @param number  the phone number to be formatted
-   * @param carrierCode  the carrier selection code to be used
-   * @return  the formatted phone number in national format for dialing using the carrier as
-   *     specified in the {@code carrierCode}
+   * @param number      the phone number to be formatted
+   * @param carrierCode the carrier selection code to be used
+   * @return the formatted phone number in national format for dialing using the carrier as
+   * specified in the {@code carrierCode}
    */
   public String formatNationalNumberWithCarrierCode(PhoneNumber number, CharSequence carrierCode) {
     int countryCallingCode = number.getCountryCode();
@@ -1345,12 +1361,12 @@ public class PhoneNumberUtil {
    * <p>Use {@link #formatNationalNumberWithCarrierCode} instead if the carrier code passed in
    * should take precedence over the number's {@code preferredDomesticCarrierCode} when formatting.
    *
-   * @param number  the phone number to be formatted
-   * @param fallbackCarrierCode  the carrier selection code to be used, if none is found in the
-   *     phone number itself
-   * @return  the formatted phone number in national format for dialing using the number's
-   *     {@code preferredDomesticCarrierCode}, or the {@code fallbackCarrierCode} passed in if
-   *     none is found
+   * @param number              the phone number to be formatted
+   * @param fallbackCarrierCode the carrier selection code to be used, if none is found in the
+   *                            phone number itself
+   * @return the formatted phone number in national format for dialing using the number's
+   * {@code preferredDomesticCarrierCode}, or the {@code fallbackCarrierCode} passed in if
+   * none is found
    */
   public String formatNationalNumberWithPreferredCarrierCode(PhoneNumber number,
                                                              CharSequence fallbackCarrierCode) {
@@ -1369,11 +1385,11 @@ public class PhoneNumberUtil {
    * toll-free numbers from being called outside of the country), the method returns an empty
    * string.
    *
-   * @param number  the phone number to be formatted
-   * @param regionCallingFrom  the region where the call is being placed
-   * @param withFormatting  whether the number should be returned with formatting symbols, such as
-   *     spaces and dashes.
-   * @return  the formatted phone number
+   * @param number            the phone number to be formatted
+   * @param regionCallingFrom the region where the call is being placed
+   * @param withFormatting    whether the number should be returned with formatting symbols, such as
+   *                          spaces and dashes.
+   * @return the formatted phone number
    */
   public String formatNumberForMobileDialing(PhoneNumber number, String regionCallingFrom,
                                              boolean withFormatting) {
@@ -1476,9 +1492,9 @@ public class PhoneNumberUtil {
    * is used. For regions which have multiple international prefixes, the number in its
    * INTERNATIONAL format will be returned instead.
    *
-   * @param number  the phone number to be formatted
-   * @param regionCallingFrom  the region where the call is being placed
-   * @return  the formatted phone number
+   * @param number            the phone number to be formatted
+   * @param regionCallingFrom the region where the call is being placed
+   * @return the formatted phone number
    */
   public String formatOutOfCountryCallingNumber(PhoneNumber number,
                                                 String regionCallingFrom) {
@@ -1549,14 +1565,14 @@ public class PhoneNumberUtil {
    * passed in. If such information is missing, the number will be formatted into the NATIONAL
    * format by default. When we don't have a formatting pattern for the number, the method returns
    * the raw input when it is available.
-   *
+   * <p>
    * Note this method guarantees no digit will be inserted, removed or modified as a result of
    * formatting.
    *
-   * @param number  the phone number that needs to be formatted in its original number format
-   * @param regionCallingFrom  the region whose IDD needs to be prefixed if the original number
-   *     has one
-   * @return  the formatted phone number in its original number format
+   * @param number            the phone number that needs to be formatted in its original number format
+   * @param regionCallingFrom the region whose IDD needs to be prefixed if the original number
+   *                          has one
+   * @return the formatted phone number in its original number format
    */
   public String formatInOriginalFormat(PhoneNumber number, String regionCallingFrom) {
     if (number.hasRawInput() && !hasFormattingPatternForNumber(number)) {
@@ -1632,7 +1648,7 @@ public class PhoneNumberUtil {
           break;
         }
         // Otherwise, we need to remove the national prefix from our output.
-        NumberFormat.Builder numFormatCopy =  NumberFormat.newBuilder();
+        NumberFormat.Builder numFormatCopy = NumberFormat.newBuilder();
         numFormatCopy.mergeFrom(formatRule);
         numFormatCopy.clearNationalPrefixFormattingRule();
         List<NumberFormat> numberFormats = new ArrayList<NumberFormat>(1);
@@ -1689,7 +1705,7 @@ public class PhoneNumberUtil {
 
   /**
    * Formats a phone number for out-of-country dialing purposes.
-   *
+   * <p>
    * Note that in this version, if the number was entered originally using alpha characters and
    * this version of the number is stored in raw_input, this representation of the number will be
    * used rather than the digit representation. Grouping information, as specified by characters
@@ -1697,19 +1713,19 @@ public class PhoneNumberUtil {
    *
    * <p><b>Caveats:</b></p>
    * <ul>
-   *  <li> This will not produce good results if the country calling code is both present in the raw
-   *       input _and_ is the start of the national number. This is not a problem in the regions
-   *       which typically use alpha numbers.
-   *  <li> This will also not produce good results if the raw input has any grouping information
-   *       within the first three digits of the national number, and if the function needs to strip
-   *       preceding digits/words in the raw input before these digits. Normally people group the
-   *       first three digits together so this is not a huge problem - and will be fixed if it
-   *       proves to be so.
+   * <li> This will not produce good results if the country calling code is both present in the raw
+   * input _and_ is the start of the national number. This is not a problem in the regions
+   * which typically use alpha numbers.
+   * <li> This will also not produce good results if the raw input has any grouping information
+   * within the first three digits of the national number, and if the function needs to strip
+   * preceding digits/words in the raw input before these digits. Normally people group the
+   * first three digits together so this is not a huge problem - and will be fixed if it
+   * proves to be so.
    * </ul>
    *
-   * @param number  the phone number that needs to be formatted
-   * @param regionCallingFrom  the region where the call is being placed
-   * @return  the formatted phone number
+   * @param number            the phone number that needs to be formatted
+   * @param regionCallingFrom the region where the call is being placed
+   * @return the formatted phone number
    */
   public String formatOutOfCountryKeepingAlphaChars(PhoneNumber number,
                                                     String regionCallingFrom) {
@@ -1806,8 +1822,8 @@ public class PhoneNumberUtil {
    * Gets the national significant number of a phone number. Note a national significant number
    * doesn't contain a national prefix or any formatting.
    *
-   * @param number  the phone number for which the national significant number is needed
-   * @return  the national significant number of the PhoneNumber object passed in
+   * @param number the phone number for which the national significant number is needed
+   * @return the national significant number of the PhoneNumber object passed in
    */
   public String getNationalSignificantNumber(PhoneNumber number) {
     // If leading zero(s) have been set, we prefix this now. Note this is not a national prefix.
@@ -1942,10 +1958,10 @@ public class PhoneNumberUtil {
   /**
    * Gets a valid number for the specified region.
    *
-   * @param regionCode  the region for which an example number is needed
-   * @return  a valid fixed-line number for the specified region. Returns null when the metadata
-   *    does not contain such information, or the region 001 is passed in. For 001 (representing
-   *    non-geographical numbers), call {@link #getExampleNumberForNonGeoEntity} instead.
+   * @param regionCode the region for which an example number is needed
+   * @return a valid fixed-line number for the specified region. Returns null when the metadata
+   * does not contain such information, or the region 001 is passed in. For 001 (representing
+   * non-geographical numbers), call {@link #getExampleNumberForNonGeoEntity} instead.
    */
   public PhoneNumber getExampleNumber(String regionCode) {
     return getExampleNumberForType(regionCode, PhoneNumberType.FIXED_LINE);
@@ -1958,9 +1974,9 @@ public class PhoneNumberUtil {
    * be a valid *short* number/code for this region. Validity checking such numbers is handled with
    * {@link ShortNumberInfo}.
    *
-   * @param regionCode  the region for which an example number is needed
-   * @return  an invalid number for the specified region. Returns null when an unsupported region or
-   *     the region 001 (Earth) is passed in.
+   * @param regionCode the region for which an example number is needed
+   * @return an invalid number for the specified region. Returns null when an unsupported region or
+   * the region 001 (Earth) is passed in.
    */
   public PhoneNumber getInvalidExampleNumber(String regionCode) {
     if (!isValidRegionCode(regionCode)) {
@@ -2010,12 +2026,12 @@ public class PhoneNumberUtil {
   /**
    * Gets a valid number for the specified region and number type.
    *
-   * @param regionCode  the region for which an example number is needed
-   * @param type  the type of number that is needed
-   * @return  a valid number for the specified region and type. Returns null when the metadata
-   *     does not contain such information or if an invalid region or region 001 was entered.
-   *     For 001 (representing non-geographical numbers), call
-   *     {@link #getExampleNumberForNonGeoEntity} instead.
+   * @param regionCode the region for which an example number is needed
+   * @param type       the type of number that is needed
+   * @return a valid number for the specified region and type. Returns null when the metadata
+   * does not contain such information or if an invalid region or region 001 was entered.
+   * For 001 (representing non-geographical numbers), call
+   * {@link #getExampleNumberForNonGeoEntity} instead.
    */
   public PhoneNumber getExampleNumberForType(String regionCode, PhoneNumberType type) {
     // Check the region code is valid.
@@ -2037,10 +2053,10 @@ public class PhoneNumberUtil {
   /**
    * Gets a valid number for the specified number type (it may belong to any country).
    *
-   * @param type  the type of number that is needed
-   * @return  a valid number for the specified type. Returns null when the metadata
-   *     does not contain such information. This should only happen when no numbers of this type are
-   *     allocated anywhere in the world anymore.
+   * @param type the type of number that is needed
+   * @return a valid number for the specified type. Returns null when the metadata
+   * does not contain such information. This should only happen when no numbers of this type are
+   * allocated anywhere in the world anymore.
    */
   public PhoneNumber getExampleNumberForType(PhoneNumberType type) {
     for (String regionCode : getSupportedRegions()) {
@@ -2068,10 +2084,10 @@ public class PhoneNumberUtil {
   /**
    * Gets a valid number for the specified country calling code for a non-geographical entity.
    *
-   * @param countryCallingCode  the country calling code for a non-geographical entity
-   * @return  a valid number for the non-geographical entity. Returns null when the metadata
-   *    does not contain such information, or the country calling code passed in does not belong
-   *    to a non-geographical entity.
+   * @param countryCallingCode the country calling code for a non-geographical entity
+   * @return a valid number for the non-geographical entity. Returns null when the metadata
+   * does not contain such information, or the country calling code passed in does not belong
+   * to a non-geographical entity.
    */
   public PhoneNumber getExampleNumberForNonGeoEntity(int countryCallingCode) {
     PhoneMetadata metadata = getMetadataForNonGeographicalRegion(countryCallingCode);
@@ -2149,8 +2165,8 @@ public class PhoneNumberUtil {
   /**
    * Gets the type of a valid phone number.
    *
-   * @param number  the phone number that we want to know the type
-   * @return  the type of the phone number, or UNKNOWN if it is invalid
+   * @param number the phone number that we want to know the type
+   * @return the type of the phone number, or UNKNOWN if it is invalid
    */
   public PhoneNumberType getNumberType(PhoneNumber number) {
     String regionCode = getRegionCodeForNumber(number);
@@ -2248,8 +2264,8 @@ public class PhoneNumberUtil {
    * number +41 (0) 78 927 2696 can be parsed into a number with country code "41" and national
    * significant number "789272696". This is valid, while the original string is not diallable.
    *
-   * @param number  the phone number that we want to validate
-   * @return  a boolean that indicates whether the number is of a valid pattern
+   * @param number the phone number that we want to validate
+   * @return a boolean that indicates whether the number is of a valid pattern
    */
   public boolean isValidNumber(PhoneNumber number) {
     String regionCode = getRegionCodeForNumber(number);
@@ -2268,9 +2284,9 @@ public class PhoneNumberUtil {
    * the region "GB" (United Kingdom), since it has its own region code, "IM", which may be
    * undesirable.
    *
-   * @param number  the phone number that we want to validate
-   * @param regionCode  the region that we want to validate the phone number for
-   * @return  a boolean that indicates whether the number is of a valid pattern
+   * @param number     the phone number that we want to validate
+   * @param regionCode the region that we want to validate the phone number for
+   * @return a boolean that indicates whether the number is of a valid pattern
    */
   public boolean isValidNumberForRegion(PhoneNumber number, String regionCode) {
     int countryCode = number.getCountryCode();
@@ -2291,9 +2307,9 @@ public class PhoneNumberUtil {
    * level. Only guarantees correct results for valid, full numbers (not short-codes, or invalid
    * numbers).
    *
-   * @param number  the phone number whose origin we want to know
-   * @return  the region where the phone number is from, or null if no region matches this calling
-   *     code
+   * @param number the phone number whose origin we want to know
+   * @return the region where the phone number is from, or null if no region matches this calling
+   * code
    */
   public String getRegionCodeForNumber(PhoneNumber number) {
     int countryCode = number.getCountryCode();
@@ -2356,8 +2372,8 @@ public class PhoneNumberUtil {
    * Returns the country calling code for a specific region. For example, this would be 1 for the
    * United States, and 64 for New Zealand.
    *
-   * @param regionCode  the region that we want to get the country calling code for
-   * @return  the country calling code for the region denoted by regionCode
+   * @param regionCode the region that we want to get the country calling code for
+   * @return the country calling code for the region denoted by regionCode
    */
   public int getCountryCodeForRegion(String regionCode) {
     if (!isValidRegionCode(regionCode)) {
@@ -2374,8 +2390,8 @@ public class PhoneNumberUtil {
    * Returns the country calling code for a specific region. For example, this would be 1 for the
    * United States, and 64 for New Zealand. Assumes the region is already valid.
    *
-   * @param regionCode  the region that we want to get the country calling code for
-   * @return  the country calling code for the region denoted by regionCode
+   * @param regionCode the region that we want to get the country calling code for
+   * @return the country calling code for the region denoted by regionCode
    * @throws IllegalArgumentException if the region is invalid
    */
   private int getCountryCodeForValidRegion(String regionCode) {
@@ -2396,9 +2412,9 @@ public class PhoneNumberUtil {
    * national dialling prefix is used only for certain types of numbers. Use the library's
    * formatting functions to prefix the national prefix when required.
    *
-   * @param regionCode  the region that we want to get the dialling prefix for
-   * @param stripNonDigits  true to strip non-digits from the national dialling prefix
-   * @return  the dialling prefix for the region denoted by regionCode
+   * @param regionCode     the region that we want to get the dialling prefix for
+   * @param stripNonDigits true to strip non-digits from the national dialling prefix
+   * @return the dialling prefix for the region denoted by regionCode
    */
   public String getNddPrefixForRegion(String regionCode, boolean stripNonDigits) {
     PhoneMetadata metadata = getMetadataForRegion(regionCode);
@@ -2425,7 +2441,7 @@ public class PhoneNumberUtil {
   /**
    * Checks if this is a region under the North American Numbering Plan Administration (NANPA).
    *
-   * @return  true if regionCode is one of the regions under NANPA
+   * @return true if regionCode is one of the regions under NANPA
    */
   public boolean isNANPACountry(String regionCode) {
     return nanpaRegions.contains(regionCode);
@@ -2438,8 +2454,8 @@ public class PhoneNumberUtil {
    * it should be parsed and methods such as {@link #isPossibleNumberWithReason} and
    * {@link #isValidNumber} should be used.
    *
-   * @param number  the number that needs to be checked
-   * @return  true if the number is a valid vanity number
+   * @param number the number that needs to be checked
+   * @return true if the number is a valid vanity number
    */
   public boolean isAlphaNumber(CharSequence number) {
     if (!isViablePhoneNumber(number)) {
@@ -2459,8 +2475,8 @@ public class PhoneNumberUtil {
    * could be possibly dialled in this format: if the area code is needed for a call to connect, the
    * number is not considered possible without it.
    *
-   * @param number  the number that needs to be checked
-   * @return  true if the number is possible
+   * @param number the number that needs to be checked
+   * @return true if the number is possible
    */
   public boolean isPossibleNumber(PhoneNumber number) {
     ValidationResult result = isPossibleNumberWithReason(number);
@@ -2476,9 +2492,9 @@ public class PhoneNumberUtil {
    * if they could be possibly dialled in this format: if the area code is needed for a call to
    * connect, the number is not considered possible without it.
    *
-   * @param number  the number that needs to be checked
-   * @param type  the type we are interested in
-   * @return  true if the number is possible for this particular type
+   * @param number the number that needs to be checked
+   * @param type   the type we are interested in
+   * @return true if the number is possible for this particular type
    */
   public boolean isPossibleNumberForType(PhoneNumber number, PhoneNumberType type) {
     ValidationResult result = isPossibleNumberForTypeWithReason(number, type);
@@ -2573,22 +2589,23 @@ public class PhoneNumberUtil {
    * Check whether a phone number is a possible number. It provides a more lenient check than
    * {@link #isValidNumber} in the following sense:
    * <ol>
-   *   <li> It only checks the length of phone numbers. In particular, it doesn't check starting
-   *        digits of the number.
-   *   <li> It doesn't attempt to figure out the type of the number, but uses general rules which
-   *        applies to all types of phone numbers in a region. Therefore, it is much faster than
-   *        isValidNumber.
-   *   <li> For some numbers (particularly fixed-line), many regions have the concept of area code,
-   *        which together with subscriber number constitute the national significant number. It is
-   *        sometimes okay to dial only the subscriber number when dialing in the same area. This
-   *        function will return IS_POSSIBLE_LOCAL_ONLY if the subscriber-number-only version is
-   *        passed in. On the other hand, because isValidNumber validates using information on both
-   *        starting digits (for fixed line numbers, that would most likely be area codes) and
-   *        length (obviously includes the length of area codes for fixed line numbers), it will
-   *        return false for the subscriber-number-only version.
+   * <li> It only checks the length of phone numbers. In particular, it doesn't check starting
+   * digits of the number.
+   * <li> It doesn't attempt to figure out the type of the number, but uses general rules which
+   * applies to all types of phone numbers in a region. Therefore, it is much faster than
+   * isValidNumber.
+   * <li> For some numbers (particularly fixed-line), many regions have the concept of area code,
+   * which together with subscriber number constitute the national significant number. It is
+   * sometimes okay to dial only the subscriber number when dialing in the same area. This
+   * function will return IS_POSSIBLE_LOCAL_ONLY if the subscriber-number-only version is
+   * passed in. On the other hand, because isValidNumber validates using information on both
+   * starting digits (for fixed line numbers, that would most likely be area codes) and
+   * length (obviously includes the length of area codes for fixed line numbers), it will
+   * return false for the subscriber-number-only version.
    * </ol>
-   * @param number  the number that needs to be checked
-   * @return  a ValidationResult object which indicates whether the number is possible
+   *
+   * @param number the number that needs to be checked
+   * @return a ValidationResult object which indicates whether the number is possible
    */
   public ValidationResult isPossibleNumberWithReason(PhoneNumber number) {
     return isPossibleNumberForTypeWithReason(number, PhoneNumberType.UNKNOWN);
@@ -2600,25 +2617,25 @@ public class PhoneNumberUtil {
    * that you use {@link #getSupportedTypesForRegion} or {@link #getSupportedTypesForNonGeoEntity}
    * respectively before calling this method to determine whether you should call it for this number
    * at all.
-   *
+   * <p>
    * This provides a more lenient check than {@link #isValidNumber} in the following sense:
    *
    * <ol>
-   *   <li> It only checks the length of phone numbers. In particular, it doesn't check starting
-   *        digits of the number.
-   *   <li> For some numbers (particularly fixed-line), many regions have the concept of area code,
-   *        which together with subscriber number constitute the national significant number. It is
-   *        sometimes okay to dial only the subscriber number when dialing in the same area. This
-   *        function will return IS_POSSIBLE_LOCAL_ONLY if the subscriber-number-only version is
-   *        passed in. On the other hand, because isValidNumber validates using information on both
-   *        starting digits (for fixed line numbers, that would most likely be area codes) and
-   *        length (obviously includes the length of area codes for fixed line numbers), it will
-   *        return false for the subscriber-number-only version.
+   * <li> It only checks the length of phone numbers. In particular, it doesn't check starting
+   * digits of the number.
+   * <li> For some numbers (particularly fixed-line), many regions have the concept of area code,
+   * which together with subscriber number constitute the national significant number. It is
+   * sometimes okay to dial only the subscriber number when dialing in the same area. This
+   * function will return IS_POSSIBLE_LOCAL_ONLY if the subscriber-number-only version is
+   * passed in. On the other hand, because isValidNumber validates using information on both
+   * starting digits (for fixed line numbers, that would most likely be area codes) and
+   * length (obviously includes the length of area codes for fixed line numbers), it will
+   * return false for the subscriber-number-only version.
    * </ol>
    *
-   * @param number  the number that needs to be checked
-   * @param type  the type we are interested in
-   * @return  a ValidationResult object which indicates whether the number is possible
+   * @param number the number that needs to be checked
+   * @param type   the type we are interested in
+   * @return a ValidationResult object which indicates whether the number is possible
    */
   public ValidationResult isPossibleNumberForTypeWithReason(
       PhoneNumber number, PhoneNumberType type) {
@@ -2647,16 +2664,16 @@ public class PhoneNumberUtil {
    * <p>This method first parses the number, then invokes {@link #isPossibleNumber(PhoneNumber)}
    * with the resultant PhoneNumber object.
    *
-   * @param number  the number that needs to be checked
-   * @param regionDialingFrom  the region that we are expecting the number to be dialed from.
-   *     Note this is different from the region where the number belongs.  For example, the number
-   *     +1 650 253 0000 is a number that belongs to US. When written in this form, it can be
-   *     dialed from any region. When it is written as 00 1 650 253 0000, it can be dialed from any
-   *     region which uses an international dialling prefix of 00. When it is written as
-   *     650 253 0000, it can only be dialed from within the US, and when written as 253 0000, it
-   *     can only be dialed from within a smaller area in the US (Mountain View, CA, to be more
-   *     specific).
-   * @return  true if the number is possible
+   * @param number            the number that needs to be checked
+   * @param regionDialingFrom the region that we are expecting the number to be dialed from.
+   *                          Note this is different from the region where the number belongs.  For example, the number
+   *                          +1 650 253 0000 is a number that belongs to US. When written in this form, it can be
+   *                          dialed from any region. When it is written as 00 1 650 253 0000, it can be dialed from any
+   *                          region which uses an international dialling prefix of 00. When it is written as
+   *                          650 253 0000, it can only be dialed from within the US, and when written as 253 0000, it
+   *                          can only be dialed from within a smaller area in the US (Mountain View, CA, to be more
+   *                          specific).
+   * @return true if the number is possible
    */
   public boolean isPossibleNumber(CharSequence number, String regionDialingFrom) {
     try {
@@ -2670,8 +2687,9 @@ public class PhoneNumberUtil {
    * Attempts to extract a valid number from a phone number that is too long to be valid, and resets
    * the PhoneNumber object passed in to that valid version. If no valid number could be extracted,
    * the PhoneNumber object passed in will not be modified.
-   * @param number  a PhoneNumber object which contains a number that is too long to be valid
-   * @return  true if a valid phone number can be successfully extracted
+   *
+   * @param number a PhoneNumber object which contains a number that is too long to be valid
+   * @return true if a valid phone number can be successfully extracted
    */
   public boolean truncateTooLongNumber(PhoneNumber number) {
     if (isValidNumber(number)) {
@@ -2695,9 +2713,9 @@ public class PhoneNumberUtil {
   /**
    * Gets an {@link AsYouTypeFormatter} for the specific region.
    *
-   * @param regionCode  the region where the phone number is being entered
-   * @return  an {@link AsYouTypeFormatter} object, which can be used
-   *     to format phone numbers in the specific region "as you type"
+   * @param regionCode the region where the phone number is being entered
+   * @return an {@link AsYouTypeFormatter} object, which can be used
+   * to format phone numbers in the specific region "as you type"
    */
   public AsYouTypeFormatter getAsYouTypeFormatter(String regionCode) {
     return new AsYouTypeFormatter(regionCode);
@@ -2729,31 +2747,31 @@ public class PhoneNumberUtil {
    * country calling code is considered to be present. Country calling codes are extracted in the
    * following ways:
    * <ul>
-   *  <li> by stripping the international dialing prefix of the region the person is dialing from,
-   *       if this is present in the number, and looking at the next digits
-   *  <li> by stripping the '+' sign if present and then looking at the next digits
-   *  <li> by comparing the start of the number and the country calling code of the default region.
-   *       If the number is not considered possible for the numbering plan of the default region
-   *       initially, but starts with the country calling code of this region, validation will be
-   *       reattempted after stripping this country calling code. If this number is considered a
-   *       possible number, then the first digits will be considered the country calling code and
-   *       removed as such.
+   * <li> by stripping the international dialing prefix of the region the person is dialing from,
+   * if this is present in the number, and looking at the next digits
+   * <li> by stripping the '+' sign if present and then looking at the next digits
+   * <li> by comparing the start of the number and the country calling code of the default region.
+   * If the number is not considered possible for the numbering plan of the default region
+   * initially, but starts with the country calling code of this region, validation will be
+   * reattempted after stripping this country calling code. If this number is considered a
+   * possible number, then the first digits will be considered the country calling code and
+   * removed as such.
    * </ul>
    * It will throw a NumberParseException if the number starts with a '+' but the country calling
    * code supplied after this does not match that of any known region.
    *
-   * @param number  non-normalized telephone number that we wish to extract a country calling
-   *     code from - may begin with '+'
-   * @param defaultRegionMetadata  metadata about the region this number may be from
-   * @param nationalNumber  a string buffer to store the national significant number in, in the case
-   *     that a country calling code was extracted. The number is appended to any existing contents.
-   *     If no country calling code was extracted, this will be left unchanged.
-   * @param keepRawInput  true if the country_code_source and preferred_carrier_code fields of
-   *     phoneNumber should be populated.
-   * @param phoneNumber  the PhoneNumber object where the country_code and country_code_source need
-   *     to be populated. Note the country_code is always populated, whereas country_code_source is
-   *     only populated when keepCountryCodeSource is true.
-   * @return  the country calling code extracted or 0 if none could be extracted
+   * @param number                non-normalized telephone number that we wish to extract a country calling
+   *                              code from - may begin with '+'
+   * @param defaultRegionMetadata metadata about the region this number may be from
+   * @param nationalNumber        a string buffer to store the national significant number in, in the case
+   *                              that a country calling code was extracted. The number is appended to any existing contents.
+   *                              If no country calling code was extracted, this will be left unchanged.
+   * @param keepRawInput          true if the country_code_source and preferred_carrier_code fields of
+   *                              phoneNumber should be populated.
+   * @param phoneNumber           the PhoneNumber object where the country_code and country_code_source need
+   *                              to be populated. Note the country_code is always populated, whereas country_code_source is
+   *                              only populated when keepCountryCodeSource is true.
+   * @return the country calling code extracted or 0 if none could be extracted
    */
   // @VisibleForTesting
   int maybeExtractCountryCode(CharSequence number, PhoneMetadata defaultRegionMetadata,
@@ -2851,13 +2869,13 @@ public class PhoneNumberUtil {
    * Strips any international prefix (such as +, 00, 011) present in the number provided, normalizes
    * the resulting number, and indicates if an international prefix was present.
    *
-   * @param number  the non-normalized telephone number that we wish to strip any international
-   *     dialing prefix from
-   * @param possibleIddPrefix  the international direct dialing prefix from the region we
-   *     think this number may be dialed in
-   * @return  the corresponding CountryCodeSource if an international dialing prefix could be
-   *     removed from the number, otherwise CountryCodeSource.FROM_DEFAULT_COUNTRY if the number did
-   *     not seem to be in international format
+   * @param number            the non-normalized telephone number that we wish to strip any international
+   *                          dialing prefix from
+   * @param possibleIddPrefix the international direct dialing prefix from the region we
+   *                          think this number may be dialed in
+   * @return the corresponding CountryCodeSource if an international dialing prefix could be
+   * removed from the number, otherwise CountryCodeSource.FROM_DEFAULT_COUNTRY if the number did
+   * not seem to be in international format
    */
   // @VisibleForTesting
   CountryCodeSource maybeStripInternationalPrefixAndNormalize(
@@ -2885,10 +2903,10 @@ public class PhoneNumberUtil {
   /**
    * Strips any national prefix (such as 0, 1) present in the number provided.
    *
-   * @param number  the normalized telephone number that we wish to strip any national
-   *     dialing prefix from
-   * @param metadata  the metadata for the region that we think this number is from
-   * @param carrierCode  a place to insert the carrier code if one is extracted
+   * @param number      the normalized telephone number that we wish to strip any national
+   *                    dialing prefix from
+   * @param metadata    the metadata for the region that we think this number is from
+   * @param carrierCode a place to insert the carrier code if one is extracted
    * @return true if a national prefix or carrier code (or both) could be extracted
    */
   // @VisibleForTesting
@@ -2947,8 +2965,8 @@ public class PhoneNumberUtil {
    * Strips any extension (as in, the part of the number dialled after the call is connected,
    * usually indicated with extn, ext, x or similar) from the end of the number, and returns it.
    *
-   * @param number  the non-normalized telephone number that we wish to strip the extension from
-   * @return  the phone extension
+   * @param number the non-normalized telephone number that we wish to strip the extension from
+   * @return the phone extension
    */
   // @VisibleForTesting
   String maybeStripExtension(StringBuilder number) {
@@ -3006,18 +3024,18 @@ public class PhoneNumberUtil {
    * input that was entered, how the country code was derived etc. then call {@link
    * #parseAndKeepRawInput} instead.
    *
-   * @param numberToParse  number that we are attempting to parse. This can contain formatting such
-   *     as +, ( and -, as well as a phone number extension. It can also be provided in RFC3966
-   *     format.
-   * @param defaultRegion  region that we are expecting the number to be from. This is only used if
-   *     the number being parsed is not written in international format. The country_code for the
-   *     number in this case would be stored as that of the default region supplied. If the number
-   *     is guaranteed to start with a '+' followed by the country calling code, then RegionCode.ZZ
-   *     or null can be supplied.
-   * @return  a phone number proto buffer filled with the parsed number
-   * @throws NumberParseException  if the string is not considered to be a viable phone number (e.g.
-   *     too few or too many digits) or if no default region was supplied and the number is not in
-   *     international format (does not start with +)
+   * @param numberToParse number that we are attempting to parse. This can contain formatting such
+   *                      as +, ( and -, as well as a phone number extension. It can also be provided in RFC3966
+   *                      format.
+   * @param defaultRegion region that we are expecting the number to be from. This is only used if
+   *                      the number being parsed is not written in international format. The country_code for the
+   *                      number in this case would be stored as that of the default region supplied. If the number
+   *                      is guaranteed to start with a '+' followed by the country calling code, then RegionCode.ZZ
+   *                      or null can be supplied.
+   * @return a phone number proto buffer filled with the parsed number
+   * @throws NumberParseException if the string is not considered to be a viable phone number (e.g.
+   *                              too few or too many digits) or if no default region was supplied and the number is not in
+   *                              international format (does not start with +)
    */
   public PhoneNumber parse(CharSequence numberToParse, String defaultRegion)
       throws NumberParseException {
@@ -3040,14 +3058,14 @@ public class PhoneNumberUtil {
    * in that it always populates the raw_input field of the protocol buffer with numberToParse as
    * well as the country_code_source field.
    *
-   * @param numberToParse  number that we are attempting to parse. This can contain formatting such
-   *     as +, ( and -, as well as a phone number extension.
-   * @param defaultRegion  region that we are expecting the number to be from. This is only used if
-   *     the number being parsed is not written in international format. The country calling code
-   *     for the number in this case would be stored as that of the default region supplied.
-   * @return  a phone number proto buffer filled with the parsed number
-   * @throws NumberParseException  if the string is not considered to be a viable phone number or if
-   *     no default region was supplied
+   * @param numberToParse number that we are attempting to parse. This can contain formatting such
+   *                      as +, ( and -, as well as a phone number extension.
+   * @param defaultRegion region that we are expecting the number to be from. This is only used if
+   *                      the number being parsed is not written in international format. The country calling code
+   *                      for the number in this case would be stored as that of the default region supplied.
+   * @return a phone number proto buffer filled with the parsed number
+   * @throws NumberParseException if the string is not considered to be a viable phone number or if
+   *                              no default region was supplied
    */
   public PhoneNumber parseAndKeepRawInput(CharSequence numberToParse, String defaultRegion)
       throws NumberParseException {
@@ -3071,11 +3089,11 @@ public class PhoneNumberUtil {
    * is a shortcut for {@link #findNumbers(CharSequence, String, Leniency, long)
    * getMatcher(text, defaultRegion, Leniency.VALID, Long.MAX_VALUE)}.
    *
-   * @param text  the text to search for phone numbers, null for no text
-   * @param defaultRegion  region that we are expecting the number to be from. This is only used if
-   *     the number being parsed is not written in international format. The country_code for the
-   *     number in this case would be stored as that of the default region supplied. May be null if
-   *     only international numbers are expected.
+   * @param text          the text to search for phone numbers, null for no text
+   * @param defaultRegion region that we are expecting the number to be from. This is only used if
+   *                      the number being parsed is not written in international format. The country_code for the
+   *                      number in this case would be stored as that of the default region supplied. May be null if
+   *                      only international numbers are expected.
    */
   public Iterable<PhoneNumberMatch> findNumbers(CharSequence text, String defaultRegion) {
     return findNumbers(text, defaultRegion, Leniency.VALID, Long.MAX_VALUE);
@@ -3084,15 +3102,15 @@ public class PhoneNumberUtil {
   /**
    * Returns an iterable over all {@link PhoneNumberMatch PhoneNumberMatches} in {@code text}.
    *
-   * @param text  the text to search for phone numbers, null for no text
-   * @param defaultRegion  region that we are expecting the number to be from. This is only used if
-   *     the number being parsed is not written in international format. The country_code for the
-   *     number in this case would be stored as that of the default region supplied. May be null if
-   *     only international numbers are expected.
-   * @param leniency  the leniency to use when evaluating candidate phone numbers
-   * @param maxTries  the maximum number of invalid numbers to try before giving up on the text.
-   *     This is to cover degenerate cases where the text has a lot of false positives in it. Must
-   *     be {@code >= 0}.
+   * @param text          the text to search for phone numbers, null for no text
+   * @param defaultRegion region that we are expecting the number to be from. This is only used if
+   *                      the number being parsed is not written in international format. The country_code for the
+   *                      number in this case would be stored as that of the default region supplied. May be null if
+   *                      only international numbers are expected.
+   * @param leniency      the leniency to use when evaluating candidate phone numbers
+   * @param maxTries      the maximum number of invalid numbers to try before giving up on the text.
+   *                      This is to cover degenerate cases where the text has a lot of false positives in it. Must
+   *                      be {@code >= 0}.
    */
   public Iterable<PhoneNumberMatch> findNumbers(
       final CharSequence text, final String defaultRegion, final Leniency leniency,
@@ -3132,7 +3150,7 @@ public class PhoneNumberUtil {
    * parse() method, with the exception that it allows the default region to be null, for use by
    * isNumberMatch(). checkRegion should be set to false if it is permitted for the default region
    * to be null or unknown ("ZZ").
-   *
+   * <p>
    * Note if any new field is added to this method that should always be filled in, even when
    * keepRawInput is false, it should also be handled in the copyCoreFieldsOnly() method.
    */
@@ -3335,10 +3353,9 @@ public class PhoneNumberUtil {
    * The numbers +1 345 657 1234 and 345 657 are a NO_MATCH.
    *
    * @param firstNumberIn  first number to compare
-   * @param secondNumberIn  second number to compare
-   *
-   * @return  NO_MATCH, SHORT_NSN_MATCH, NSN_MATCH or EXACT_MATCH depending on the level of equality
-   *     of the two numbers, described in the method definition.
+   * @param secondNumberIn second number to compare
+   * @return NO_MATCH, SHORT_NSN_MATCH, NSN_MATCH or EXACT_MATCH depending on the level of equality
+   * of the two numbers, described in the method definition.
    */
   public MatchType isNumberMatch(PhoneNumber firstNumberIn, PhoneNumber secondNumberIn) {
     // We only care about the fields that uniquely define a number, so we copy these across
@@ -3394,11 +3411,11 @@ public class PhoneNumberUtil {
    * wrapper for {@link #isNumberMatch(PhoneNumber, PhoneNumber)}. No default region is known.
    *
    * @param firstNumber  first number to compare. Can contain formatting, and can have country
-   *     calling code specified with + at the start.
-   * @param secondNumber  second number to compare. Can contain formatting, and can have country
-   *     calling code specified with + at the start.
-   * @return  NOT_A_NUMBER, NO_MATCH, SHORT_NSN_MATCH, NSN_MATCH, EXACT_MATCH. See
-   *     {@link #isNumberMatch(PhoneNumber, PhoneNumber)} for more details.
+   *                     calling code specified with + at the start.
+   * @param secondNumber second number to compare. Can contain formatting, and can have country
+   *                     calling code specified with + at the start.
+   * @return NOT_A_NUMBER, NO_MATCH, SHORT_NSN_MATCH, NSN_MATCH, EXACT_MATCH. See
+   * {@link #isNumberMatch(PhoneNumber, PhoneNumber)} for more details.
    */
   public MatchType isNumberMatch(CharSequence firstNumber, CharSequence secondNumber) {
     try {
@@ -3433,10 +3450,10 @@ public class PhoneNumberUtil {
    * {@link #isNumberMatch(PhoneNumber, PhoneNumber)}. No default region is known.
    *
    * @param firstNumber  first number to compare in proto buffer format
-   * @param secondNumber  second number to compare. Can contain formatting, and can have country
-   *     calling code specified with + at the start.
-   * @return  NOT_A_NUMBER, NO_MATCH, SHORT_NSN_MATCH, NSN_MATCH, EXACT_MATCH. See
-   *     {@link #isNumberMatch(PhoneNumber, PhoneNumber)} for more details.
+   * @param secondNumber second number to compare. Can contain formatting, and can have country
+   *                     calling code specified with + at the start.
+   * @return NOT_A_NUMBER, NO_MATCH, SHORT_NSN_MATCH, NSN_MATCH, EXACT_MATCH. See
+   * {@link #isNumberMatch(PhoneNumber, PhoneNumber)} for more details.
    */
   public MatchType isNumberMatch(PhoneNumber firstNumber, CharSequence secondNumber) {
     // First see if the second number has an implicit country calling code, by attempting to parse
@@ -3480,8 +3497,8 @@ public class PhoneNumberUtil {
    * number. Note that, at the moment, this method does not handle short numbers (which are
    * currently all presumed to not be diallable from outside their country).
    *
-   * @param number  the phone-number for which we want to know whether it is diallable from
-   *     outside the region
+   * @param number the phone-number for which we want to know whether it is diallable from
+   *               outside the region
    */
   public boolean canBeInternationallyDialled(PhoneNumber number) {
     PhoneMetadata metadata = getMetadataForRegion(getRegionCodeForNumber(number));
@@ -3498,8 +3515,8 @@ public class PhoneNumberUtil {
    * Returns true if the supplied region supports mobile number portability. Returns false for
    * invalid, unknown or regions that don't support mobile number portability.
    *
-   * @param regionCode  the region for which we want to know whether it supports mobile number
-   *     portability or not
+   * @param regionCode the region for which we want to know whether it supports mobile number
+   *                   portability or not
    */
   public boolean isMobileNumberPortableRegion(String regionCode) {
     PhoneMetadata metadata = getMetadataForRegion(regionCode);
