@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final TextView textView = findViewById(R.id.textView);
+    final TextView textView = (TextView) findViewById(R.id.textView);
     findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
       private PhoneNumberUtil util = null;
 
