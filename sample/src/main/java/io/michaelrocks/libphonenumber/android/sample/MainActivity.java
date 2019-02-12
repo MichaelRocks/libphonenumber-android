@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final TextView textView = (TextView) findViewById(R.id.textView);
+    final TextView textView = findViewById(R.id.textView);
     findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
       private PhoneNumberUtil util = null;
 
@@ -27,9 +27,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-          final Phonenumber.PhoneNumber phoneNumber = util.parse("525611343433", "MX");
-          util.isValidNumber(util.parse("525611343433", "MX"));
-
+          final Phonenumber.PhoneNumber phoneNumber = util.parse("8005551212", "US");
           textView.setText(util.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL));
         } catch (NumberParseException e) {
           e.printStackTrace();
