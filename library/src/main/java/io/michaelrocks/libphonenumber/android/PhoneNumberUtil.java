@@ -1108,8 +1108,30 @@ public class PhoneNumberUtil {
    * metadata loading. Calling this method multiple times is very expensive, as each time
    * a new instance is created from scratch. When in doubt, use {@link #getInstance}.
    *
-   * @param metadataLoader  customized metadata loader. This should not be null
-   * @return  a PhoneNumberUtil instance
+   * @param context Android {@link Context} used to load metadata. This should not be null.
+   * @return a PhoneNumberUtil instance
+   */
+  public static PhoneNumberUtil createInstance(Context context) {
+    if (context == null) {
+      throw new IllegalArgumentException("context could not be null.");
+    }
+
+    setInstance(createInstance(new AssetsMetadataLoader(context.getAssets())));
+
+    return instance;
+  }
+
+  /**
+   * Create a new {@link PhoneNumberUtil} instance to carry out international phone number
+   * formatting, parsing, or validation. The instance is loaded with all metadata by
+   * using the metadataLoader specified.
+   *
+   * <p>This method should only be used in the rare case in which you want to manage your own
+   * metadata loading. Calling this method multiple times is very expensive, as each time
+   * a new instance is created from scratch. When in doubt, use {@link #getInstance}.
+   *
+   * @param metadataLoader customized metadata loader. This should not be null
+   * @return a PhoneNumberUtil instance
    */
   public static PhoneNumberUtil createInstance(MetadataLoader metadataLoader) {
     if (metadataLoader == null) {
