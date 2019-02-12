@@ -1,10 +1,10 @@
 package io.michaelrocks.libphonenumber.android.sample;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import io.michaelrocks.libphonenumber.android.NumberParseException;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 import io.michaelrocks.libphonenumber.android.Phonenumber;
@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final TextView textView = (TextView) findViewById(R.id.textView);
+    final TextView textView = findViewById(R.id.textView);
     findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
       private PhoneNumberUtil util = null;
 
