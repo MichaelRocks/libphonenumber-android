@@ -57,7 +57,7 @@ public class AsYouTypeFormatter {
   // true, we will no longer use local number formatting patterns.
   private boolean isCompleteNumber = false;
   private boolean isExpectingCountryCallingCode = false;
-  private final PhoneNumberUtil phoneUtil;
+  private final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
   private String defaultCountry;
 
   // Character used when appropriate to separate a prefix, such as a long NDD or a country calling
@@ -67,16 +67,6 @@ public class AsYouTypeFormatter {
       new PhoneMetadata().setInternationalPrefix("NA");
   private PhoneMetadata defaultMetadata;
   private PhoneMetadata currentMetadata;
-
-  // A pattern that is used to match character classes in regular expressions. An example of a
-  // character class is [1-4].
-  private static final Pattern CHARACTER_CLASS_PATTERN = Pattern.compile("\\[([^\\[\\]])*\\]");
-  // Any digit in a regular expression that actually denotes a digit. For example, in the regular
-  // expression 80[0-2]\d{6,10}, the first 2 digits (8 and 0) are standalone digits, but the rest
-  // are not.
-  // Two look-aheads are needed because the number following \\d could be a two-digit number, since
-  // the phone number can be as long as 15 digits.
-  private static final Pattern STANDALONE_DIGIT_PATTERN = Pattern.compile("\\d(?=[^,}][^,}])");
 
   // A pattern that is used to determine if a numberFormat under availableFormats is eligible to be
   // used by the AYTF. It is eligible when the format element under numberFormat contains groups of
@@ -124,11 +114,9 @@ public class AsYouTypeFormatter {
    * Constructs an as-you-type formatter. Should be obtained from {@link
    * PhoneNumberUtil#getAsYouTypeFormatter}.
    *
-   * @param phoneUtil   an instance of {@link PhoneNumberUtil}
    * @param regionCode  the country/region where the phone number is being entered
    */
-  AsYouTypeFormatter(PhoneNumberUtil phoneUtil, String regionCode) {
-    this.phoneUtil = phoneUtil;
+  AsYouTypeFormatter(String regionCode) {
     defaultCountry = regionCode;
     currentMetadata = getMetadataForRegion(defaultCountry);
     defaultMetadata = currentMetadata;
@@ -188,7 +176,7 @@ public class AsYouTypeFormatter {
       // prefix.
       if (extractedNationalPrefix.length() > 0
           && PhoneNumberUtil.formattingRuleHasFirstGroupOnly(
-              format.getNationalPrefixFormattingRule())
+          format.getNationalPrefixFormattingRule())
           && !format.getNationalPrefixOptionalWhenFormatting()
           && !format.hasDomesticCarrierCodeFormattingRule()) {
         // If it is a national number that had a national prefix, any rules that aren't valid with a
@@ -199,7 +187,7 @@ public class AsYouTypeFormatter {
       } else if (extractedNationalPrefix.length() == 0
           && !isCompleteNumber
           && !PhoneNumberUtil.formattingRuleHasFirstGroupOnly(
-              format.getNationalPrefixFormattingRule())
+          format.getNationalPrefixFormattingRule())
           && !format.getNationalPrefixOptionalWhenFormatting()) {
         // This number was entered without a national prefix, and this formatting rule requires one,
         // so we discard it.
@@ -234,18 +222,6 @@ public class AsYouTypeFormatter {
 
   private boolean createFormattingTemplate(NumberFormat format) {
     String numberPattern = format.getPattern();
-
-    // The formatter doesn't format numbers when numberPattern contains "|", e.g.
-    // (20|3)\d{4}. In those cases we quickly return.
-    if (numberPattern.indexOf('|') != -1) {
-      return false;
-    }
-
-    // Replace anything in the form of [..] with \d
-    numberPattern = CHARACTER_CLASS_PATTERN.matcher(numberPattern).replaceAll("\\\\d");
-
-    // Replace any standalone digit (not the one in d{}) with \d
-    numberPattern = STANDALONE_DIGIT_PATTERN.matcher(numberPattern).replaceAll("\\\\d");
     formattingTemplate.setLength(0);
     String tempTemplate = getFormattingTemplate(numberPattern, format.getFormat());
     if (tempTemplate.length() > 0) {
@@ -396,8 +372,8 @@ public class AsYouTypeFormatter {
             return inputAccruedNationalNumber();
           }
           return ableToFormat
-             ? appendNationalNumber(tempNationalNumber)
-             : accruedInput.toString();
+              ? appendNationalNumber(tempNationalNumber)
+              : accruedInput.toString();
         } else {
           return attemptToChooseFormattingPattern();
         }
@@ -437,7 +413,7 @@ public class AsYouTypeFormatter {
   private boolean isDigitOrLeadingPlusSign(char nextChar) {
     return Character.isDigit(nextChar)
         || (accruedInput.length() == 1
-            && PhoneNumberUtil.PLUS_CHARS_PATTERN.matcher(Character.toString(nextChar)).matches());
+        && PhoneNumberUtil.PLUS_CHARS_PATTERN.matcher(Character.toString(nextChar)).matches());
   }
 
   /**
@@ -487,7 +463,7 @@ public class AsYouTypeFormatter {
     int prefixBeforeNationalNumberLength = prefixBeforeNationalNumber.length();
     if (shouldAddSpaceAfterNationalPrefix && prefixBeforeNationalNumberLength > 0
         && prefixBeforeNationalNumber.charAt(prefixBeforeNationalNumberLength - 1)
-            != SEPARATOR_BEFORE_NATIONAL_NUMBER) {
+        != SEPARATOR_BEFORE_NATIONAL_NUMBER) {
       // We want to add a space after the national prefix if the national prefix formatting rule
       // indicates that this would normally be done, with the exception of the case where we already
       // appended a space because the NDD was surprisingly long.

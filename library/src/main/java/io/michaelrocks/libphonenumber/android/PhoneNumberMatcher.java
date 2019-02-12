@@ -140,9 +140,9 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
      */
     MATCHING_BRACKETS = Pattern.compile(
         "(?:[" + openingParens + "])?" + "(?:" + nonParens + "+" + "[" + closingParens + "])?"
-        + nonParens + "+"
-        + "(?:[" + openingParens + "]" + nonParens + "+[" + closingParens + "])" + bracketPairLimit
-        + nonParens + "*");
+            + nonParens + "+"
+            + "(?:[" + openingParens + "]" + nonParens + "+[" + closingParens + "])" + bracketPairLimit
+            + nonParens + "*");
 
     /* Limit on the number of leading (plus) characters. */
     String leadLimit = limit(0, 2);
@@ -169,8 +169,8 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     /* Phone number pattern allowing optional punctuation. */
     PATTERN = Pattern.compile(
         "(?:" + leadClass + punctuation + ")" + leadLimit
-        + digitSequence + "(?:" + punctuation + digitSequence + ")" + blockLimit
-        + "(?:" + PhoneNumberUtil.EXTN_PATTERNS_FOR_MATCHING + ")?",
+            + digitSequence + "(?:" + punctuation + digitSequence + ")" + blockLimit
+            + "(?:" + PhoneNumberUtil.EXTN_PATTERNS_FOR_MATCHING + ")?",
         PhoneNumberUtil.REGEX_FLAGS);
   }
 
@@ -224,7 +224,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
    *     be {@code >= 0}.
    */
   PhoneNumberMatcher(PhoneNumberUtil util, CharSequence text, String country, Leniency leniency,
-      long maxTries) {
+                     long maxTries) {
 
     if ((util == null) || (leniency == null)) {
       throw new NullPointerException();
@@ -507,7 +507,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     // a prefix such as a national number prefix, or the country code itself.
     if (candidateGroups.length == 1
         || candidateGroups[candidateNumberGroupIndex].contains(
-            util.getNationalSignificantNumber(number))) {
+        util.getNationalSignificantNumber(number))) {
       return true;
     }
     // Starting from the end, go through in reverse, excluding the first group, and check the
@@ -548,7 +548,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
       // We format the NSN only, and split that according to the separator.
       String nationalSignificantNumber = util.getNationalSignificantNumber(number);
       return util.formatNsnUsingPattern(nationalSignificantNumber,
-                                        formattingPattern, PhoneNumberFormat.RFC3966).split("-");
+          formattingPattern, PhoneNumberFormat.RFC3966).split("-");
     }
   }
 
@@ -565,7 +565,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     }
     // If this didn't pass, see if there are any alternate formats, and try them instead.
     PhoneMetadata alternateFormats =
-        util.getMetadataSource().getAlternateFormatsForCountry(number.getCountryCode());
+        MetadataManager.getAlternateFormatsForCountry(number.getCountryCode());
     if (alternateFormats != null) {
       for (NumberFormat alternateFormat : alternateFormats.numberFormats()) {
         formattedNumberGroups = getNationalNumberGroups(util, number, alternateFormat);
@@ -593,10 +593,10 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     // If the first slash is after the country calling code, this is permitted.
     boolean candidateHasCountryCode =
         (number.getCountryCodeSource() == CountryCodeSource.FROM_NUMBER_WITH_PLUS_SIGN
-         || number.getCountryCodeSource() == CountryCodeSource.FROM_NUMBER_WITHOUT_PLUS_SIGN);
+            || number.getCountryCodeSource() == CountryCodeSource.FROM_NUMBER_WITHOUT_PLUS_SIGN);
     if (candidateHasCountryCode
         && PhoneNumberUtil.normalizeDigitsOnly(candidate.substring(0, firstSlashInBodyIndex))
-            .equals(Integer.toString(number.getCountryCode()))) {
+        .equals(Integer.toString(number.getCountryCode()))) {
       // Any more slashes and this is illegal.
       return candidate.substring(secondSlashInBodyIndex + 1).contains("/");
     }
@@ -621,8 +621,8 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
           if (util.isNumberMatch(number, candidate.substring(index)) != MatchType.NSN_MATCH) {
             return false;
           }
-        // This is the extension sign case, in which the 'x' or 'X' should always precede the
-        // extension number.
+          // This is the extension sign case, in which the 'x' or 'X' should always precede the
+          // extension number.
         } else if (!PhoneNumberUtil.normalizeDigitsOnly(candidate.substring(index)).equals(
             number.getExtension())) {
           return false;

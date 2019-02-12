@@ -18,6 +18,7 @@
 package io.michaelrocks.libphonenumber.android.internal;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -57,7 +58,7 @@ public class RegexCache {
       // Using access-order instead of insertion-order.
       map = new LinkedHashMap<K, V>(size * 4 / 3 + 1, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Entry<K, V> eldest) {
+        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
           return size() > LRUCache.this.size;
         }
       };

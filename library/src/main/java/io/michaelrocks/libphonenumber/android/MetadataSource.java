@@ -37,17 +37,4 @@ interface MetadataSource {
    * @return the phone metadata for that region, or null if there is none.
    */
   PhoneMetadata getMetadataForNonGeographicalRegion(int countryCallingCode);
-
-  /**
-   * Gets alternative phone metadata for a non-geographical region.
-   * @param countryCallingCode the country calling code.
-   * @return the phone metadata for that region, or null if there is none.
-   */
-  PhoneMetadata getAlternateFormatsForCountry(int countryCallingCode);
-  /**
-   * Gets short number phone metadata for a region.
-   * @param regionCode the region code.
-   * @return the phone metadata for that region, or null if there is none.
-   */
-  PhoneMetadata getShortNumberMetadataForRegion(String regionCode);
 }

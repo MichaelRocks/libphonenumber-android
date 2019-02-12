@@ -75,7 +75,7 @@ public final class Phonenumber {
 
     // optional string extension = 3;
     private boolean hasExtension;
-    private String extension_ = "";
+    private java.lang.String extension_ = "";
     public boolean hasExtension() { return hasExtension; }
     public String getExtension() { return extension_; }
     public PhoneNumber setExtension(String value) {
@@ -164,7 +164,7 @@ public final class Phonenumber {
 
     // optional string preferred_domestic_carrier_code = 7;
     private boolean hasPreferredDomesticCarrierCode;
-    private String preferredDomesticCarrierCode_ = "";
+    private java.lang.String preferredDomesticCarrierCode_ = "";
     public boolean hasPreferredDomesticCarrierCode() { return hasPreferredDomesticCarrierCode; }
     public String getPreferredDomesticCarrierCode() { return preferredDomesticCarrierCode_; }
     public PhoneNumber setPreferredDomesticCarrierCode(String value) {
