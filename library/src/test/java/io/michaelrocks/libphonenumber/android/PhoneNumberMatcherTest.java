@@ -121,7 +121,7 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
     doTestFindInContext("\uFF0B1 (650) 333-6000", RegionCode.SG);
     // The whole number, including punctuation, is here represented in full-width form.
     doTestFindInContext("\uFF0B\uFF11\u3000\uFF08\uFF16\uFF15\uFF10\uFF09"
-        + "\u3000\uFF13\uFF13\uFF13\uFF0D\uFF16\uFF10\uFF10\uFF10",
+            + "\u3000\uFF13\uFF13\uFF13\uFF0D\uFF16\uFF10\uFF10\uFF10",
         RegionCode.SG);
   }
 
@@ -428,37 +428,37 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
    * Strings with number-like things that shouldn't be found under any level.
    */
   private static final NumberTest[] IMPOSSIBLE_CASES = {
-    new NumberTest("12345", RegionCode.US),
-    new NumberTest("23456789", RegionCode.US),
-    new NumberTest("234567890112", RegionCode.US),
-    new NumberTest("650+253+1234", RegionCode.US),
-    new NumberTest("3/10/1984", RegionCode.CA),
-    new NumberTest("03/27/2011", RegionCode.US),
-    new NumberTest("31/8/2011", RegionCode.US),
-    new NumberTest("1/12/2011", RegionCode.US),
-    new NumberTest("10/12/82", RegionCode.DE),
-    new NumberTest("650x2531234", RegionCode.US),
-    new NumberTest("2012-01-02 08:00", RegionCode.US),
-    new NumberTest("2012/01/02 08:00", RegionCode.US),
-    new NumberTest("20120102 08:00", RegionCode.US),
-    new NumberTest("2014-04-12 04:04 PM", RegionCode.US),
-    new NumberTest("2014-04-12 &nbsp;04:04 PM", RegionCode.US),
-    new NumberTest("2014-04-12 &nbsp;04:04 PM", RegionCode.US),
-    new NumberTest("2014-04-12  04:04 PM", RegionCode.US),
+      new NumberTest("12345", RegionCode.US),
+      new NumberTest("23456789", RegionCode.US),
+      new NumberTest("234567890112", RegionCode.US),
+      new NumberTest("650+253+1234", RegionCode.US),
+      new NumberTest("3/10/1984", RegionCode.CA),
+      new NumberTest("03/27/2011", RegionCode.US),
+      new NumberTest("31/8/2011", RegionCode.US),
+      new NumberTest("1/12/2011", RegionCode.US),
+      new NumberTest("10/12/82", RegionCode.DE),
+      new NumberTest("650x2531234", RegionCode.US),
+      new NumberTest("2012-01-02 08:00", RegionCode.US),
+      new NumberTest("2012/01/02 08:00", RegionCode.US),
+      new NumberTest("20120102 08:00", RegionCode.US),
+      new NumberTest("2014-04-12 04:04 PM", RegionCode.US),
+      new NumberTest("2014-04-12 &nbsp;04:04 PM", RegionCode.US),
+      new NumberTest("2014-04-12 &nbsp;04:04 PM", RegionCode.US),
+      new NumberTest("2014-04-12  04:04 PM", RegionCode.US),
   };
 
   /**
    * Strings with number-like things that should only be found under "possible".
    */
   private static final NumberTest[] POSSIBLE_ONLY_CASES = {
-    // US numbers cannot start with 7 in the test metadata to be valid.
-    new NumberTest("7121115678", RegionCode.US),
-    // 'X' should not be found in numbers at leniencies stricter than POSSIBLE, unless it represents
-    // a carrier code or extension.
-    new NumberTest("1650 x 253 - 1234", RegionCode.US),
-    new NumberTest("650 x 253 - 1234", RegionCode.US),
-    new NumberTest("6502531x234", RegionCode.US),
-    new NumberTest("(20) 3346 1234", RegionCode.GB),  // Non-optional NP omitted
+      // US numbers cannot start with 7 in the test metadata to be valid.
+      new NumberTest("7121115678", RegionCode.US),
+      // 'X' should not be found in numbers at leniencies stricter than POSSIBLE, unless it represents
+      // a carrier code or extension.
+      new NumberTest("1650 x 253 - 1234", RegionCode.US),
+      new NumberTest("650 x 253 - 1234", RegionCode.US),
+      new NumberTest("6502531x234", RegionCode.US),
+      new NumberTest("(20) 3346 1234", RegionCode.GB),  // Non-optional NP omitted
   };
 
   /**
@@ -466,25 +466,25 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
    * leniency level.
    */
   private static final NumberTest[] VALID_CASES = {
-    new NumberTest("65 02 53 00 00", RegionCode.US),
-    new NumberTest("6502 538365", RegionCode.US),
-    new NumberTest("650//253-1234", RegionCode.US),  // 2 slashes are illegal at higher levels
-    new NumberTest("650/253/1234", RegionCode.US),
-    new NumberTest("9002309. 158", RegionCode.US),
-    new NumberTest("12 7/8 - 14 12/34 - 5", RegionCode.US),
-    new NumberTest("12.1 - 23.71 - 23.45", RegionCode.US),
-    new NumberTest("800 234 1 111x1111", RegionCode.US),
-    new NumberTest("1979-2011 100", RegionCode.US),
-    new NumberTest("+494949-4-94", RegionCode.DE),  // National number in wrong format
-    new NumberTest("\uFF14\uFF11\uFF15\uFF16\uFF16\uFF16\uFF16-\uFF17\uFF17\uFF17", RegionCode.US),
-    new NumberTest("2012-0102 08", RegionCode.US),  // Very strange formatting.
-    new NumberTest("2012-01-02 08", RegionCode.US),
-    // Breakdown assistance number with unexpected formatting.
-    new NumberTest("1800-1-0-10 22", RegionCode.AU),
-    new NumberTest("030-3-2 23 12 34", RegionCode.DE),
-    new NumberTest("03 0 -3 2 23 12 34", RegionCode.DE),
-    new NumberTest("(0)3 0 -3 2 23 12 34", RegionCode.DE),
-    new NumberTest("0 3 0 -3 2 23 12 34", RegionCode.DE),
+      new NumberTest("65 02 53 00 00", RegionCode.US),
+      new NumberTest("6502 538365", RegionCode.US),
+      new NumberTest("650//253-1234", RegionCode.US),  // 2 slashes are illegal at higher levels
+      new NumberTest("650/253/1234", RegionCode.US),
+      new NumberTest("9002309. 158", RegionCode.US),
+      new NumberTest("12 7/8 - 14 12/34 - 5", RegionCode.US),
+      new NumberTest("12.1 - 23.71 - 23.45", RegionCode.US),
+      new NumberTest("800 234 1 111x1111", RegionCode.US),
+      new NumberTest("1979-2011 100", RegionCode.US),
+      new NumberTest("+494949-4-94", RegionCode.DE),  // National number in wrong format
+      new NumberTest("\uFF14\uFF11\uFF15\uFF16\uFF16\uFF16\uFF16-\uFF17\uFF17\uFF17", RegionCode.US),
+      new NumberTest("2012-0102 08", RegionCode.US),  // Very strange formatting.
+      new NumberTest("2012-01-02 08", RegionCode.US),
+      // Breakdown assistance number with unexpected formatting.
+      new NumberTest("1800-1-0-10 22", RegionCode.AU),
+      new NumberTest("030-3-2 23 12 34", RegionCode.DE),
+      new NumberTest("03 0 -3 2 23 12 34", RegionCode.DE),
+      new NumberTest("(0)3 0 -3 2 23 12 34", RegionCode.DE),
+      new NumberTest("0 3 0 -3 2 23 12 34", RegionCode.DE),
   };
 
   /**
@@ -492,51 +492,51 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
    * "strict_grouping" leniency level.
    */
   private static final NumberTest[] STRICT_GROUPING_CASES = {
-    new NumberTest("(415) 6667777", RegionCode.US),
-    new NumberTest("415-6667777", RegionCode.US),
-    // Should be found by strict grouping but not exact grouping, as the last two groups are
-    // formatted together as a block.
-    new NumberTest("0800-2491234", RegionCode.DE),
-    // Doesn't match any formatting in the test file, but almost matches an alternate format (the
-    // last two groups have been squashed together here).
-    new NumberTest("0900-1 123123", RegionCode.DE),
-    new NumberTest("(0)900-1 123123", RegionCode.DE),
-    new NumberTest("0 900-1 123123", RegionCode.DE),
-    // NDC also found as part of the country calling code; this shouldn't ruin the grouping
-    // expectations.
-    new NumberTest("+33 3 34 2312", RegionCode.FR),
+      new NumberTest("(415) 6667777", RegionCode.US),
+      new NumberTest("415-6667777", RegionCode.US),
+      // Should be found by strict grouping but not exact grouping, as the last two groups are
+      // formatted together as a block.
+      new NumberTest("0800-2491234", RegionCode.DE),
+      // Doesn't match any formatting in the test file, but almost matches an alternate format (the
+      // last two groups have been squashed together here).
+      new NumberTest("0900-1 123123", RegionCode.DE),
+      new NumberTest("(0)900-1 123123", RegionCode.DE),
+      new NumberTest("0 900-1 123123", RegionCode.DE),
+      // NDC also found as part of the country calling code; this shouldn't ruin the grouping
+      // expectations.
+      new NumberTest("+33 3 34 2312", RegionCode.FR),
   };
 
   /**
    * Strings with number-like things that should be found at all levels.
    */
   private static final NumberTest[] EXACT_GROUPING_CASES = {
-    new NumberTest("\uFF14\uFF11\uFF15\uFF16\uFF16\uFF16\uFF17\uFF17\uFF17\uFF17", RegionCode.US),
-    new NumberTest("\uFF14\uFF11\uFF15-\uFF16\uFF16\uFF16-\uFF17\uFF17\uFF17\uFF17", RegionCode.US),
-    new NumberTest("4156667777", RegionCode.US),
-    new NumberTest("4156667777 x 123", RegionCode.US),
-    new NumberTest("415-666-7777", RegionCode.US),
-    new NumberTest("415/666-7777", RegionCode.US),
-    new NumberTest("415-666-7777 ext. 503", RegionCode.US),
-    new NumberTest("1 415 666 7777 x 123", RegionCode.US),
-    new NumberTest("+1 415-666-7777", RegionCode.US),
-    new NumberTest("+494949 49", RegionCode.DE),
-    new NumberTest("+49-49-34", RegionCode.DE),
-    new NumberTest("+49-4931-49", RegionCode.DE),
-    new NumberTest("04931-49", RegionCode.DE),  // With National Prefix
-    new NumberTest("+49-494949", RegionCode.DE),  // One group with country code
-    new NumberTest("+49-494949 ext. 49", RegionCode.DE),
-    new NumberTest("+49494949 ext. 49", RegionCode.DE),
-    new NumberTest("0494949", RegionCode.DE),
-    new NumberTest("0494949 ext. 49", RegionCode.DE),
-    new NumberTest("01 (33) 3461 2234", RegionCode.MX),  // Optional NP present
-    new NumberTest("(33) 3461 2234", RegionCode.MX),  // Optional NP omitted
-    new NumberTest("1800-10-10 22", RegionCode.AU),  // Breakdown assistance number.
-    // Doesn't match any formatting in the test file, but matches an alternate format exactly.
-    new NumberTest("0900-1 123 123", RegionCode.DE),
-    new NumberTest("(0)900-1 123 123", RegionCode.DE),
-    new NumberTest("0 900-1 123 123", RegionCode.DE),
-    new NumberTest("+33 3 34 23 12", RegionCode.FR),
+      new NumberTest("\uFF14\uFF11\uFF15\uFF16\uFF16\uFF16\uFF17\uFF17\uFF17\uFF17", RegionCode.US),
+      new NumberTest("\uFF14\uFF11\uFF15-\uFF16\uFF16\uFF16-\uFF17\uFF17\uFF17\uFF17", RegionCode.US),
+      new NumberTest("4156667777", RegionCode.US),
+      new NumberTest("4156667777 x 123", RegionCode.US),
+      new NumberTest("415-666-7777", RegionCode.US),
+      new NumberTest("415/666-7777", RegionCode.US),
+      new NumberTest("415-666-7777 ext. 503", RegionCode.US),
+      new NumberTest("1 415 666 7777 x 123", RegionCode.US),
+      new NumberTest("+1 415-666-7777", RegionCode.US),
+      new NumberTest("+494949 49", RegionCode.DE),
+      new NumberTest("+49-49-34", RegionCode.DE),
+      new NumberTest("+49-4931-49", RegionCode.DE),
+      new NumberTest("04931-49", RegionCode.DE),  // With National Prefix
+      new NumberTest("+49-494949", RegionCode.DE),  // One group with country code
+      new NumberTest("+49-494949 ext. 49", RegionCode.DE),
+      new NumberTest("+49494949 ext. 49", RegionCode.DE),
+      new NumberTest("0494949", RegionCode.DE),
+      new NumberTest("0494949 ext. 49", RegionCode.DE),
+      new NumberTest("01 (33) 3461 2234", RegionCode.MX),  // Optional NP present
+      new NumberTest("(33) 3461 2234", RegionCode.MX),  // Optional NP omitted
+      new NumberTest("1800-10-10 22", RegionCode.AU),  // Breakdown assistance number.
+      // Doesn't match any formatting in the test file, but matches an alternate format exactly.
+      new NumberTest("0900-1 123 123", RegionCode.DE),
+      new NumberTest("(0)900-1 123 123", RegionCode.DE),
+      new NumberTest("0 900-1 123 123", RegionCode.DE),
+      new NumberTest("+33 3 34 23 12", RegionCode.FR),
   };
 
   public void testMatchesWithPossibleLeniency() throws Exception {
@@ -650,7 +650,7 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
       for (NumberContext context : contexts) {
         String text = context.leadingText + number + context.trailingText;
         assertTrue("Should not have found a number in " + text,
-                   hasNoMatches(phoneUtil.findNumbers(text, region)));
+            hasNoMatches(phoneUtil.findNumbers(text, region)));
       }
     }
     if (isPossible) {
@@ -659,8 +659,8 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
       for (NumberContext context : contexts) {
         String text = context.leadingText + number + context.trailingText;
         assertTrue("Should not have found a number in " + text,
-                   hasNoMatches(phoneUtil.findNumbers(text, region, Leniency.POSSIBLE,
-                                                      Long.MAX_VALUE)));
+            hasNoMatches(phoneUtil.findNumbers(text, region, Leniency.POSSIBLE,
+                Long.MAX_VALUE)));
       }
     }
   }
@@ -929,7 +929,7 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
   private void assertEqualRange(CharSequence text, int index, int start, int end) {
     CharSequence sub = text.subSequence(index, text.length());
     Iterator<PhoneNumberMatch> matches =
-      phoneUtil.findNumbers(sub, RegionCode.NZ, Leniency.POSSIBLE, Long.MAX_VALUE).iterator();
+        phoneUtil.findNumbers(sub, RegionCode.NZ, Leniency.POSSIBLE, Long.MAX_VALUE).iterator();
     assertTrue(matches.hasNext());
     PhoneNumberMatch match = matches.next();
     assertEquals(start - index, match.start());
@@ -985,7 +985,7 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
     // When matching we don't consider semicolon along with legitimate extension symbol to indicate
     // an extension. The 7246433 should not be considered an extension.
     contextPairs.add(new NumberContext("", ";x 7246433"));
-     // With a postfix stripped off as it looks like the start of another number.
+    // With a postfix stripped off as it looks like the start of another number.
     contextPairs.add(new NumberContext("Call ", "/x12 more"));
 
     doTestInContext(number, defaultCountry, contextPairs, Leniency.POSSIBLE);
@@ -1012,7 +1012,7 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
   }
 
   private void doTestInContext(String number, String defaultCountry,
-      List<NumberContext> contextPairs, Leniency leniency) {
+                               List<NumberContext> contextPairs, Leniency leniency) {
     for (NumberContext context : contextPairs) {
       String prefix = context.leadingText;
       String text = prefix + number + context.trailingText;
@@ -1045,7 +1045,7 @@ public class PhoneNumberMatcherTest extends TestMetadataTestCase {
       StringBuilder matches = new StringBuilder();
       // Iterates over all matches.
       for (PhoneNumberMatch match :
-           phoneUtil.findNumbers(sub, defaultCountry, leniency, Long.MAX_VALUE)) {
+          phoneUtil.findNumbers(sub, defaultCountry, leniency, Long.MAX_VALUE)) {
         matches.append(", ").append(match.toString());
       }
     }

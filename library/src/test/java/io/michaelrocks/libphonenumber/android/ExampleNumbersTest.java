@@ -38,9 +38,8 @@ import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
  */
 public class ExampleNumbersTest extends TestCase {
   private static final Logger logger = Logger.getLogger(ExampleNumbersTest.class.getName());
-  private final MetadataSource metadataSource = new MultiFileMetadataSourceImpl(new ResourceMetadataLoader(getClass()));
-  private final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.createInstance(metadataSource);
-  private final ShortNumberInfo shortNumberInfo = phoneNumberUtil.getShortNumberInfo();
+  private PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+  private ShortNumberInfo shortNumberInfo = ShortNumberInfo.getInstance();
   private List<PhoneNumber> invalidCases = new ArrayList<PhoneNumber>();
   private List<PhoneNumber> wrongTypeCases = new ArrayList<PhoneNumber>();
 
@@ -78,7 +77,7 @@ public class ExampleNumbersTest extends TestCase {
 
   public void testFixedLine() throws Exception {
     Set<PhoneNumberType> fixedLineTypes = EnumSet.of(PhoneNumberType.FIXED_LINE,
-                                                     PhoneNumberType.FIXED_LINE_OR_MOBILE);
+        PhoneNumberType.FIXED_LINE_OR_MOBILE);
     checkNumbersValidAndCorrectType(PhoneNumberType.FIXED_LINE, fixedLineTypes);
     assertEquals(0, invalidCases.size());
     assertEquals(0, wrongTypeCases.size());
@@ -86,7 +85,7 @@ public class ExampleNumbersTest extends TestCase {
 
   public void testMobile() throws Exception {
     Set<PhoneNumberType> mobileTypes = EnumSet.of(PhoneNumberType.MOBILE,
-                                                  PhoneNumberType.FIXED_LINE_OR_MOBILE);
+        PhoneNumberType.FIXED_LINE_OR_MOBILE);
     checkNumbersValidAndCorrectType(PhoneNumberType.MOBILE, mobileTypes);
     assertEquals(0, invalidCases.size());
     assertEquals(0, wrongTypeCases.size());
@@ -240,7 +239,7 @@ public class ExampleNumbersTest extends TestCase {
     int wrongTypeCounter = 0;
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       PhoneNumberDesc desc =
-          metadataSource.getShortNumberMetadataForRegion(regionCode).getEmergency();
+          MetadataManager.getShortNumberMetadataForRegion(regionCode).getEmergency();
       if (desc.hasExampleNumber()) {
         String exampleNumber = desc.getExampleNumber();
         PhoneNumber phoneNumber = phoneNumberUtil.parse(exampleNumber, regionCode);
@@ -262,7 +261,7 @@ public class ExampleNumbersTest extends TestCase {
     int wrongTagCounter = 0;
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       PhoneNumberDesc desc =
-          metadataSource.getShortNumberMetadataForRegion(regionCode).getCarrierSpecific();
+          MetadataManager.getShortNumberMetadataForRegion(regionCode).getCarrierSpecific();
       if (desc.hasExampleNumber()) {
         String exampleNumber = desc.getExampleNumber();
         PhoneNumber carrierSpecificNumber = phoneNumberUtil.parse(exampleNumber, regionCode);
@@ -280,7 +279,7 @@ public class ExampleNumbersTest extends TestCase {
     int wrongTagCounter = 0;
     for (String regionCode : shortNumberInfo.getSupportedRegions()) {
       PhoneNumberDesc desc =
-          metadataSource.getShortNumberMetadataForRegion(regionCode).getSmsServices();
+          MetadataManager.getShortNumberMetadataForRegion(regionCode).getSmsServices();
       if (desc.hasExampleNumber()) {
         String exampleNumber = desc.getExampleNumber();
         PhoneNumber smsServiceNumber = phoneNumberUtil.parse(exampleNumber, regionCode);

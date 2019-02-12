@@ -25,8 +25,7 @@ import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
  * @author Shaopeng Jia
  */
 public class ShortNumberInfoTest extends TestMetadataTestCase {
-  private final ShortNumberInfo shortInfo =
-      PhoneNumberUtil.createInstance(new ResourceMetadataLoader(ShortNumberInfoTest.class)).getShortNumberInfo();
+  private static final ShortNumberInfo shortInfo = ShortNumberInfo.getInstance();
 
   public void testIsPossibleShortNumber() {
     PhoneNumber possibleNumber = new PhoneNumber();
@@ -368,11 +367,8 @@ public class ShortNumberInfoTest extends TestMetadataTestCase {
     try {
       return phoneUtil.parse(number, regionCode);
     } catch (NumberParseException e) {
-      AssertionError error =
-          new AssertionError("Test input data should always parse correctly: " + number + " (" + regionCode + ")");
-      //noinspection UnnecessaryInitCause
-      error.initCause(e);
-      throw error;
+      throw new AssertionError(
+          "Test input data should always parse correctly: " + number + " (" + regionCode + ")", e);
     }
   }
 }

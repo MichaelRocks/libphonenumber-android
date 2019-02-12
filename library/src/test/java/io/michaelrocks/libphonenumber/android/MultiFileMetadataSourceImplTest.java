@@ -25,22 +25,21 @@ import io.michaelrocks.libphonenumber.android.Phonemetadata.PhoneMetadata;
  * Unit tests for MultiFileMetadataSourceImpl.java.
  */
 public class MultiFileMetadataSourceImplTest extends TestCase {
-  private final MetadataLoader metadataLoader = new ResourceMetadataLoader(getClass());
-  private final MultiFileMetadataSourceImpl source =
-      new MultiFileMetadataSourceImpl(metadataLoader);
-  private final MultiFileMetadataSourceImpl missingFileSource =
-      new MultiFileMetadataSourceImpl("no/such/file", "no/such/file", "no/such/file", metadataLoader);
+  private static final MultiFileMetadataSourceImpl SOURCE =
+      new MultiFileMetadataSourceImpl(MetadataManager.DEFAULT_METADATA_LOADER);
+  private static final MultiFileMetadataSourceImpl MISSING_FILE_SOURCE =
+      new MultiFileMetadataSourceImpl("no/such/file", MetadataManager.DEFAULT_METADATA_LOADER);
 
   public void testGeoPhoneNumberMetadataLoadCorrectly() {
     // We should have some data for the UAE.
-    PhoneMetadata uaeMetadata = source.getMetadataForRegion("AE");
+    PhoneMetadata uaeMetadata = SOURCE.getMetadataForRegion("AE");
     assertEquals(uaeMetadata.getCountryCode(), 971);
     assertTrue(uaeMetadata.hasGeneralDesc());
   }
 
   public void testGeoPhoneNumberMetadataLoadFromMissingFileThrowsException() throws Exception {
     try {
-      missingFileSource.getMetadataForRegion("AE");
+      MISSING_FILE_SOURCE.getMetadataForRegion("AE");
       fail("expected exception");
     } catch (RuntimeException e) {
       assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file"));
@@ -49,14 +48,14 @@ public class MultiFileMetadataSourceImplTest extends TestCase {
 
   public void testNonGeoPhoneNumberMetadataLoadCorrectly() {
     // We should have some data for international toll-free numbers.
-    PhoneMetadata intlMetadata = source.getMetadataForNonGeographicalRegion(800);
+    PhoneMetadata intlMetadata = SOURCE.getMetadataForNonGeographicalRegion(800);
     assertEquals(intlMetadata.getId(), "001");
     assertTrue(intlMetadata.hasGeneralDesc());
   }
 
   public void testNonGeoPhoneNumberMetadataLoadFromMissingFileThrowsException() throws Exception {
     try {
-      missingFileSource.getMetadataForNonGeographicalRegion(800);
+      MISSING_FILE_SOURCE.getMetadataForNonGeographicalRegion(800);
       fail("expected exception");
     } catch (RuntimeException e) {
       assertTrue("Unexpected error: " + e, e.getMessage().contains("no/such/file"));

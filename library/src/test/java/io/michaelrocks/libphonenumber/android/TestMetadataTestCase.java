@@ -33,21 +33,28 @@ import junit.framework.TestCase;
  *
  * @author Shaopeng Jia
  */
-public abstract class TestMetadataTestCase extends TestCase {
+public class TestMetadataTestCase extends TestCase {
   private static final String TEST_METADATA_FILE_PREFIX =
       "/io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProtoForTesting";
-  private static final String TEST_ALTERNATE_FORMATS_FILE_PREFIX =
-      "/io/michaelrocks/libphonenumber/android/data/PhoneNumberAlternateFormatsProto";
-  private static final String TEST_SHORT_NUMBER_METADATA_FILE_PREFIX =
-      "/io/michaelrocks/libphonenumber/android/data/ShortNumberMetadataProto";
 
   /** An instance of PhoneNumberUtil that uses test metadata. */
   protected final PhoneNumberUtil phoneUtil;
 
   public TestMetadataTestCase() {
-    phoneUtil = new PhoneNumberUtil(new MultiFileMetadataSourceImpl(
-        TEST_METADATA_FILE_PREFIX, TEST_ALTERNATE_FORMATS_FILE_PREFIX, TEST_SHORT_NUMBER_METADATA_FILE_PREFIX,
-        new ResourceMetadataLoader(TestMetadataTestCase.class)),
+    phoneUtil = new PhoneNumberUtil(new MultiFileMetadataSourceImpl(TEST_METADATA_FILE_PREFIX,
+        MetadataManager.DEFAULT_METADATA_LOADER),
         CountryCodeToRegionCodeMapForTesting.getCountryCodeToRegionCodeMap());
+  }
+
+  @Override
+  protected void setUp() throws Exception {
+    super.setUp();
+    PhoneNumberUtil.setInstance(phoneUtil);
+  }
+
+  @Override
+  protected void tearDown() throws Exception {
+    PhoneNumberUtil.setInstance(null);
+    super.tearDown();
   }
 }
