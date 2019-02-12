@@ -27,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-          final Phonenumber.PhoneNumber phoneNumber = util.parse("8005551212", "US");
+          final Phonenumber.PhoneNumber phoneNumber = util.parse("525611343433", "MX");
+          util.isValidNumber(util.parse("525611343433", "MX"));
+
           textView.setText(util.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL));
         } catch (NumberParseException e) {
           e.printStackTrace();
