@@ -54,37 +54,6 @@ dependencies {
   testImplementation 'junit:junit:4.12'
 }
 
-publishing {
-  android.libraryVariants.all { variant ->
-    publications {
-      create(variant.name.capitalize(), MavenPublication) {
-        artifactId artifactName
-        variant.outputs.each { output ->
-          artifact output.packageLibrary
-        }
-
-        artifact tasks["javadocJar${variant.name.capitalize()}"]
-        artifact tasks["sourcesJar${variant.name.capitalize()}"]
-
-        def dependencies = project.configurations["${variant.baseName}CompileClasspath"].allDependencies
-        if (!dependencies.empty) {
-          pom.withXml {
-            asNode().appendNode("dependencies").with {
-              dependencies.each { dependency ->
-                appendNode("dependency").with {
-                  appendNode("groupId", dependency.group)
-                  appendNode("artifactId", dependency.name)
-                  appendNode("version", dependency.version)
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 android.libraryVariants.all { variant ->
   tasks.addRule("Publishing configuration for ${variant.name} variant") { taskName ->
     if (taskName == "bintrayUpload${variant.name.capitalize()}") {
@@ -122,15 +91,46 @@ android.libraryVariants.all { variant ->
       }
     } else if (taskName == "javadocJar${variant.name.capitalize()}") {
       tasks.create(taskName, Jar) {
-        classifier = 'javadoc'
+        archiveClassifier.set('javadoc')
         def javadoc = tasks["javadoc${variant.name.capitalize()}"]
         from javadoc.destinationDir
         dependsOn javadoc
       }
     } else if (taskName == "sourcesJar${variant.name.capitalize()}") {
       tasks.create(taskName, Jar) {
-        classifier = 'sources'
+        archiveClassifier.set('sources')
         from variant.sourceSets.javaDirectories
+      }
+    }
+  }
+}
+
+publishing {
+  android.libraryVariants.all { variant ->
+    publications {
+      create(variant.name.capitalize(), MavenPublication) {
+        artifactId artifactName
+        variant.outputs.each { output ->
+          artifact output.packageLibrary
+        }
+
+        artifact tasks["javadocJar${variant.name.capitalize()}"]
+        artifact tasks["sourcesJar${variant.name.capitalize()}"]
+
+        def dependencies = project.configurations["${variant.baseName}CompileClasspath"].allDependencies
+        if (!dependencies.empty) {
+          pom.withXml {
+            asNode().appendNode("dependencies").with {
+              dependencies.each { dependency ->
+                appendNode("dependency").with {
+                  appendNode("groupId", dependency.group)
+                  appendNode("artifactId", dependency.name)
+                  appendNode("version", dependency.version)
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
