@@ -6,7 +6,7 @@ pushd $1
 git diff $2 $3 -- java/libphonenumber/**/*.java > ${LOCAL}/$3.patch
 popd
 
-sed -i \
+sed -i '.orig' \
   -e 's:java/libphonenumber/src/com/google/i18n/phonenumbers:library/src/main/java/io/michaelrocks/libphonenumber/android:g' \
   -e 's:java/libphonenumber/test/com/google/i18n/phonenumbers:library/src/test/java/io/michaelrocks/libphonenumber/android:g' \
   ${LOCAL}/$3.patch
@@ -14,3 +14,4 @@ sed -i \
 patch -p1 < ${LOCAL}/$3.patch
 
 rm ${LOCAL}/$3.patch
+rm ${LOCAL}/$3.patch.orig
