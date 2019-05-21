@@ -42,6 +42,8 @@ android {
   buildTypes {
     release {
       minifyEnabled false
+
+      consumerProguardFiles 'proguard-rules.pro'
     }
   }
 
