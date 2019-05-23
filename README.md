@@ -28,6 +28,14 @@ dependencies {
 }
 ```
 
+For DexGuard users
+------------------
+If your project is obfuscated with DexGuard you may need to add the following line to the
+DexGuard configuration:
+```
+-keepresourcefiles assets/io/michaelrocks/libphonenumber/android/**
+```
+
 API differences
 ---------------
 This library is not fully compatible with the original `libphonenumber`.
