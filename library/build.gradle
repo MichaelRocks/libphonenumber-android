@@ -36,7 +36,7 @@ android {
     targetSdkVersion projectTargetSdkVersion
 
     versionCode 1
-    versionName project.version
+    versionName version
   }
 
   buildTypes {
@@ -81,7 +81,7 @@ android.libraryVariants.all { variant ->
     } else if (taskName == "javadoc${variant.name.capitalize()}") {
       tasks.create(taskName, Javadoc) {
         source = variant.sourceSets.javaDirectories
-        classpath += variant.javaCompiler.classpath
+        classpath += project.files(variant.javaCompileProvider.map { it.classpath })
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 
         if (JavaVersion.current().isJava8Compatible()) {
