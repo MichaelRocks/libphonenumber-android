@@ -13,6 +13,11 @@ buildscript {
 
   ext.androidxAppcompatVersion = '1.1.0'
 
+  ext.androidxEspressoVersion = '3.2.0'
+  ext.androidxTestRulesVersion = '1.2.0'
+  ext.androidxTestRunnerVersion = '1.2.0'
+  ext.androidxTestExtJunitVersion = '1.1.1'
+
   repositories {
     google()
     jcenter()
