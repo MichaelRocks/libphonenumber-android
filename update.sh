@@ -16,12 +16,11 @@ find_next_version() {
     local next_version=$(format_version ${next_parts[@]})
     if [[ $(git tag -l "v$next_version") ]]; then
       echo ${next_version}
-      return 0
+      break
     else
       next_parts[index]=0
     fi
   done
-  return 1
 }
 
 LOCAL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -53,7 +52,7 @@ NEXT_VERSION=$(find_next_version ${PARTS[@]})
 popd > /dev/null
 
 echo "Current version is ${VERSION}"
-if [[ -z NEXT_VERSION ]]; then
+if [[ -z ${NEXT_VERSION} ]]; then
   echo "Next version is not found"
   exit 1
 fi
