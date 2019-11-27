@@ -26,7 +26,7 @@ find_next_version() {
 
 LOCAL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REMOTE=$1
-BASE_TRAP="cd ${LOCAL} > /dev/null; git merge -q --abort; git checkout -q develop"
+BASE_TRAP="cd ${LOCAL} > /dev/null; git merge --abort > /dev/null 2>&1; git checkout -q develop"
 
 trap "${BASE_TRAP}; exit" INT TERM EXIT
 
