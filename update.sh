@@ -110,28 +110,37 @@ cp "${REMOTE}"/java/libphonenumber/test/com/google/i18n/phonenumbers/data/* "${L
 
 git commit -q -a -m "Merge code and metadata changes from ${NEXT_VERSION}"
 
+echo "Merging the release branch..."
+
 git checkout -q develop
 git pull -q > /dev/null
-git merge -q --no-ff --no-edit "release/${NEXT_VERSION}"
+git merge -q --no-ff --no-edit "release/${NEXT_VERSION}" > /dev/null
 
 git checkout -q master
 git pull -q > /dev/null
-git merge -q --no-ff --no-edit "release/${NEXT_VERSION}"
+git merge -q --no-ff --no-edit "release/${NEXT_VERSION}" > /dev/null
 
 git tag "v${NEXT_VERSION}" > /dev/null
 git branch -q -d "release/${NEXT_VERSION}"
 
 git checkout -q "v${NEXT_VERSION}"
-./gradlew clean build
-./gradlew connectedCheck
-./gradlew bintrayUploadRelease
+echo "Building the release..."
+./gradlew clean build > /dev/null
+echo "Running tests..."
+./gradlew connectedCheck > /dev/null
+echo "Uploading artifacts..."
+./gradlew bintrayUploadRelease > /dev/null
+
+echo "Pushing changes to the repo..."
 
 git checkout -q develop
-git push -q
+git push -q > /dev/null
 git checkout -q master
-git push -q
-git push -q --tags
+git push -q > /dev/null
+git push -q --tags > /dev/null
 
 git checkout -q develop
+
+echo "And it's done!"
 
 trap - INT TERM EXIT
