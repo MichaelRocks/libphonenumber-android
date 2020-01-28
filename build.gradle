@@ -1,15 +1,17 @@
 buildscript {
   group = 'io.michaelrocks'
-  version = '8.11.2'
+  version = '8.11.3'
 
   ext.projectCompileSdkVersion = 29
   ext.projectBuildToolsVersion = '29.0.2'
   ext.projectMinSdkVersion = 14
   ext.projectTargetSdkVersion = 29
 
-  ext.androidToolsVersion = '3.5.2'
+  ext.androidToolsVersion = '3.5.3'
   ext.bintrayVersion = '1.8.4'
-  ext.dexCountVersion = '0.8.6'
+  ext.dexCountVersion = '1.0.2'
+
+  ext.junitVersion = '4.13'
 
   ext.androidxAppcompatVersion = '1.1.0'
 
