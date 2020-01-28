@@ -11,6 +11,8 @@ buildscript {
   ext.bintrayVersion = '1.8.4'
   ext.dexCountVersion = '0.8.6'
 
+  ext.junitVersion = '4.13'
+
   ext.androidxAppcompatVersion = '1.1.0'
 
   ext.androidxEspressoVersion = '3.2.0'
