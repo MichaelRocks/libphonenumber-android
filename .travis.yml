@@ -38,6 +38,8 @@ install:
   # Mute sdkmanager warning.
   - echo 'count=0' > /home/travis/.android/repositories.cfg
   # We need the API of the emulator we will run.
+  - echo y | sdkmanager "tools" >/dev/null
+  - echo y | sdkmanager "platform-tools" >/dev/null
   - echo y | sdkmanager "platforms;android-$ANDROID_API" >/dev/null
   - echo y | sdkmanager "emulator" >/dev/null
   - echo y | sdkmanager "system-images;android-$ANDROID_API;$EMULATOR_FLAVOR;$ANDROID_ABI" >/dev/null
