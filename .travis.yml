@@ -22,7 +22,7 @@ android:
     - tools
     - tools
     - platform-tools
-    - build-tools-29.0.2
+    - build-tools-29.0.3
     - android-29
 
 before_cache:
