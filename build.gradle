@@ -7,8 +7,8 @@ buildscript {
   ext.projectMinSdkVersion = 14
   ext.projectTargetSdkVersion = 29
 
-  ext.androidToolsVersion = '3.6.1'
-  ext.bintrayVersion = '1.8.4'
+  ext.androidToolsVersion = '4.0.0'
+  ext.bintrayVersion = '1.8.5'
   ext.dexCountVersion = '1.0.2'
 
   ext.junitVersion = '4.13'
