@@ -107,6 +107,7 @@ cp "${REMOTE}"/java/libphonenumber/src/com/google/i18n/phonenumbers/data/* "${LO
 cp "${REMOTE}"/java/libphonenumber/src/com/google/i18n/phonenumbers/data/* "${LOCAL}"/library/src/test/resources/io/michaelrocks/libphonenumber/android/data
 cp "${REMOTE}"/java/libphonenumber/test/com/google/i18n/phonenumbers/data/* "${LOCAL}"/library/src/test/resources/io/michaelrocks/libphonenumber/android/data
 
+git add .
 git commit -q -a -m "Merge code and metadata changes from ${NEXT_VERSION}"
 
 echo "Merging the release branch..."
