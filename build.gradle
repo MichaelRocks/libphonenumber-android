@@ -20,20 +20,18 @@ buildscript {
 
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 
   dependencies {
     classpath "com.android.tools.build:gradle:$androidToolsVersion"
-    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion"
-    classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexCountVersion"
   }
 }
 
 allprojects {
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 }
 
