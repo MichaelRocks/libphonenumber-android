@@ -107,6 +107,7 @@ cp "${REMOTE}"/java/libphonenumber/src/com/google/i18n/phonenumbers/data/* "${LO
 cp "${REMOTE}"/java/libphonenumber/src/com/google/i18n/phonenumbers/data/* "${LOCAL}"/library/src/test/resources/io/michaelrocks/libphonenumber/android/data
 cp "${REMOTE}"/java/libphonenumber/test/com/google/i18n/phonenumbers/data/* "${LOCAL}"/library/src/test/resources/io/michaelrocks/libphonenumber/android/data
 
+git add .
 git commit -q -a -m "Merge code and metadata changes from ${NEXT_VERSION}"
 
 echo "Merging the release branch..."
@@ -128,7 +129,7 @@ echo "Building the release..."
 echo "Running tests..."
 ./gradlew connectedCheck > /dev/null
 echo "Uploading artifacts..."
-./gradlew bintrayUploadRelease > /dev/null
+./gradlew publishReleasePublicationToSonatypeRepository > /dev/null
 
 echo "Pushing changes to the repo..."
 

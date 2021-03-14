@@ -1,24 +1,6 @@
-/*
- * Copyright 2017 Michael Rozumyanskiy
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
-
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'signing'
 
 def artifactName = rootProject.name
 group rootProject.group
@@ -56,29 +38,7 @@ dependencies {
 
 android.libraryVariants.all { variant ->
   tasks.addRule("Publishing configuration for ${variant.name} variant") { taskName ->
-    if (taskName == "bintrayUpload${variant.name.capitalize()}") {
-      def bintrayUpload = tasks.create(taskName, BintrayUploadTask) {
-        apiUrl = BintrayUploadTask.API_URL_DEFAULT
-
-        user = project.findProperty('bintrayUser')
-        apiKey = project.findProperty('bintrayKey')
-        publications = [variant.name.capitalize()]
-
-        repoName = 'maven'
-        packageName = artifactName
-
-        versionName = project.version
-        versionReleased = new Date()
-        versionVcsTag = "v${project.version}"
-
-        dependsOn tasks["assemble${variant.name.capitalize()}"]
-        dependsOn tasks["javadocJar${variant.name.capitalize()}"]
-        dependsOn tasks["sourcesJar${variant.name.capitalize()}"]
-        dependsOn tasks["generatePomFileFor${variant.name.capitalize()}Publication"]
-      }
-
-      bintrayUpload.project = project
-    } else if (taskName == "javadoc${variant.name.capitalize()}") {
+    if (taskName == "javadoc${variant.name.capitalize()}") {
       tasks.create(taskName, Javadoc) {
         source = variant.sourceSets.javaDirectories
         classpath += project.files(variant.javaCompileProvider.map { it.classpath })
@@ -117,6 +77,34 @@ publishing {
         artifact tasks["javadocJar${variant.name.capitalize()}"]
         artifact tasks["sourcesJar${variant.name.capitalize()}"]
 
+        pom {
+          name = 'libphonenumber-android'
+          description = 'An Android port of Google\'s libphonenumber.'
+          inceptionYear = '2016'
+          url = 'https://github.com/michaelrocks/libphonenumber-android'
+          packaging = 'aar'
+
+          licenses {
+            license {
+              name = 'The Apache License, Version 2.0'
+              url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+              distribution = 'repo'
+            }
+          }
+          developers {
+            developer {
+              id = 'MichaelRocks'
+              name = 'Michael Rozumyanskiy'
+              email = 'michael.rozumyanskiy@gmail.com'
+            }
+          }
+          scm {
+            connection = 'scm:git:git://github.com/michaelrocks/libphonenumber-android.git'
+            developerConnection = 'scm:git:ssh://git@github.com/michaelrocks/libphonenumber-android.git'
+            url = 'https://github.com/michaelrocks/libphonenumber-android'
+          }
+        }
+
         def dependencies = project.configurations["${variant.baseName}CompileClasspath"].allDependencies
         if (!dependencies.empty) {
           pom.withXml {
@@ -134,6 +122,23 @@ publishing {
       }
     }
   }
+
+  repositories {
+    if (project.hasProperty('mavenCentralRepositoryUsername') && project.hasProperty('mavenCentralRepositoryPassword')) {
+      maven {
+        name 'Sonatype'
+        url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+        credentials {
+          username mavenCentralRepositoryUsername
+          password mavenCentralRepositoryPassword
+        }
+      }
+    }
+  }
 }
 
-apply plugin: 'com.getkeepsafe.dexcount'
+signing {
+  android.libraryVariants.all { variant ->
+    sign publishing.publications.getByName(variant.name.capitalize())
+  }
+}
