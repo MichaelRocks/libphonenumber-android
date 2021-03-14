@@ -9,7 +9,6 @@ buildscript {
 
   ext.androidToolsVersion = '4.1.2'
   ext.bintrayVersion = '1.8.5'
-  ext.dexCountVersion = '2.0.0'
 
   ext.junitVersion = '4.13.2'
 

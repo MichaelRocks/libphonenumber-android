@@ -135,5 +135,3 @@ publishing {
     }
   }
 }
-
-apply plugin: 'com.getkeepsafe.dexcount'
