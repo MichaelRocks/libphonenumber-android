@@ -1,44 +1,56 @@
 buildscript {
   group = 'io.michaelrocks'
-  version = '8.12.19'
+  version = '8.12.19-1'
 
-  ext.projectCompileSdkVersion = 29
-  ext.projectBuildToolsVersion = '29.0.3'
+  ext.projectCompileSdkVersion = 30
+  ext.projectBuildToolsVersion = '30.0.3'
   ext.projectMinSdkVersion = 14
-  ext.projectTargetSdkVersion = 29
+  ext.projectTargetSdkVersion = 30
 
-  ext.androidToolsVersion = '4.0.0'
-  ext.bintrayVersion = '1.8.5'
-  ext.dexCountVersion = '1.0.2'
+  ext.androidToolsVersion = '4.2.0-beta06'
 
-  ext.junitVersion = '4.13'
+  ext.junitVersion = '4.13.2'
 
-  ext.androidxAppcompatVersion = '1.1.0'
+  ext.androidxAppcompatVersion = '1.2.0'
 
-  ext.androidxEspressoVersion = '3.2.0'
-  ext.androidxTestRulesVersion = '1.2.0'
-  ext.androidxTestRunnerVersion = '1.2.0'
-  ext.androidxTestExtJunitVersion = '1.1.1'
+  ext.androidxEspressoVersion = '3.3.0'
+  ext.androidxTestRulesVersion = '1.3.0'
+  ext.androidxTestRunnerVersion = '1.3.0'
+  ext.androidxTestExtJunitVersion = '1.1.2'
 
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 
   dependencies {
     classpath "com.android.tools.build:gradle:$androidToolsVersion"
-    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion"
-    classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexCountVersion"
   }
 }
 
 allprojects {
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 }
 
 task clean(type: Delete) {
   delete rootProject.buildDir
+}
+
+allprojects { project ->
+  def publishPropertiesFile = rootProject.file('publish.properties')
+  if (publishPropertiesFile.exists()) {
+    def localProperties = new Properties()
+    publishPropertiesFile.withInputStream { stream -> localProperties.load(stream) }
+    localProperties.each { property ->
+      if (property.key == "signing.secretKeyRingFile") {
+        // If this is the key ring, treat it as a relative path
+        project.ext.set(property.key, rootProject.file(property.value).absolutePath)
+      } else {
+        project.ext.set(property.key, property.value)
+      }
+    }
+  }
 }
