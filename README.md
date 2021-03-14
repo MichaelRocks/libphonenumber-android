@@ -19,7 +19,7 @@ Download
 Gradle:
 ```groovy
 repositories {
-  jcenter()
+  mavenCentral()
 }
 
 dependencies {
