@@ -7,8 +7,7 @@ buildscript {
   ext.projectMinSdkVersion = 14
   ext.projectTargetSdkVersion = 30
 
-  ext.androidToolsVersion = '4.1.2'
-  ext.bintrayVersion = '1.8.5'
+  ext.androidToolsVersion = '4.2.0-beta06'
 
   ext.junitVersion = '4.13.2'
 
@@ -40,4 +39,20 @@ allprojects {
 
 task clean(type: Delete) {
   delete rootProject.buildDir
+}
+
+allprojects { project ->
+  def publishPropertiesFile = rootProject.file('publish.properties')
+  if (publishPropertiesFile.exists()) {
+    def localProperties = new Properties()
+    publishPropertiesFile.withInputStream { stream -> localProperties.load(stream) }
+    localProperties.each { property ->
+      if (property.key == "signing.secretKeyRingFile") {
+        // If this is the key ring, treat it as a relative path
+        project.ext.set(property.key, rootProject.file(property.value).absolutePath)
+      } else {
+        project.ext.set(property.key, property.value)
+      }
+    }
+  }
 }

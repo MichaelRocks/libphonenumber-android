@@ -129,7 +129,7 @@ echo "Building the release..."
 echo "Running tests..."
 ./gradlew connectedCheck > /dev/null
 echo "Uploading artifacts..."
-./gradlew bintrayUploadRelease > /dev/null
+./gradlew publishReleasePublicationToSonatypeRepository > /dev/null
 
 echo "Pushing changes to the repo..."
 
