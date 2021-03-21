@@ -35,12 +35,13 @@ echo "Updating the local repo..."
 git checkout -q develop
 git pull -q > /dev/null
 
-VERSION="$( sed -ne 's/^[[:space:]]*version[[:space:]]=[[:space:]]'"'"'\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\(\-[0-9][0-9]*\)\{0,1\}'"'"'[[:space:]]*$/\1/p' ${LOCAL}/build.gradle)"
-if [[ -z "$VERSION" ]]; then
+LIB_VERSION="$( sed -ne 's/^[[:space:]]*version[[:space:]]=[[:space:]]'"'"'\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\(\-[0-9][0-9]*\)\{0,1\}'"'"'[[:space:]]*$/\1\2/p' ${LOCAL}/build.gradle)"
+if [[ -z "$LIB_VERSION" ]]; then
   echo "Current version is not found"
   exit 1
 fi
 
+VERSION=${LIB_VERSION%-*}
 PARTS=( ${VERSION//./ } )
 
 echo "Updating the remote repo..."
@@ -51,7 +52,7 @@ git fetch -q --tags
 NEXT_VERSION=$(find_next_version ${PARTS[@]})
 popd > /dev/null
 
-echo "Current version is ${VERSION}"
+echo "Current version is ${LIB_VERSION}"
 if [[ -z ${NEXT_VERSION} ]]; then
   echo "Next version is not found"
   exit 1
@@ -62,8 +63,8 @@ echo "Creating a release branch..."
 git checkout -q -b "release/${NEXT_VERSION}"
 trap "${BASE_TRAP}; git branch -D "release/${NEXT_VERSION}"; exit" INT TERM EXIT
 
-sed -i '.tmp' "s/${VERSION}/${NEXT_VERSION}/g" build.gradle
-sed -i '.tmp' "s/${VERSION}/${NEXT_VERSION}/g" README.md
+sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" build.gradle
+sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" README.md
 git add build.gradle > /dev/null
 git add README.md > /dev/null
 rm build.gradle.tmp > /dev/null
