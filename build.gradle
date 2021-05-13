@@ -1,13 +1,13 @@
 buildscript {
   group = 'io.michaelrocks'
-  version = '8.12.22'
+  version = '8.12.23'
 
   ext.projectCompileSdkVersion = 30
   ext.projectBuildToolsVersion = '30.0.3'
   ext.projectMinSdkVersion = 14
   ext.projectTargetSdkVersion = 30
 
-  ext.androidToolsVersion = '4.2.0-rc01'
+  ext.androidToolsVersion = '4.2.0'
 
   ext.junitVersion = '4.13.2'
 
