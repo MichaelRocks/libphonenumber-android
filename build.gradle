@@ -1,6 +1,6 @@
 buildscript {
   group = 'io.michaelrocks'
-  version = '8.12.26'
+  version = '8.12.27'
 
   ext.projectCompileSdkVersion = 30
   ext.projectBuildToolsVersion = '30.0.3'
