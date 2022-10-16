@@ -28,6 +28,12 @@ android {
     }
   }
 
+  variantFilter { variant ->
+    if (variant.buildType.name != 'release') {
+      variant.setIgnore(true)
+    }
+  }
+
   lintOptions {
     abortOnError false
   }
