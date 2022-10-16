@@ -1,15 +1,15 @@
 package io.michaelrocks.libphonenumber.android.sample;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import io.michaelrocks.libphonenumber.android.NumberParseException;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 import io.michaelrocks.libphonenumber.android.Phonenumber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

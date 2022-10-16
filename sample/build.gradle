@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+  namespace 'io.michaelrocks.libphonenumber.android.sample'
   compileSdkVersion projectCompileSdkVersion
   buildToolsVersion projectBuildToolsVersion
 
@@ -17,6 +18,10 @@ android {
   }
 
   buildTypes {
+    debug {
+      matchingFallbacks = ["release"]
+    }
+
     release {
       minifyEnabled true
     }
@@ -29,7 +34,6 @@ android {
 
 dependencies {
   implementation project(':library')
-  implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
 
   androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoVersion"
   androidTestImplementation "androidx.test:rules:$androidxTestRulesVersion"

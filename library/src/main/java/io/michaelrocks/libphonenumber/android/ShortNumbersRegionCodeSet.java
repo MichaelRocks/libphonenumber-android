@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2013 The Libphonenumber Authors
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import java.util.Set;
 
 public class ShortNumbersRegionCodeSet {
   // A set of all region codes for which data is available.
-  static Set<String> getRegionCodeSet() {
-    // The capacity is set to 320 as there are 240 different entries,
+  public static Set<String> getRegionCodeSet() {
+    // The capacity is set to 321 as there are 241 different entries,
     // and this offers a load factor of roughly 0.75.
-    Set<String> regionCodeSet = new HashSet<String>(320);
+    Set<String> regionCodeSet = new HashSet<String>(321);
 
     regionCodeSet.add("AC");
     regionCodeSet.add("AD");
@@ -232,6 +232,7 @@ public class ShortNumbersRegionCodeSet {
     regionCodeSet.add("SN");
     regionCodeSet.add("SO");
     regionCodeSet.add("SR");
+    regionCodeSet.add("SS");
     regionCodeSet.add("ST");
     regionCodeSet.add("SV");
     regionCodeSet.add("SX");

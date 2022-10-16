@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MichaelRocks/libphonenumber-android.svg?branch=master)](https://travis-ci.org/MichaelRocks/libphonenumber-android)
+[![Build](https://github.com/MichaelRocks/libphonenumber-android/actions/workflows/build.yml/badge.svg)](https://github.com/MichaelRocks/libphonenumber-android/actions/workflows/build.yml)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-libphonenumber--android-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3676)
 
 libphonenumber-android
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.michaelrocks:libphonenumber-android:8.12.52'
+  implementation 'io.michaelrocks:libphonenumber-android:8.12.53'
 }
 ```
 
@@ -63,5 +63,5 @@ License
     limitations under the License.
 
  [1]: https://github.com/googlei18n/libphonenumber
- [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.12.52
+ [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.12.53
  [3]: http://blog.nimbledroid.com/2016/04/06/slow-ClassLoader.getResourceAsStream.html

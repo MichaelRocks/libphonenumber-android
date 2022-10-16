@@ -10,6 +10,7 @@ sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 android {
+  namespace 'io.michaelrocks.libphonenumber.android'
   compileSdkVersion projectCompileSdkVersion
   buildToolsVersion projectBuildToolsVersion
 
@@ -27,56 +28,32 @@ android {
     }
   }
 
+  variantFilter { variant ->
+    if (variant.buildType.name != 'release') {
+      variant.setIgnore(true)
+    }
+  }
+
   lintOptions {
     abortOnError false
+  }
+
+  publishing {
+    singleVariant('release')
   }
 }
 
 dependencies {
   testImplementation "junit:junit:$junitVersion"
+  testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
 
-android.libraryVariants.all { variant ->
-  tasks.addRule("Publishing configuration for ${variant.name} variant") { taskName ->
-    if (taskName == "javadoc${variant.name.capitalize()}") {
-      tasks.create(taskName, Javadoc) {
-        source = variant.sourceSets.javaDirectories
-        classpath += project.files(variant.javaCompileProvider.map { it.classpath })
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-
-        if (JavaVersion.current().isJava8Compatible()) {
-          options.addStringOption('Xdoclint:none', '-quiet')
-          options.encoding "UTF-8"
-        }
-      }
-    } else if (taskName == "javadocJar${variant.name.capitalize()}") {
-      tasks.create(taskName, Jar) {
-        archiveClassifier.set('javadoc')
-        def javadoc = tasks["javadoc${variant.name.capitalize()}"]
-        from javadoc.destinationDir
-        dependsOn javadoc
-      }
-    } else if (taskName == "sourcesJar${variant.name.capitalize()}") {
-      tasks.create(taskName, Jar) {
-        archiveClassifier.set('sources')
-        from variant.sourceSets.javaDirectories
-      }
-    }
-  }
-}
-
-publishing {
-  android.libraryVariants.all { variant ->
+afterEvaluate {
+  publishing {
     publications {
-      create(variant.name.capitalize(), MavenPublication) {
+      release(MavenPublication) {
+        from components.release
         artifactId artifactName
-        variant.outputs.each { output ->
-          artifact output.packageLibrary
-        }
-
-        artifact tasks["javadocJar${variant.name.capitalize()}"]
-        artifact tasks["sourcesJar${variant.name.capitalize()}"]
-
         pom {
           name = 'libphonenumber-android'
           description = 'An Android port of Google\'s libphonenumber.'
@@ -104,41 +81,24 @@ publishing {
             url = 'https://github.com/michaelrocks/libphonenumber-android'
           }
         }
+      }
+    }
 
-        def dependencies = project.configurations["${variant.baseName}CompileClasspath"].allDependencies
-        if (!dependencies.empty) {
-          pom.withXml {
-            asNode().appendNode("dependencies").with {
-              dependencies.each { dependency ->
-                appendNode("dependency").with {
-                  appendNode("groupId", dependency.group)
-                  appendNode("artifactId", dependency.name)
-                  appendNode("version", dependency.version)
-                }
-              }
-            }
+    repositories {
+      if (project.hasProperty('mavenCentralRepositoryUsername') && project.hasProperty('mavenCentralRepositoryPassword')) {
+        maven {
+          name 'Sonatype'
+          url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+          credentials {
+            username mavenCentralRepositoryUsername
+            password mavenCentralRepositoryPassword
           }
         }
       }
     }
   }
 
-  repositories {
-    if (project.hasProperty('mavenCentralRepositoryUsername') && project.hasProperty('mavenCentralRepositoryPassword')) {
-      maven {
-        name 'Sonatype'
-        url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-        credentials {
-          username mavenCentralRepositoryUsername
-          password mavenCentralRepositoryPassword
-        }
-      }
-    }
-  }
-}
-
-signing {
-  android.libraryVariants.all { variant ->
-    sign publishing.publications.getByName(variant.name.capitalize())
+  signing {
+    sign publishing.publications.release
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 The Libphonenumber Authors
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import java.util.Set;
 
 public class AlternateFormatsCountryCodeSet {
   // A set of all country codes for which data is available.
-  static Set<Integer> getCountryCodeSet() {
-    // The capacity is set to 62 as there are 47 different entries,
+  public static Set<Integer> getCountryCodeSet() {
+    // The capacity is set to 61 as there are 46 different entries,
     // and this offers a load factor of roughly 0.75.
-    Set<Integer> countryCodeSet = new HashSet<Integer>(62);
+    Set<Integer> countryCodeSet = new HashSet<Integer>(61);
 
     countryCodeSet.add(7);
     countryCodeSet.add(27);
@@ -47,7 +47,6 @@ public class AlternateFormatsCountryCodeSet {
     countryCodeSet.add(58);
     countryCodeSet.add(61);
     countryCodeSet.add(62);
-    countryCodeSet.add(63);
     countryCodeSet.add(64);
     countryCodeSet.add(66);
     countryCodeSet.add(81);
