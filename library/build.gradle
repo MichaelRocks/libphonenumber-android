@@ -48,19 +48,6 @@ dependencies {
   testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
 
-repositories {
-  if (project.hasProperty('mavenCentralRepositoryUsername') && project.hasProperty('mavenCentralRepositoryPassword')) {
-    maven {
-      name 'Sonatype'
-      url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-      credentials {
-        username mavenCentralRepositoryUsername
-        password mavenCentralRepositoryPassword
-      }
-    }
-  }
-}
-
 afterEvaluate {
   publishing {
     publications {
@@ -92,6 +79,19 @@ afterEvaluate {
             connection = 'scm:git:git://github.com/michaelrocks/libphonenumber-android.git'
             developerConnection = 'scm:git:ssh://git@github.com/michaelrocks/libphonenumber-android.git'
             url = 'https://github.com/michaelrocks/libphonenumber-android'
+          }
+        }
+      }
+    }
+
+    repositories {
+      if (project.hasProperty('mavenCentralRepositoryUsername') && project.hasProperty('mavenCentralRepositoryPassword')) {
+        maven {
+          name 'Sonatype'
+          url 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+          credentials {
+            username mavenCentralRepositoryUsername
+            password mavenCentralRepositoryPassword
           }
         }
       }
