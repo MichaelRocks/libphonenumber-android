@@ -10,6 +10,7 @@ sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 android {
+  namespace 'io.michaelrocks.libphonenumber.android'
   compileSdkVersion projectCompileSdkVersion
   buildToolsVersion projectBuildToolsVersion
 

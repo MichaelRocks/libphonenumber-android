@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+  namespace 'io.michaelrocks.libphonenumber.android.sample'
   compileSdkVersion projectCompileSdkVersion
   buildToolsVersion projectBuildToolsVersion
 
