@@ -29,7 +29,6 @@ android {
 
 dependencies {
   implementation project(':library')
-  implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
 
   androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoVersion"
   androidTestImplementation "androidx.test:rules:$androidxTestRulesVersion"
