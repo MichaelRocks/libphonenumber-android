@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MichaelRocks/libphonenumber-android.svg?branch=master)](https://travis-ci.org/MichaelRocks/libphonenumber-android)
+[![Build](https://github.com/MichaelRocks/libphonenumber-android/actions/workflows/build.yml/badge.svg)](https://github.com/MichaelRocks/libphonenumber-android/actions/workflows/build.yml)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-libphonenumber--android-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3676)
 
 libphonenumber-android
