@@ -4,9 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import io.michaelrocks.libphonenumber.android.sample.MainActivity;
 import io.michaelrocks.libphonenumber.android.sample.R;
 
@@ -21,7 +21,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class MainActivityTest {
 
   @Rule
-  public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+  public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
   @Test
   public void checkTextViewContainsEnabledFeatures() {
