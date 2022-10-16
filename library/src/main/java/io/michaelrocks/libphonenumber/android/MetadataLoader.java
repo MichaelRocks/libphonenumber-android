@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2014 The Libphonenumber Authors
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public interface MetadataLoader {
    * concurrently so implementations must be thread-safe.
    *
    * @param metadataFileName  file name (including path) of metadata to load. File path is an
-   *     absolute class path like /com/google/i18n/phonenumbers/data/PhoneNumberMetadataProto
+   *     absolute class path like /io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProto
    * @return  the input stream for the metadata file. The library will close this stream
    *     after it is done. Return null in case the metadata file could not be found
    */

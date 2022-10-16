@@ -10,6 +10,7 @@ buildscript {
   ext.androidToolsVersion = '7.3.1'
 
   ext.junitVersion = '4.13.2'
+  ext.mockitoVersion = '4.8.0'
 
   ext.androidxEspressoVersion = '3.4.0'
   ext.androidxTestRulesVersion = '1.4.0'

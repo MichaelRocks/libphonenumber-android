@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 The Libphonenumber Authors
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@ package io.michaelrocks.libphonenumber.android;
 
 import junit.framework.TestCase;
 
+import io.michaelrocks.libphonenumber.android.metadata.DefaultMetadataDependenciesProvider;
+import io.michaelrocks.libphonenumber.android.metadata.source.MetadataSourceImpl;
+import io.michaelrocks.libphonenumber.android.metadata.source.MultiFileModeFileNameProvider;
+
 /**
  * Root class for PhoneNumberUtil tests that depend on the test metadata file.
  * <p>
@@ -33,21 +37,24 @@ import junit.framework.TestCase;
  *
  * @author Shaopeng Jia
  */
-public abstract class TestMetadataTestCase extends TestCase {
+abstract public class TestMetadataTestCase extends TestCase {
+
   private static final String TEST_METADATA_FILE_PREFIX =
       "/io/michaelrocks/libphonenumber/android/data/PhoneNumberMetadataProtoForTesting";
-  private static final String TEST_ALTERNATE_FORMATS_FILE_PREFIX =
-      "/io/michaelrocks/libphonenumber/android/data/PhoneNumberAlternateFormatsProto";
-  private static final String TEST_SHORT_NUMBER_METADATA_FILE_PREFIX =
-      "/io/michaelrocks/libphonenumber/android/data/ShortNumberMetadataProto";
 
-  /** An instance of PhoneNumberUtil that uses test metadata. */
+  /**
+   * An instance of PhoneNumberUtil that uses test metadata.
+   */
   protected final PhoneNumberUtil phoneUtil;
 
   public TestMetadataTestCase() {
-    phoneUtil = new PhoneNumberUtil(new MultiFileMetadataSourceImpl(
-        TEST_METADATA_FILE_PREFIX, TEST_ALTERNATE_FORMATS_FILE_PREFIX, TEST_SHORT_NUMBER_METADATA_FILE_PREFIX,
-        new ResourceMetadataLoader(TestMetadataTestCase.class)),
+    final DefaultMetadataDependenciesProvider metadataDependenciesProvider =
+        new DefaultMetadataDependenciesProvider();
+    phoneUtil = new PhoneNumberUtil(
+        new MetadataSourceImpl(new MultiFileModeFileNameProvider(TEST_METADATA_FILE_PREFIX),
+            metadataDependenciesProvider.getMetadataLoader(),
+            metadataDependenciesProvider.getMetadataParser()),
+        metadataDependenciesProvider,
         CountryCodeToRegionCodeMapForTesting.getCountryCodeToRegionCodeMap());
   }
 }

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package io.michaelrocks.libphonenumber.android;
+package io.michaelrocks.libphonenumber.android.metadata.source;
 
 import android.content.res.AssetManager;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import io.michaelrocks.libphonenumber.android.MetadataLoader;
 
 public class AssetsMetadataLoader implements MetadataLoader {
   private final AssetManager assetManager;

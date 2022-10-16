@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2013 The Libphonenumber Authors
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package io.michaelrocks.libphonenumber.android;
 
 import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
+import io.michaelrocks.libphonenumber.android.metadata.init.ClassPathResourceMetadataLoader;
 
 /**
  * Unit tests for ShortNumberInfo.java
@@ -26,7 +27,7 @@ import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber;
  */
 public class ShortNumberInfoTest extends TestMetadataTestCase {
   private final ShortNumberInfo shortInfo =
-      PhoneNumberUtil.createInstance(new ResourceMetadataLoader(ShortNumberInfoTest.class)).getShortNumberInfo();
+      PhoneNumberUtil.createInstance(new ClassPathResourceMetadataLoader()).getShortNumberInfo();
 
   public void testIsPossibleShortNumber() {
     PhoneNumber possibleNumber = new PhoneNumber();
@@ -368,11 +369,8 @@ public class ShortNumberInfoTest extends TestMetadataTestCase {
     try {
       return phoneUtil.parse(number, regionCode);
     } catch (NumberParseException e) {
-      AssertionError error =
-          new AssertionError("Test input data should always parse correctly: " + number + " (" + regionCode + ")");
-      //noinspection UnnecessaryInitCause
-      error.initCause(e);
-      throw error;
+      throw new AssertionError(
+          "Test input data should always parse correctly: " + number + " (" + regionCode + ")", e);
     }
   }
 }

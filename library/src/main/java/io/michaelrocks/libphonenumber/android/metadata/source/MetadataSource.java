@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 The Libphonenumber Authors
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +15,8 @@
  * limitations under the License.
  */
 
-package io.michaelrocks.libphonenumber.android;
+package io.michaelrocks.libphonenumber.android.metadata.source;
 
-import java.io.InputStream;
-
-class ResourceMetadataLoader implements MetadataLoader {
-  private final Class<?> loaderClass;
-
-  public ResourceMetadataLoader() {
-    this(ResourceMetadataLoader.class);
-  }
-
-  public ResourceMetadataLoader(Class<?> loaderClass) {
-    this.loaderClass = loaderClass;
-  }
-
-  @Override
-  public InputStream loadMetadata(String metadataFileName) {
-    return loaderClass.getResourceAsStream(metadataFileName);
-  }
+/** A source of phone metadata split by different regions. */
+public interface MetadataSource extends RegionMetadataSource, NonGeographicalEntityMetadataSource {
 }

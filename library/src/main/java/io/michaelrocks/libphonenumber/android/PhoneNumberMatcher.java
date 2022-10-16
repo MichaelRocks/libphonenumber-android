@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 The Libphonenumber Authors
- * Copyright (C) 2017 Michael Rozumyanskiy
+ * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -577,11 +577,13 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     }
     // If this didn't pass, see if there are any alternate formats that match, and try them instead.
     PhoneMetadata alternateFormats =
-        util.getMetadataSource().getAlternateFormatsForCountry(number.getCountryCode());
+        phoneUtil.getMetadataDependenciesProvider()
+            .getAlternateFormatsMetadataSource()
+              .getFormattingMetadataForCountryCallingCode(number.getCountryCode());
     String nationalSignificantNumber = util.getNationalSignificantNumber(number);
     if (alternateFormats != null) {
-      for (NumberFormat alternateFormat : alternateFormats.numberFormats()) {
-        if (alternateFormat.leadingDigitsPatternSize() > 0) {
+      for (NumberFormat alternateFormat : alternateFormats.getNumberFormatList()) {
+        if (alternateFormat.getLeadingDigitsPatternCount() > 0) {
           // There is only one leading digits pattern for alternate formats.
           Pattern pattern =
               regexCache.getPatternForRegex(alternateFormat.getLeadingDigitsPattern(0));
@@ -669,7 +671,7 @@ final class PhoneNumberMatcher implements Iterator<PhoneNumberMatch> {
     // Check if a national prefix should be present when formatting this number.
     String nationalNumber = util.getNationalSignificantNumber(number);
     NumberFormat formatRule =
-        util.chooseFormattingPatternForNumber(metadata.numberFormats(), nationalNumber);
+        util.chooseFormattingPatternForNumber(metadata.getNumberFormatList(), nationalNumber);
     // To do this, we check that a national prefix formatting rule was present and that it wasn't
     // just the first-group symbol ($1) with punctuation.
     if ((formatRule != null) && formatRule.getNationalPrefixFormattingRule().length() > 0) {
