@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.michaelrocks:libphonenumber-android:8.12.57'
+  implementation 'io.michaelrocks:libphonenumber-android:8.13.0'
 }
 ```
 
@@ -48,7 +48,7 @@ This library is not fully compatible with the original `libphonenumber`.
 
 License
 =======
-    Copyright 2017 Michael Rozumyanskiy
+    Copyright 2022 Michael Rozumyanskiy
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -63,5 +63,5 @@ License
     limitations under the License.
 
  [1]: https://github.com/googlei18n/libphonenumber
- [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.12.57
+ [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A8.13.0
  [3]: http://blog.nimbledroid.com/2016/04/06/slow-ClassLoader.getResourceAsStream.html
