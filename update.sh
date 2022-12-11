@@ -81,7 +81,7 @@ pushd ${REMOTE} > /dev/null
 git diff ${CURRENT_TAG} ${NEXT_TAG} -- java/libphonenumber/**/*.java > ${PATCH_PATH}
 popd > /dev/null
 
-sed -i '.tmp' -n \
+sed -i '.tmp' \
   -e 's:java/libphonenumber/src/com/google/i18n/phonenumbers:library/src/main/java/io/michaelrocks/libphonenumber/android:g' \
   -e 's:java/libphonenumber/test/com/google/i18n/phonenumbers:library/src/test/java/io/michaelrocks/libphonenumber/android:g' \
   ${PATCH_PATH}
