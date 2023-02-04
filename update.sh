@@ -92,7 +92,7 @@ rm "${PATCH_PATH}" > /dev/null
 rm "${PATCH_PATH}.tmp" > /dev/null
 find ${LOCAL} -name *.orig -delete
 
-REJ_COUNT=`find ${LOCAL} -name *.rej | wc -l`
+REJ_COUNT=`find ${LOCAL} -name *.rej | wc -l | xargs`
 if [[ ${REJ_COUNT} != 0 ]]; then
   echo 'Seems a patch cannot be applied manually'
   exit 1
