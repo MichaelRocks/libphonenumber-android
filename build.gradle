@@ -3,19 +3,19 @@ buildscript {
   version = '8.13.5'
 
   ext.projectCompileSdkVersion = 33
-  ext.projectBuildToolsVersion = '33.0.0'
+  ext.projectBuildToolsVersion = '33.0.2'
   ext.projectMinSdkVersion = 14
   ext.projectTargetSdkVersion = 33
 
-  ext.androidToolsVersion = '7.3.1'
+  ext.androidToolsVersion = '7.4.1'
 
   ext.junitVersion = '4.13.2'
-  ext.mockitoVersion = '4.8.0'
+  ext.mockitoVersion = '5.1.1'
 
-  ext.androidxEspressoVersion = '3.4.0'
-  ext.androidxTestRulesVersion = '1.4.0'
-  ext.androidxTestRunnerVersion = '1.4.0'
-  ext.androidxTestExtJunitVersion = '1.1.3'
+  ext.androidxEspressoVersion = '3.5.1'
+  ext.androidxTestRulesVersion = '1.5.0'
+  ext.androidxTestRunnerVersion = '1.5.2'
+  ext.androidxTestExtJunitVersion = '1.1.5'
 
   repositories {
     google()

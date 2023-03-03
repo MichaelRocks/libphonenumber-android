@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 19
       - uses: gradle/gradle-build-action@v2
       - run: ./gradlew check
 
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 19
       - uses: gradle/gradle-build-action@v2
       - name: AVD cache
         uses: actions/cache@v3
