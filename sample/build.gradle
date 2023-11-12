@@ -26,10 +26,10 @@ android {
       minifyEnabled true
     }
   }
+    lint {
+        abortOnError false
+    }
 
-  lintOptions {
-    abortOnError false
-  }
 }
 
 dependencies {

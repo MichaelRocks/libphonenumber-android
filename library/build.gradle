@@ -11,15 +11,14 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 android {
   namespace 'io.michaelrocks.libphonenumber.android'
-  compileSdkVersion projectCompileSdkVersion
-  buildToolsVersion projectBuildToolsVersion
 
   defaultConfig {
+    compileSdk projectCompileSdkVersion
+    buildToolsVersion = projectBuildToolsVersion
+
     minSdkVersion projectMinSdkVersion
     targetSdkVersion projectTargetSdkVersion
 
-    versionCode 1
-    versionName version
   }
 
   buildTypes {
@@ -34,15 +33,15 @@ android {
     }
   }
 
-  lintOptions {
-    abortOnError false
-  }
 
   publishing {
     singleVariant('release') {
       withSourcesJar()
       withJavadocJar()
     }
+  }
+  lint {
+    abortOnError false
   }
 }
 
