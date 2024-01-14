@@ -18,7 +18,6 @@ android {
 
     minSdkVersion projectMinSdkVersion
     targetSdkVersion projectTargetSdkVersion
-
   }
 
   buildTypes {
