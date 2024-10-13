@@ -6,7 +6,7 @@ android {
   buildToolsVersion projectBuildToolsVersion
 
   defaultConfig {
-    minSdkVersion projectMinSdkVersion
+    minSdkVersion 19
     targetSdkVersion projectTargetSdkVersion
 
     applicationId "io.michaelrocks.libphonenumber.android.sample"
