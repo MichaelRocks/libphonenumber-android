@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Libphonenumber Authors
+ * Copyright (C) 2011 The Libphonenumber Authors
  * Copyright (C) 2022 Michael Rozumyanskiy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
