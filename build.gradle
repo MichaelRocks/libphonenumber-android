@@ -2,15 +2,15 @@ buildscript {
   group = 'io.michaelrocks'
   version = '8.13.52'
 
-  ext.projectCompileSdkVersion = 35
-  ext.projectBuildToolsVersion = '35.0.0'
+  ext.projectCompileSdkVersion = 36
+  ext.projectBuildToolsVersion = '36.0.0'
   ext.projectMinSdkVersion = 14
-  ext.projectTargetSdkVersion = 35
+  ext.projectTargetSdkVersion = 36
 
-  ext.androidToolsVersion = '8.7.0'
+  ext.androidToolsVersion = '8.9.2'
 
   ext.junitVersion = '4.13.2'
-  ext.mockitoVersion = '5.14.1'
+  ext.mockitoVersion = '5.14.2'
 
   ext.androidxEspressoVersion = '3.6.1'
   ext.androidxTestRulesVersion = '1.6.1'
