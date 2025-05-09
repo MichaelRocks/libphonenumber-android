@@ -26,10 +26,18 @@ android {
       minifyEnabled true
     }
   }
-    lint {
-        abortOnError false
-    }
 
+  lint {
+      abortOnError false
+  }
+
+  android {
+    signingConfigs {
+      debug {
+        storeFile rootProject.file("debug.keystore")
+      }
+    }
+  }
 }
 
 dependencies {
