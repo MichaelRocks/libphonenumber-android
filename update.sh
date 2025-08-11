@@ -1,6 +1,46 @@
 #!/usr/bin/env bash
 set -e
 
+set -E -o pipefail
+
+rollback() {
+  cd "${LOCAL}" > /dev/null 2>&1 || true
+  git merge --abort > /dev/null 2>&1 || true
+
+  if [[ -n "${RELEASE_BRANCH:-}" ]]; then
+    git branch -D "${RELEASE_BRANCH}" > /dev/null 2>&1 || true
+  fi
+
+  if [[ -n "${DEVELOP_ORIG_SHA:-}" ]]; then
+    git checkout -q develop > /dev/null 2>&1 || true
+    git reset -q --hard "${DEVELOP_ORIG_SHA}" > /dev/null 2>&1 || true
+  fi
+
+  if [[ -n "${MASTER_ORIG_SHA:-}" ]]; then
+    git checkout -q master > /dev/null 2>&1 || true
+    git reset -q --hard "${MASTER_ORIG_SHA}" > /dev/null 2>&1 || true
+  fi
+
+  if [[ -n "${NEXT_TAG:-}" ]]; then
+    git tag -d "${NEXT_TAG}" > /dev/null 2>&1 || true
+  fi
+
+  if [[ -n "${PATCH_PATH:-}" ]]; then
+    rm -f "${PATCH_PATH}" "${PATCH_PATH}.tmp" > /dev/null 2>&1 || true
+  fi
+
+  git checkout -q develop > /dev/null 2>&1 || true
+}
+
+error_exit() {
+  local exit_code=$?
+  local line_no=${BASH_LINENO[0]}
+  local cmd="${BASH_COMMAND//$'\n'/ }"
+  echo "ERROR: Command '${cmd}' failed at line ${line_no} with exit code ${exit_code}. Rolling back." >&2
+  rollback
+  exit "${exit_code}"
+}
+
 format_version() {
   local parts=("$@")
   local version=
@@ -27,13 +67,17 @@ LOCAL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REMOTE=$1
 BASE_TRAP="cd ${LOCAL} > /dev/null; git merge --abort > /dev/null 2>&1; git checkout -q develop"
 
-trap "${BASE_TRAP}; exit" INT TERM EXIT
+trap 'error_exit' ERR INT TERM
 
 echo "Merging changes from '${REMOTE}' to '${LOCAL}'"
 
 echo "Updating the local repo..."
 git checkout -q develop
 git pull -q > /dev/null
+
+DEVELOP_ORIG_SHA=$(git rev-parse develop)
+MASTER_ORIG_SHA=""
+RELEASE_BRANCH=""
 
 LIB_VERSION="$( sed -ne "s/^[[:space:]]*version[[:space:]]*=[[:space:]]*[\"']\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\(\-[0-9][0-9]*\)\{0,1\}[\"'][[:space:]]*$/\1\2/p" "${LOCAL}/build.gradle.kts" )"
 if [[ -z "$LIB_VERSION" ]]; then
@@ -60,8 +104,8 @@ fi
 echo "Next version is ${NEXT_VERSION}"
 
 echo "Creating a release branch..."
-git checkout -q -b "release/${NEXT_VERSION}"
-trap "${BASE_TRAP}; git branch -D "release/${NEXT_VERSION}"; exit" INT TERM EXIT
+RELEASE_BRANCH="release/${NEXT_VERSION}"
+git checkout -q -b "${RELEASE_BRANCH}"
 
 sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" build.gradle.kts
 sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" README.md
@@ -115,10 +159,12 @@ echo "Merging the release branch..."
 
 git checkout -q develop
 git pull -q > /dev/null
+DEVELOP_ORIG_SHA=$(git rev-parse develop)
 git merge -q --no-ff --no-edit "release/${NEXT_VERSION}" > /dev/null
 
 git checkout -q master
 git pull -q > /dev/null
+MASTER_ORIG_SHA=$(git rev-parse master)
 git merge -q --no-ff --no-edit "release/${NEXT_VERSION}" > /dev/null
 
 git tag "v${NEXT_VERSION}" > /dev/null
@@ -144,4 +190,4 @@ git checkout -q develop
 
 echo "And it's done!"
 
-trap - INT TERM EXIT
+trap - ERR INT TERM
