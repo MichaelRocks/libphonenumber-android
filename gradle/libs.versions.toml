@@ -11,6 +11,8 @@ buildTools = "36.0.0"
 minSdk = "14"
 minSdkSample = "21"
 targetSdk = "36"
+java = "17"
+javaLibrary = "8"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }

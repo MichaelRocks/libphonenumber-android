@@ -2,6 +2,12 @@ plugins {
   alias(libs.plugins.android.application)
 }
 
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInteger())
+  }
+}
+
 android {
   namespace 'io.michaelrocks.libphonenumber.android.sample'
   compileSdk libs.versions.compileSdk.get().toInteger()
