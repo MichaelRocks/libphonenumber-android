@@ -6,6 +6,11 @@ androidx-test-rules = "1.7.0"
 androidx-test-runner = "1.7.0"
 androidx-test-ext-junit = "1.3.0"
 agp = "8.12.0"
+compileSdk = "36"
+buildTools = "36.0.0"
+minSdk = "14"
+minSdkSample = "21"
+targetSdk = "36"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }

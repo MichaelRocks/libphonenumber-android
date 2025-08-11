@@ -16,11 +16,11 @@ android {
   namespace 'io.michaelrocks.libphonenumber.android'
 
   defaultConfig {
-    compileSdk projectCompileSdkVersion
-    buildToolsVersion = projectBuildToolsVersion
+    compileSdk libs.versions.compileSdk.get().toInteger()
+    buildToolsVersion libs.versions.buildTools.get()
 
-    minSdkVersion projectMinSdkVersion
-    targetSdkVersion projectTargetSdkVersion
+    minSdk libs.versions.minSdk.get().toInteger()
+    targetSdk libs.versions.targetSdk.get().toInteger()
   }
 
   buildTypes {

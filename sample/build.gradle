@@ -4,12 +4,12 @@ plugins {
 
 android {
   namespace 'io.michaelrocks.libphonenumber.android.sample'
-  compileSdkVersion projectCompileSdkVersion
-  buildToolsVersion projectBuildToolsVersion
+  compileSdk libs.versions.compileSdk.get().toInteger()
+  buildToolsVersion libs.versions.buildTools.get()
 
   defaultConfig {
-    minSdkVersion 21
-    targetSdkVersion projectTargetSdkVersion
+    minSdk libs.versions.minSdkSample.get().toInteger()
+    targetSdk libs.versions.targetSdk.get().toInteger()
 
     applicationId "io.michaelrocks.libphonenumber.android.sample"
 

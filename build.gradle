@@ -6,10 +6,6 @@ plugins {
 group = 'io.michaelrocks'
 version = '9.0.5'
 
-ext.projectCompileSdkVersion = 36
-ext.projectBuildToolsVersion = '36.0.0'
-ext.projectMinSdkVersion = 14
-ext.projectTargetSdkVersion = 36
 
 tasks.register('clean', Delete) {
   delete rootProject.layout.buildDirectory
