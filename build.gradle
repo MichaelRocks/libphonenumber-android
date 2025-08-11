@@ -1,40 +1,17 @@
-buildscript {
-  group = 'io.michaelrocks'
-  version = '9.0.5'
-
-  ext.projectCompileSdkVersion = 36
-  ext.projectBuildToolsVersion = '36.0.0'
-  ext.projectMinSdkVersion = 14
-  ext.projectTargetSdkVersion = 36
-
-  ext.androidToolsVersion = '8.12.0'
-
-  ext.junitVersion = '4.13.2'
-  ext.mockitoVersion = '5.18.0'
-
-  ext.androidxEspressoVersion = '3.7.0'
-  ext.androidxTestRulesVersion = '1.7.0'
-  ext.androidxTestRunnerVersion = '1.7.0'
-  ext.androidxTestExtJunitVersion = '1.3.0'
-
-  repositories {
-    google()
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath "com.android.tools.build:gradle:$androidToolsVersion"
-  }
+plugins {
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.library) apply false
 }
 
-allprojects {
-  repositories {
-    google()
-    mavenCentral()
-  }
-}
+group = 'io.michaelrocks'
+version = '9.0.5'
 
-task clean(type: Delete) {
+ext.projectCompileSdkVersion = 36
+ext.projectBuildToolsVersion = '36.0.0'
+ext.projectMinSdkVersion = 14
+ext.projectTargetSdkVersion = 36
+
+tasks.register('clean', Delete) {
   delete rootProject.layout.buildDirectory
 }
 
