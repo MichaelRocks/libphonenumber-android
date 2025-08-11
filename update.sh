@@ -35,7 +35,7 @@ echo "Updating the local repo..."
 git checkout -q develop
 git pull -q > /dev/null
 
-LIB_VERSION="$( sed -ne 's/^[[:space:]]*version[[:space:]]=[[:space:]]'"'"'\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\(\-[0-9][0-9]*\)\{0,1\}'"'"'[[:space:]]*$/\1\2/p' ${LOCAL}/build.gradle)"
+LIB_VERSION="$( sed -ne "s/^[[:space:]]*version[[:space:]]*=[[:space:]]*[\"']\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\(\-[0-9][0-9]*\)\{0,1\}[\"'][[:space:]]*$/\1\2/p" "${LOCAL}/build.gradle.kts" )"
 if [[ -z "$LIB_VERSION" ]]; then
   echo "Current version is not found"
   exit 1
@@ -63,11 +63,11 @@ echo "Creating a release branch..."
 git checkout -q -b "release/${NEXT_VERSION}"
 trap "${BASE_TRAP}; git branch -D "release/${NEXT_VERSION}"; exit" INT TERM EXIT
 
-sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" build.gradle
+sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" build.gradle.kts
 sed -i '.tmp' "s/${LIB_VERSION}/${NEXT_VERSION}/g" README.md
-git add build.gradle > /dev/null
+git add build.gradle.kts > /dev/null
 git add README.md > /dev/null
-rm build.gradle.tmp > /dev/null
+rm build.gradle.kts.tmp > /dev/null
 rm README.md.tmp > /dev/null
 git commit -q -m "Bump version to ${NEXT_VERSION}"
 
@@ -130,7 +130,7 @@ echo "Building the release..."
 echo "Running tests..."
 ./gradlew connectedCheck > /dev/null
 echo "Uploading artifacts..."
-./gradlew publishReleasePublicationToSonatypeRepository > /dev/null
+./gradlew publishAggregationToCentralPortal > /dev/null
 
 echo "Pushing changes to the repo..."
 
