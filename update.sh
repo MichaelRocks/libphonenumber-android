@@ -11,11 +11,6 @@ rollback() {
     git branch -D "${RELEASE_BRANCH}" > /dev/null 2>&1 || true
   fi
 
-  if [[ -n "${DEVELOP_ORIG_SHA:-}" ]]; then
-    git checkout -q develop > /dev/null 2>&1 || true
-    git reset -q --hard "${DEVELOP_ORIG_SHA}" > /dev/null 2>&1 || true
-  fi
-
   if [[ -n "${MASTER_ORIG_SHA:-}" ]]; then
     git checkout -q master > /dev/null 2>&1 || true
     git reset -q --hard "${MASTER_ORIG_SHA}" > /dev/null 2>&1 || true
@@ -29,7 +24,7 @@ rollback() {
     rm -f "${PATCH_PATH}" "${PATCH_PATH}.tmp" > /dev/null 2>&1 || true
   fi
 
-  git checkout -q develop > /dev/null 2>&1 || true
+  git checkout -q master > /dev/null 2>&1 || true
 }
 
 error_exit() {
@@ -65,18 +60,16 @@ find_next_version() {
 
 LOCAL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REMOTE=$1
-BASE_TRAP="cd ${LOCAL} > /dev/null; git merge --abort > /dev/null 2>&1; git checkout -q develop"
 
 trap 'error_exit' ERR INT TERM
 
 echo "Merging changes from '${REMOTE}' to '${LOCAL}'"
 
 echo "Updating the local repo..."
-git checkout -q develop
+git checkout -q master
 git pull -q > /dev/null
 
-DEVELOP_ORIG_SHA=$(git rev-parse develop)
-MASTER_ORIG_SHA=""
+MASTER_ORIG_SHA=$(git rev-parse master)
 RELEASE_BRANCH=""
 
 LIB_VERSION="$( sed -ne "s/^[[:space:]]*version[[:space:]]*=[[:space:]]*[\"']\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\(\-[0-9][0-9]*\)\{0,1\}[\"'][[:space:]]*$/\1\2/p" "${LOCAL}/build.gradle.kts" )"
@@ -157,11 +150,6 @@ git commit -q -a -m "Merge code and metadata changes from ${NEXT_VERSION}"
 
 echo "Merging the release branch..."
 
-git checkout -q develop
-git pull -q > /dev/null
-DEVELOP_ORIG_SHA=$(git rev-parse develop)
-git merge -q --no-ff --no-edit "release/${NEXT_VERSION}" > /dev/null
-
 git checkout -q master
 git pull -q > /dev/null
 MASTER_ORIG_SHA=$(git rev-parse master)
@@ -180,13 +168,11 @@ echo "Uploading artifacts..."
 
 echo "Pushing changes to the repo..."
 
-git checkout -q develop
-git push -q > /dev/null
 git checkout -q master
 git push -q > /dev/null
 git push -q --tags > /dev/null
 
-git checkout -q develop
+git checkout -q master
 
 echo "And it's done!"
 
