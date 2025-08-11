@@ -1,13 +1,33 @@
+import java.util.*
+
 plugins {
   alias(libs.plugins.android.library)
   id("maven-publish")
   id("signing")
+  id("com.gradleup.nmcp")
 }
 
 val artifactName = rootProject.name
 
 group = rootProject.group
 version = rootProject.version
+
+// Load local publish/signing properties from publish.properties if present
+val publishPropertiesFile = rootProject.file("publish.properties")
+if (publishPropertiesFile.exists()) {
+  val localProperties = Properties().apply {
+    publishPropertiesFile.inputStream().use { this.load(it) }
+  }
+  for ((keyAny, valueAny) in localProperties) {
+    val key = keyAny as String
+    val value = valueAny as String
+    if (key == "signing.secretKeyRingFile") {
+      project.extensions.extraProperties.set(key, rootProject.file(value).absolutePath)
+    } else {
+      project.extensions.extraProperties.set(key, value)
+    }
+  }
+}
 
 java {
   toolchain {
@@ -99,19 +119,6 @@ afterEvaluate {
             connection.set("scm:git:git://github.com/michaelrocks/libphonenumber-android.git")
             developerConnection.set("scm:git:ssh://git@github.com/michaelrocks/libphonenumber-android.git")
             url.set("https://github.com/michaelrocks/libphonenumber-android")
-          }
-        }
-      }
-    }
-
-    repositories {
-      if (project.hasProperty("mavenCentralRepositoryUsername") && project.hasProperty("mavenCentralRepositoryPassword")) {
-        maven {
-          name = "Sonatype"
-          url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-          credentials {
-            username = findProperty("mavenCentralRepositoryUsername") as String?
-            password = findProperty("mavenCentralRepositoryPassword") as String?
           }
         }
       }
