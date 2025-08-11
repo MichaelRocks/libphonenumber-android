@@ -14,7 +14,7 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = 'libphonenumber-android'
+rootProject.name = "libphonenumber-android"
 
-include ':library'
-include ':sample'
+include(":library")
+include(":sample")
