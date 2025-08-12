@@ -24,7 +24,7 @@ nmcpAggregation {
       password = centralPortalPassword
     }
 
-    publishingType = "USER_MANAGED"
+    publishingType = "AUTOMATIC"
   }
 }
 
