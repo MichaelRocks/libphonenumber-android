@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.michaelrocks:libphonenumber-android:9.0.5'
+  implementation 'io.michaelrocks:libphonenumber-android:9.0.6'
 }
 ```
 
@@ -63,5 +63,5 @@ License
     limitations under the License.
 
  [1]: https://github.com/googlei18n/libphonenumber
- [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A9.0.5
+ [2]: http://www.methodscount.com/?lib=com.googlecode.libphonenumber%3Alibphonenumber%3A9.0.6
  [3]: http://blog.nimbledroid.com/2016/04/06/slow-ClassLoader.getResourceAsStream.html
