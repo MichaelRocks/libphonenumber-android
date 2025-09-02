@@ -63,7 +63,8 @@ android {
         create("atdApi$minSdk") {
           device = "Pixel 2"
           apiLevel = minSdk
-          systemImageSource = "aosp-atd"
+          // ATD image doesn't exist for API level 21
+          systemImageSource = "aosp"
         }
         create("atdApi$targetSdk") {
           device = "Pixel 2"
