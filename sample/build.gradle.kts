@@ -74,12 +74,12 @@ android {
       }
       groups {
         register("localDevices") {
-          targetDevices.add(devices.getByName("pixel2Api$minSdk"))
-          targetDevices.add(devices.getByName("pixel2Api$targetSdk"))
+          targetDevices.add(allDevices.getByName("pixel2Api$minSdk"))
+          targetDevices.add(allDevices.getByName("pixel2Api$targetSdk"))
         }
         register("ciDevices") {
-          targetDevices.add(devices.getByName("atdApi$minSdk"))
-          targetDevices.add(devices.getByName("atdApi$targetSdk"))
+          targetDevices.add(allDevices.getByName("atdApi$minSdk"))
+          targetDevices.add(allDevices.getByName("atdApi$targetSdk"))
         }
       }
     }
