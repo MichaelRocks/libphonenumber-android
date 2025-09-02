@@ -7,7 +7,7 @@ env:
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-arm64
     steps:
       - uses: actions/checkout@v4
       - uses: gradle/actions/wrapper-validation@v4
