@@ -49,7 +49,7 @@ android {
     val minSdk = libs.versions.minSdkSample.get().toInt()
     val targetSdk = libs.versions.targetSdk.get().toInt()
     managedDevices {
-      devices {
+      localDevices {
         create("pixel2Api$minSdk") {
           device = "Pixel 2"
           apiLevel = minSdk
