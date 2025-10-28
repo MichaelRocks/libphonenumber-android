@@ -44,6 +44,45 @@ android {
       storeFile = rootProject.file("debug.keystore")
     }
   }
+
+  testOptions {
+    val minSdk = libs.versions.minSdkSample.get().toInt()
+    val targetSdk = libs.versions.targetSdk.get().toInt()
+    managedDevices {
+      localDevices {
+        create("pixel2Api$minSdk") {
+          device = "Pixel 2"
+          apiLevel = minSdk
+          systemImageSource = "aosp"
+        }
+        create("pixel2Api$targetSdk") {
+          device = "Pixel 2"
+          apiLevel = targetSdk
+          systemImageSource = "aosp"
+        }
+        create("atdApi$minSdk") {
+          device = "Pixel 2"
+          apiLevel = minSdk
+          systemImageSource = "aosp-atd"
+        }
+        create("atdApi$targetSdk") {
+          device = "Pixel 2"
+          apiLevel = targetSdk
+          systemImageSource = "aosp-atd"
+        }
+      }
+      groups {
+        register("localDevices") {
+          targetDevices.add(allDevices.getByName("pixel2Api$minSdk"))
+          targetDevices.add(allDevices.getByName("pixel2Api$targetSdk"))
+        }
+        register("ciDevices") {
+          targetDevices.add(allDevices.getByName("atdApi$minSdk"))
+          targetDevices.add(allDevices.getByName("atdApi$targetSdk"))
+        }
+      }
+    }
+  }
 }
 
 dependencies {
