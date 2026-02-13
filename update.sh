@@ -47,7 +47,7 @@ format_version() {
 find_next_version() {
   local next_parts=("$@")
   for (( index=${#next_parts[@]}-1 ; index>=0 ; index-- )) ; do
-    ((next_parts[index]++))
+    ((++next_parts[index]))
     local next_version=$(format_version ${next_parts[@]})
     if [[ $(git tag -l "v$next_version") ]]; then
       echo ${next_version}
