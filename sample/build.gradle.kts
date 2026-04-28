@@ -39,6 +39,18 @@ android {
     abortOnError = false
   }
 
+  testOptions {
+    managedDevices {
+      localDevices {
+        create("pixel2Api29") {
+          device = "Pixel 2"
+          apiLevel = 29
+          systemImageSource = "aosp"
+        }
+      }
+    }
+  }
+
   signingConfigs {
     getByName("debug") {
       storeFile = rootProject.file("debug.keystore")

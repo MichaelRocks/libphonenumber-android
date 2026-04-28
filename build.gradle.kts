@@ -12,6 +12,12 @@ tasks.register<Delete>("clean") {
   delete(rootProject.layout.buildDirectory)
 }
 
+tasks.register("integrationTest") {
+  group = LifecycleBasePlugin.VERIFICATION_GROUP
+  description = "Runs sample instrumentation tests on a Gradle-managed local Android device."
+  dependsOn(":sample:pixel2Api29DebugAndroidTest")
+}
+
 nmcpAggregation {
   centralPortal {
     val centralPortalUsername = (findProperty("centralPortalUsername") as String?)

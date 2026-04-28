@@ -162,7 +162,7 @@ git checkout -q "v${NEXT_VERSION}"
 echo "Building the release..."
 ./gradlew clean build > /dev/null
 echo "Running tests..."
-./gradlew connectedCheck > /dev/null
+./gradlew integrationTest > /dev/null
 echo "Uploading artifacts..."
 ./gradlew publishAggregationToCentralPortal > /dev/null
 

@@ -23,6 +23,18 @@ dependencies {
 }
 ```
 
+Development
+-----------
+Run unit checks with:
+```shell
+./gradlew check
+```
+
+Run instrumentation integration tests on the Gradle-managed local emulator with:
+```shell
+./gradlew integrationTest
+```
+
 For DexGuard users
 ------------------
 If your project is obfuscated with DexGuard you may need to add the following line to the
