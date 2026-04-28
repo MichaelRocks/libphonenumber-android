@@ -15,7 +15,7 @@ tasks.register<Delete>("clean") {
 tasks.register("integrationTest") {
   group = LifecycleBasePlugin.VERIFICATION_GROUP
   description = "Runs sample instrumentation tests on a Gradle-managed local Android device."
-  dependsOn(":sample:pixel2Api29DebugAndroidTest")
+  dependsOn(":sample:pixel2Api30DebugAndroidTest")
 }
 
 nmcpAggregation {

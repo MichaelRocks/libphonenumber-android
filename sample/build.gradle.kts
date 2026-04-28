@@ -51,10 +51,10 @@ android {
     @Suppress("UnstableApiUsage")
     managedDevices {
       localDevices {
-        create("pixel2Api29") {
+        create("pixel2Api30") {
           device = "Pixel 2"
-          apiLevel = 29
-          systemImageSource = "aosp"
+          apiLevel = 30
+          systemImageSource = "aosp-atd"
         }
       }
     }
