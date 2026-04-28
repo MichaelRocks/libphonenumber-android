@@ -39,6 +39,7 @@ android {
 
     release {
       isMinifyEnabled = true
+      isShrinkResources = true
     }
   }
 
@@ -47,6 +48,7 @@ android {
   }
 
   testOptions {
+    @Suppress("UnstableApiUsage")
     managedDevices {
       localDevices {
         create("pixel2Api29") {
