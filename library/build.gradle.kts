@@ -20,10 +20,13 @@ java {
 android {
   namespace = "io.michaelrocks.libphonenumber.android"
 
-  defaultConfig {
-    compileSdk = libs.versions.compileSdk.get().toInt()
-    buildToolsVersion = libs.versions.buildTools.get()
+  compileSdk {
+    version = release(libs.versions.compileSdk.get().toInt())
+  }
 
+  buildToolsVersion = libs.versions.buildTools.get()
+
+  defaultConfig {
     minSdk = libs.versions.minSdk.get().toInt()
   }
 
@@ -48,11 +51,15 @@ android {
 
   lint {
     abortOnError = false
-    targetSdk = libs.versions.targetSdk.get().toInt()
+    targetSdk {
+      version = release(libs.versions.targetSdk.get().toInt())
+    }
   }
 
   testOptions {
-    targetSdk = libs.versions.targetSdk.get().toInt()
+    targetSdk {
+      version = release(libs.versions.targetSdk.get().toInt())
+    }
   }
 }
 

@@ -10,12 +10,19 @@ java {
 
 android {
   namespace = "io.michaelrocks.libphonenumber.android.sample"
-  compileSdk = libs.versions.compileSdk.get().toInt()
+
+  compileSdk {
+    version = release(libs.versions.compileSdk.get().toInt())
+  }
+
   buildToolsVersion = libs.versions.buildTools.get()
 
   defaultConfig {
     minSdk = libs.versions.minSdkSample.get().toInt()
-    targetSdk = libs.versions.targetSdk.get().toInt()
+
+    targetSdk {
+      version = release(libs.versions.targetSdk.get().toInt())
+    }
 
     applicationId = "io.michaelrocks.libphonenumber.android.sample"
 
