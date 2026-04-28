@@ -1,6 +1,6 @@
 [versions]
 junit = "4.13.2"
-mockito = "5.18.0"
+mockito = "5.23.0"
 androidx-espresso = "3.7.0"
 androidx-test-rules = "1.7.0"
 androidx-test-runner = "1.7.0"
@@ -13,7 +13,7 @@ minSdkSample = "21"
 targetSdk = "36"
 java = "17"
 javaLibrary = "8"
-nmcp = "1.0.3"
+nmcp = "1.4.4"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
