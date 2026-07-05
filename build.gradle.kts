@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.michaelrocks"
-version = "9.0.32"
+version = "9.0.33"
 
 tasks.register<Delete>("clean") {
   delete(rootProject.layout.buildDirectory)
