@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'io.michaelrocks:libphonenumber-android:9.0.33'
+  implementation 'io.michaelrocks:libphonenumber-android:9.0.34'
 }
 ```
 
