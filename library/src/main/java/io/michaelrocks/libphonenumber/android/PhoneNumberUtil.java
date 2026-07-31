@@ -1959,9 +1959,11 @@ public class PhoneNumberUtil {
    */
   public String getNationalSignificantNumber(PhoneNumber number) {
     // If leading zero(s) have been set, we prefix this now. Note this is not a national prefix.
+    // Defensively cap the number of leading zeros to avoid OOM from malicious input.
     StringBuilder nationalNumber = new StringBuilder();
     if (number.isItalianLeadingZero() && number.getNumberOfLeadingZeros() > 0) {
-      char[] zeros = new char[number.getNumberOfLeadingZeros()];
+      int numberOfLeadingZeros = Math.min(number.getNumberOfLeadingZeros(), 10);
+      char[] zeros = new char[numberOfLeadingZeros];
       Arrays.fill(zeros, '0');
       nationalNumber.append(new String(zeros));
     }
@@ -2594,14 +2596,30 @@ public class PhoneNumberUtil {
    * @param number  the number that needs to be checked
    * @return  true if the number is a valid vanity number
    */
+  private static boolean hasAtLeastThreeAlphaChars(CharSequence number) {
+    int alphaCount = 0;
+    for (int i = 0; i < number.length(); i++) {
+      char c = number.charAt(i);
+      if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+        if (++alphaCount >= 3) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   public boolean isAlphaNumber(CharSequence number) {
+    if (number.length() > MAX_INPUT_STRING_LENGTH) {
+      return false;
+    }
     if (!isViablePhoneNumber(number)) {
       // Number is too short, or doesn't match the basic phone number pattern.
       return false;
     }
     StringBuilder strippedNumber = new StringBuilder(number);
     maybeStripExtension(strippedNumber);
-    return VALID_ALPHA_PHONE_PATTERN.matcher(strippedNumber).matches();
+    return hasAtLeastThreeAlphaChars(strippedNumber);
   }
 
   /**
